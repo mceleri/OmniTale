@@ -18,6 +18,7 @@ export interface Adventure {
   title: string;
   description: string;
   characterName: string;
+  genre?: string;
   characterSheet: string;
   lorebook: LoreItem[];
   masterJournal: string;
@@ -27,7 +28,7 @@ export interface Adventure {
 }
 
 interface StoryState {
-  currentView: 'home' | 'story';
+  currentView: 'home' | 'story' | 'settings';
   savedStories: Adventure[];
   activeStoryId: string | null;
   // Active story state duplicates (for ease of direct binding in views)
@@ -37,10 +38,14 @@ interface StoryState {
   masterJournal: string;
   masterFeedback: string;
   
+  // Settings
+  llmUrl: string;
+  llmKey: string;
+  
   // Actions
-  setView: (view: 'home' | 'story') => void;
+  setView: (view: 'home' | 'story' | 'settings') => void;
   selectStory: (storyId: string) => void;
-  createStory: (title: string, description: string, characterName: string) => void;
+  createStory: (title: string, description: string, characterName: string, genre: string) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (sender: 'master' | 'player', text: string) => void;
   updateCharacterSheet: (text: string) => void;
@@ -48,6 +53,7 @@ interface StoryState {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
+  updateLlmSettings: (url: string, key: string) => void;
 }
 
 const initialStories: Adventure[] = [
@@ -56,6 +62,7 @@ const initialStories: Adventure[] = [
     title: 'The Whispers of Eldoria',
     description: 'You stand at the moss-covered gates of Eldoria, an ancient sanctuary lost to time. Inside, a soft violet light pulses, whispering your name.',
     characterName: 'Evelyn the Ranger',
+    genre: 'Fantasy',
     characterSheet: 'Name: Evelyn of Eldoria\nClass: Ranger / Scout\nLevel: 3\n\nAttributes:\n- Strength: 11\n- Dexterity: 16\n- Constitution: 12\n- Intelligence: 14\n- Wisdom: 15\n- Charisma: 10\n\nEquipment:\n- Recurve Bow of Elm\n- Leather Jerkin\n- Silver Elven Pendant\n- Ranger\'s Survival Kit',
     lorebook: [
       {
@@ -98,6 +105,7 @@ const initialStories: Adventure[] = [
     title: 'Sector 7: Neon Drift',
     description: 'Rain pours over the towering neon monoliths of Sector 7. As a rogue decker, you hold a datachip that megacorporations would burn cities to retrieve.',
     characterName: 'Kaelen Vex',
+    genre: 'Cyberpunk',
     characterSheet: 'Name: Kaelen Vex\nRole: Rogue Decker\nCreds: 1,450\n\nAugmentations:\n- Neuro-Link V4 (Neural Jack)\n- Synthetic Cyber-Eye (Thermal/IR)\n- Subdermal Armor Plate\n\nGear:\n- Arasaka Custom Cyberdeck\n- Monomolecular Dagger\n- Silenced heavy pistol (9mm)',
     lorebook: [
       {
@@ -128,6 +136,7 @@ const initialStories: Adventure[] = [
     title: 'The Deep Ice',
     description: 'On Europa\'s frozen ocean, your mining outpost drilled deeper than ever before. Yesterday, the drill stopped. Today, something started tapping back.',
     characterName: 'Dr. Isaac Clarke',
+    genre: 'Sci-Fi',
     characterSheet: 'Name: Dr. Isaac Clarke\nRole: Lead Xenogeologist\nSanity: 78%\n\nEquipment:\n- Thermal Hardsuit (Level 2)\n- Industrial Plasma Cutter\n- Handheld Spectrometer\n- Portable Oxygen Tank (2 hours remaining)',
     lorebook: [
       {
@@ -173,6 +182,9 @@ export const useStoryStore = create<StoryState>((set) => ({
   masterJournal: '',
   masterFeedback: '',
 
+  llmUrl: localStorage.getItem('omnitale_llm_url') || '',
+  llmKey: localStorage.getItem('omnitale_llm_key') || '',
+
   setView: (view) => set({ currentView: view }),
 
   selectStory: (storyId) => set((state) => {
@@ -190,13 +202,14 @@ export const useStoryStore = create<StoryState>((set) => ({
     };
   }),
 
-  createStory: (title, description, characterName) => set((state) => {
+  createStory: (title, description, characterName, genre) => set((state) => {
     const newId = 'story_' + Date.now();
     const newStory: Adventure = {
       id: newId,
       title,
       description,
       characterName,
+      genre,
       characterSheet: `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
       lorebook: [
         {
@@ -397,5 +410,11 @@ export const useStoryStore = create<StoryState>((set) => ({
       lorebook: updatedLore,
       savedStories: updatedStories
     };
+  }),
+
+  updateLlmSettings: (url, key) => set(() => {
+    localStorage.setItem('omnitale_llm_url', url);
+    localStorage.setItem('omnitale_llm_key', key);
+    return { llmUrl: url, llmKey: key };
   })
 }));
