@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
+import { get, set as idbSet, del } from 'idb-keyval';
 
 export interface Message {
   id: string;
@@ -159,262 +161,258 @@ const initialStories: Adventure[] = [
   }
 ];
 
-// Try to load initial state from localStorage if available
-const getSavedStories = (): Adventure[] => {
-  try {
-    const saved = localStorage.getItem('omnitale_stories');
-    if (saved) {
-      return JSON.parse(saved);
-    }
-  } catch (e) {
-    console.error('Failed to parse saved stories', e);
-  }
-  return initialStories;
+// Custom StateStorage using idb-keyval
+const idbStorage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await idbSet(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
 };
 
-export const useStoryStore = create<StoryState>((set) => ({
-  currentView: 'home',
-  savedStories: getSavedStories(),
-  activeStoryId: null,
-  messages: [],
-  characterSheet: '',
-  lorebook: [],
-  masterJournal: '',
-  masterFeedback: '',
+export const useStoryStore = create<StoryState>()(
+  persist(
+    (set) => ({
+      currentView: 'home',
+      savedStories: initialStories,
+      activeStoryId: null,
+      messages: [],
+      characterSheet: '',
+      lorebook: [],
+      masterJournal: '',
+      masterFeedback: '',
 
-  llmUrl: localStorage.getItem('omnitale_llm_url') || '',
-  llmKey: localStorage.getItem('omnitale_llm_key') || '',
+      llmUrl: '',
+      llmKey: '',
 
-  setView: (view) => set({ currentView: view }),
+      setView: (view) => set({ currentView: view }),
 
-  selectStory: (storyId) => set((state) => {
-    const story = state.savedStories.find((s) => s.id === storyId);
-    if (!story) return {};
+      selectStory: (storyId) => set((state) => {
+        const story = state.savedStories.find((s) => s.id === storyId);
+        if (!story) return {};
 
-    return {
-      currentView: 'story',
-      activeStoryId: storyId,
-      messages: story.messages,
-      characterSheet: story.characterSheet,
-      lorebook: story.lorebook,
-      masterJournal: story.masterJournal,
-      masterFeedback: story.masterFeedback
-    };
-  }),
-
-  createStory: (title, description, characterName, genre) => set((state) => {
-    const newId = 'story_' + Date.now();
-    const newStory: Adventure = {
-      id: newId,
-      title,
-      description,
-      characterName,
-      genre,
-      characterSheet: `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
-      lorebook: [
-        {
-          id: '1',
-          title: 'The Journey Begins',
-          content: `This is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`
-        }
-      ],
-      masterJournal: `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`,
-      masterFeedback: 'Act as a professional Game Master. Keep descriptions evocative, give choices, and let the character actions matter.',
-      messages: [
-        {
-          id: '1',
-          sender: 'master',
-          text: `Welcome to ${title}, ${characterName}.\n\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\n\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`,
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
-      ],
-      lastPlayed: 'Just now'
-    };
-
-    const updatedStories = [newStory, ...state.savedStories];
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-
-    return {
-      savedStories: updatedStories,
-      currentView: 'story',
-      activeStoryId: newId,
-      messages: newStory.messages,
-      characterSheet: newStory.characterSheet,
-      lorebook: newStory.lorebook,
-      masterJournal: newStory.masterJournal,
-      masterFeedback: newStory.masterFeedback
-    };
-  }),
-
-  deleteStory: (storyId) => set((state) => {
-    const updatedStories = state.savedStories.filter((s) => s.id !== storyId);
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-    
-    const wasActive = state.activeStoryId === storyId;
-    return {
-      savedStories: updatedStories,
-      ...(wasActive ? {
-        activeStoryId: null,
-        currentView: 'home',
-        messages: [],
-        characterSheet: '',
-        lorebook: [],
-        masterJournal: '',
-        masterFeedback: ''
-      } : {})
-    };
-  }),
-
-  addMessage: (sender, text) => set((state) => {
-    if (!state.activeStoryId) return {};
-
-    const newMessage: Message = {
-      id: 'msg_' + Date.now() + Math.random().toString(36).substr(2, 4),
-      sender,
-      text,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    const updatedMessages = [...state.messages, newMessage];
-
-    // Persist to savedStories list
-    const updatedStories = state.savedStories.map((story) => {
-      if (story.id === state.activeStoryId) {
         return {
-          ...story,
-          messages: updatedMessages,
+          currentView: 'story',
+          activeStoryId: storyId,
+          messages: story.messages,
+          characterSheet: story.characterSheet,
+          lorebook: story.lorebook,
+          masterJournal: story.masterJournal,
+          masterFeedback: story.masterFeedback
+        };
+      }),
+
+      createStory: (title, description, characterName, genre) => set((state) => {
+        const newId = 'story_' + Date.now();
+        const newStory: Adventure = {
+          id: newId,
+          title,
+          description,
+          characterName,
+          genre,
+          characterSheet: `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
+          lorebook: [
+            {
+              id: '1',
+              title: 'The Journey Begins',
+              content: `This is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`
+            }
+          ],
+          masterJournal: `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`,
+          masterFeedback: 'Act as a professional Game Master. Keep descriptions evocative, give choices, and let the character actions matter.',
+          messages: [
+            {
+              id: '1',
+              sender: 'master',
+              text: `Welcome to ${title}, ${characterName}.\n\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\n\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`,
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ],
           lastPlayed: 'Just now'
         };
-      }
-      return story;
-    });
 
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
+        const updatedStories = [newStory, ...state.savedStories];
 
-    // If player sent a message, schedule a mock master response to maintain game-like interactive feel!
-    if (sender === 'player') {
-      setTimeout(() => {
-        const mockResponses = [
-          "The darkness deepens as you consider your next move. A chilling breeze echoes down the corridor. What do you do?",
-          "Your actions ripple through the surroundings. You sense that your choice has drawn attention. How do you prepare?",
-          "You move forward with quiet resolve. The pathway ahead reveals new details: a hidden mechanism, a curious inscription, and an eerie silence. Proceed with caution.",
-          "An interesting approach. Your skill and intuition reveal a subtle detail you almost missed. How do you capitalize on this?",
-          "The air is thick with tension. As you step forward, you hear a faint click underneath your feet. Silence follows. What is your reaction?"
-        ];
-        const randomText = mockResponses[Math.floor(Math.random() * mockResponses.length)];
-        useStoryStore.getState().addMessage('master', randomText);
-      }, 1000);
+        return {
+          savedStories: updatedStories,
+          currentView: 'story',
+          activeStoryId: newId,
+          messages: newStory.messages,
+          characterSheet: newStory.characterSheet,
+          lorebook: newStory.lorebook,
+          masterJournal: newStory.masterJournal,
+          masterFeedback: newStory.masterFeedback
+        };
+      }),
+
+      deleteStory: (storyId) => set((state) => {
+        const updatedStories = state.savedStories.filter((s) => s.id !== storyId);
+        
+        const wasActive = state.activeStoryId === storyId;
+        return {
+          savedStories: updatedStories,
+          ...(wasActive ? {
+            activeStoryId: null,
+            currentView: 'home',
+            messages: [],
+            characterSheet: '',
+            lorebook: [],
+            masterJournal: '',
+            masterFeedback: ''
+          } : {})
+        };
+      }),
+
+      addMessage: (sender, text) => set((state) => {
+        if (!state.activeStoryId) return {};
+
+        const newMessage: Message = {
+          id: 'msg_' + Date.now() + Math.random().toString(36).substr(2, 4),
+          sender,
+          text,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        const updatedMessages = [...state.messages, newMessage];
+
+        // Update in savedStories list (in-memory only)
+        const updatedStories = state.savedStories.map((story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              messages: updatedMessages,
+              lastPlayed: 'Just now'
+            };
+          }
+          return story;
+        });
+
+        // If player sent a message, schedule a mock master response to maintain game-like interactive feel!
+        if (sender === 'player') {
+          setTimeout(() => {
+            const mockResponses = [
+              "The darkness deepens as you consider your next move. A chilling breeze echoes down the corridor. What do you do?",
+              "Your actions ripple through the surroundings. You sense that your choice has drawn attention. How do you prepare?",
+              "You move forward with quiet resolve. The pathway ahead reveals new details: a hidden mechanism, a curious inscription, and an eerie silence. Proceed with caution.",
+              "An interesting approach. Your skill and intuition reveal a subtle detail you almost missed. How do you capitalize on this?",
+              "The air is thick with tension. As you step forward, you hear a faint click underneath your feet. Silence follows. What is your reaction?"
+            ];
+            const randomText = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+            useStoryStore.getState().addMessage('master', randomText);
+          }, 1000);
+        }
+
+        return {
+          messages: updatedMessages,
+          savedStories: updatedStories
+        };
+      }),
+
+      updateCharacterSheet: (text) => set((state) => {
+        if (!state.activeStoryId) return {};
+
+        const updatedStories = state.savedStories.map((story) => {
+          if (story.id === state.activeStoryId) {
+            return { ...story, characterSheet: text };
+          }
+          return story;
+        });
+
+        return {
+          characterSheet: text,
+          savedStories: updatedStories
+        };
+      }),
+
+      updateMasterJournal: (text) => set((state) => {
+        if (!state.activeStoryId) return {};
+
+        const updatedStories = state.savedStories.map((story) => {
+          if (story.id === state.activeStoryId) {
+            return { ...story, masterJournal: text };
+          }
+          return story;
+        });
+
+        return {
+          masterJournal: text,
+          savedStories: updatedStories
+        };
+      }),
+
+      updateMasterFeedback: (text) => set((state) => {
+        if (!state.activeStoryId) return {};
+
+        const updatedStories = state.savedStories.map((story) => {
+          if (story.id === state.activeStoryId) {
+            return { ...story, masterFeedback: text };
+          }
+          return story;
+        });
+
+        return {
+          masterFeedback: text,
+          savedStories: updatedStories
+        };
+      }),
+
+      addLoreItem: (title, content) => set((state) => {
+        if (!state.activeStoryId) return {};
+
+        const newItem: LoreItem = {
+          id: 'lore_' + Date.now(),
+          title,
+          content
+        };
+
+        const updatedLore = [...state.lorebook, newItem];
+
+        const updatedStories = state.savedStories.map((story) => {
+          if (story.id === state.activeStoryId) {
+            return { ...story, lorebook: updatedLore };
+          }
+          return story;
+        });
+
+        return {
+          lorebook: updatedLore,
+          savedStories: updatedStories
+        };
+      }),
+
+      deleteLoreItem: (itemId) => set((state) => {
+        if (!state.activeStoryId) return {};
+
+        const updatedLore = state.lorebook.filter((item) => item.id !== itemId);
+
+        const updatedStories = state.savedStories.map((story) => {
+          if (story.id === state.activeStoryId) {
+            return { ...story, lorebook: updatedLore };
+          }
+          return story;
+        });
+
+        return {
+          lorebook: updatedLore,
+          savedStories: updatedStories
+        };
+      }),
+
+      updateLlmSettings: (url, key) => set(() => {
+        return { llmUrl: url, llmKey: key };
+      })
+    }),
+    {
+      name: 'omnitale-storage',
+      storage: createJSONStorage(() => idbStorage),
+      partialize: (state) => ({
+        llmUrl: state.llmUrl,
+        llmKey: state.llmKey,
+      }),
     }
-
-    return {
-      messages: updatedMessages,
-      savedStories: updatedStories
-    };
-  }),
-
-  updateCharacterSheet: (text) => set((state) => {
-    if (!state.activeStoryId) return {};
-
-    const updatedStories = state.savedStories.map((story) => {
-      if (story.id === state.activeStoryId) {
-        return { ...story, characterSheet: text };
-      }
-      return story;
-    });
-
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-
-    return {
-      characterSheet: text,
-      savedStories: updatedStories
-    };
-  }),
-
-  updateMasterJournal: (text) => set((state) => {
-    if (!state.activeStoryId) return {};
-
-    const updatedStories = state.savedStories.map((story) => {
-      if (story.id === state.activeStoryId) {
-        return { ...story, masterJournal: text };
-      }
-      return story;
-    });
-
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-
-    return {
-      masterJournal: text,
-      savedStories: updatedStories
-    };
-  }),
-
-  updateMasterFeedback: (text) => set((state) => {
-    if (!state.activeStoryId) return {};
-
-    const updatedStories = state.savedStories.map((story) => {
-      if (story.id === state.activeStoryId) {
-        return { ...story, masterFeedback: text };
-      }
-      return story;
-    });
-
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-
-    return {
-      masterFeedback: text,
-      savedStories: updatedStories
-    };
-  }),
-
-  addLoreItem: (title, content) => set((state) => {
-    if (!state.activeStoryId) return {};
-
-    const newItem: LoreItem = {
-      id: 'lore_' + Date.now(),
-      title,
-      content
-    };
-
-    const updatedLore = [...state.lorebook, newItem];
-
-    const updatedStories = state.savedStories.map((story) => {
-      if (story.id === state.activeStoryId) {
-        return { ...story, lorebook: updatedLore };
-      }
-      return story;
-    });
-
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-
-    return {
-      lorebook: updatedLore,
-      savedStories: updatedStories
-    };
-  }),
-
-  deleteLoreItem: (itemId) => set((state) => {
-    if (!state.activeStoryId) return {};
-
-    const updatedLore = state.lorebook.filter((item) => item.id !== itemId);
-
-    const updatedStories = state.savedStories.map((story) => {
-      if (story.id === state.activeStoryId) {
-        return { ...story, lorebook: updatedLore };
-      }
-      return story;
-    });
-
-    localStorage.setItem('omnitale_stories', JSON.stringify(updatedStories));
-
-    return {
-      lorebook: updatedLore,
-      savedStories: updatedStories
-    };
-  }),
-
-  updateLlmSettings: (url, key) => set(() => {
-    localStorage.setItem('omnitale_llm_url', url);
-    localStorage.setItem('omnitale_llm_key', key);
-    return { llmUrl: url, llmKey: key };
-  })
-}));
+  )
+);
