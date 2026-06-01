@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useStoryStore, Adventure } from '../store/useStoryStore';
-import { Plus, BookOpen, Trash2, Clock, Sparkles, BookMarked, X, ChevronRight } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight } from 'lucide-react';
 
 export const HomeView: React.FC = () => {
-  const { savedStories, selectStory, createStory, deleteStory } = useStoryStore();
+  const { savedStories, selectStory, createStory, deleteStory, setView } = useStoryStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [charName, setCharName] = useState('');
@@ -55,7 +55,8 @@ export const HomeView: React.FC = () => {
     createStory(
       title.trim(),
       description.trim() || 'A mysterious journey across unknown frontiers.',
-      charName.trim()
+      charName.trim(),
+      selectedGenre
     );
 
     // Reset fields
@@ -78,7 +79,13 @@ export const HomeView: React.FC = () => {
               Solo RPG Reader
             </p>
           </div>
-          <BookMarked className="w-6 h-6 text-zinc-500 stroke-[1.5]" />
+          <button
+            onClick={() => setView('settings')}
+            className="p-1.5 hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-zinc-200 transition"
+            title="Settings"
+          >
+            <Settings className="w-6 h-6 text-zinc-500 stroke-[1.5]" />
+          </button>
         </div>
 
         {/* Intro */}
@@ -132,7 +139,7 @@ export const HomeView: React.FC = () => {
                           {story.title}
                         </h4>
                         <span className="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded-full shrink-0">
-                          {story.characterName.split(' ')[0]}
+                          {story.genre || 'Fantasy'}
                         </span>
                       </div>
                       <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">

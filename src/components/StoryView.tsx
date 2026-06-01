@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useStoryStore, Message, LoreItem } from '../store/useStoryStore';
-import { ArrowLeft, Send, User, BookOpen, Eye, X, Plus, Trash2, Sliders, Check, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare } from 'lucide-react';
 
 export const StoryView: React.FC = () => {
   const {
@@ -23,11 +23,7 @@ export const StoryView: React.FC = () => {
   const story = savedStories.find((s) => s.id === activeStoryId);
 
   const [inputText, setInputText] = useState('');
-  const [activeSheet, setActiveSheet] = useState<'character' | 'lore' | 'master' | null>(null);
-  
-  // Sheet Tabs
-  const [characterTab, setCharacterTab] = useState<'sheet' | 'lore'>('sheet');
-  const [masterTab, setMasterTab] = useState<'journal' | 'feedback'>('journal');
+  const [activeSheet, setActiveSheet] = useState<'character' | 'lore' | 'master' | 'feedback' | null>(null);
 
   // Lore Creation State
   const [newLoreTitle, setNewLoreTitle] = useState('');
@@ -145,50 +141,54 @@ export const StoryView: React.FC = () => {
 
       {/* 3. BOTTOM INPUT BAR & CONTROLS */}
       <footer className="sticky bottom-0 bg-zinc-950 border-t border-zinc-900/80 p-4 z-20 space-y-3">
-        {/* Quick Sheet Buttons */}
+        {/* Quick Sheet Buttons (No labels, icons only) */}
         <div className="flex items-center justify-around border-b border-zinc-900 pb-3">
           <button
-            onClick={() => {
-              setActiveSheet('character');
-              setCharacterTab('sheet');
-            }}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs transition ${
-              activeSheet === 'character' && characterTab === 'sheet'
+            onClick={() => setActiveSheet('character')}
+            className={`flex items-center justify-center p-2 rounded-lg text-xs transition ${
+              activeSheet === 'character'
                 ? 'bg-zinc-900 text-zinc-100 border border-zinc-800'
                 : 'text-zinc-500 hover:text-zinc-300'
             }`}
+            title="Character Sheet"
           >
-            <User className="w-4 h-4" />
-            <span>Character Sheet</span>
+            <User className="w-5 h-5" />
           </button>
 
           <button
-            onClick={() => {
-              setActiveSheet('character');
-              setCharacterTab('lore');
-            }}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs transition ${
-              activeSheet === 'character' && characterTab === 'lore'
+            onClick={() => setActiveSheet('lore')}
+            className={`flex items-center justify-center p-2 rounded-lg text-xs transition ${
+              activeSheet === 'lore'
                 ? 'bg-zinc-900 text-zinc-100 border border-zinc-800'
                 : 'text-zinc-500 hover:text-zinc-300'
             }`}
+            title="Lorebook"
           >
-            <BookOpen className="w-4 h-4" />
-            <span>Lorebook</span>
+            <BookOpen className="w-5 h-5" />
           </button>
 
           <button
-            onClick={() => {
-              setActiveSheet('master');
-            }}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs transition ${
+            onClick={() => setActiveSheet('master')}
+            className={`flex items-center justify-center p-2 rounded-lg text-xs transition ${
               activeSheet === 'master'
                 ? 'bg-zinc-900 text-zinc-100 border border-zinc-800'
                 : 'text-zinc-500 hover:text-zinc-300'
             }`}
+            title="AI Master"
           >
-            <Eye className="w-4 h-4" />
-            <span>AI Master</span>
+            <Eye className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={() => setActiveSheet('feedback')}
+            className={`flex items-center justify-center p-2 rounded-lg text-xs transition ${
+              activeSheet === 'feedback'
+                ? 'bg-zinc-900 text-zinc-100 border border-zinc-800'
+                : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+            title="Feedback"
+          >
+            <MessageSquare className="w-5 h-5" />
           </button>
         </div>
 
@@ -221,36 +221,20 @@ export const StoryView: React.FC = () => {
         />
       )}
 
-      {/* Sheet A: Character & Lorebook (👤 / 📚) */}
+      {/* Slide-up Bottom Sheet */}
       <div
         className={`fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-zinc-900 border-t border-zinc-800/80 rounded-t-2xl z-40 overflow-hidden shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
-          activeSheet === 'character' ? 'translate-y-0 h-[65vh]' : 'translate-y-full h-[65vh]'
+          activeSheet !== null ? 'translate-y-0 h-[65vh]' : 'translate-y-full h-[65vh]'
         }`}
       >
         {/* Sheet Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-800 bg-zinc-900/90 z-10 shrink-0">
-          <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-850/60">
-            <button
-              onClick={() => setCharacterTab('sheet')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
-                characterTab === 'sheet'
-                  ? 'bg-zinc-800 text-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              Character Sheet
-            </button>
-            <button
-              onClick={() => setCharacterTab('lore')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
-                characterTab === 'lore'
-                  ? 'bg-zinc-800 text-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              Lorebook
-            </button>
-          </div>
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-800 bg-zinc-900/90 shrink-0">
+          <span className="font-serif text-sm font-medium text-zinc-200">
+            {activeSheet === 'character' && 'Character Sheet'}
+            {activeSheet === 'lore' && 'Lorebook'}
+            {activeSheet === 'master' && 'AI Master'}
+            {activeSheet === 'feedback' && 'Feedback'}
+          </span>
           
           <button
             onClick={() => setActiveSheet(null)}
@@ -262,7 +246,7 @@ export const StoryView: React.FC = () => {
 
         {/* Sheet Content Scrollable Area */}
         <div className="flex-1 overflow-y-auto p-5 no-scrollbar bg-zinc-900">
-          {characterTab === 'sheet' ? (
+          {activeSheet === 'character' && (
             <div className="h-full flex flex-col">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
@@ -281,7 +265,9 @@ export const StoryView: React.FC = () => {
                 placeholder="Enter character sheet details..."
               />
             </div>
-          ) : (
+          )}
+
+          {activeSheet === 'lore' && (
             <div className="space-y-6">
               {/* Lore Addition Form */}
               <div className="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
@@ -347,51 +333,8 @@ export const StoryView: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Sheet B: AI Master (👁️) */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-zinc-900 border-t border-zinc-800/80 rounded-t-2xl z-40 overflow-hidden shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
-          activeSheet === 'master' ? 'translate-y-0 h-[65vh]' : 'translate-y-full h-[65vh]'
-        }`}
-      >
-        {/* Sheet Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-800 bg-zinc-900/90 shrink-0">
-          <div className="flex bg-zinc-950 p-1 rounded-xl border border-zinc-850/60">
-            <button
-              onClick={() => setMasterTab('journal')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
-                masterTab === 'journal'
-                  ? 'bg-zinc-800 text-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              Master Journal
-            </button>
-            <button
-              onClick={() => setMasterTab('feedback')}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition ${
-                masterTab === 'feedback'
-                  ? 'bg-zinc-800 text-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              Feedback
-            </button>
-          </div>
-          
-          <button
-            onClick={() => setActiveSheet(null)}
-            className="p-1 hover:bg-zinc-800 rounded-lg text-zinc-400 transition"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Sheet Content Scrollable Area */}
-        <div className="flex-1 overflow-y-auto p-5 bg-zinc-900">
-          {masterTab === 'journal' ? (
+          {activeSheet === 'master' && (
             <div className="h-full flex flex-col">
               <div className="mb-2.5">
                 <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
@@ -409,7 +352,9 @@ export const StoryView: React.FC = () => {
                 placeholder="// Enter logical blocks here..."
               />
             </div>
-          ) : (
+          )}
+
+          {activeSheet === 'feedback' && (
             <div className="space-y-4">
               <div>
                 <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">
