@@ -1,35 +1,51 @@
 import React, { useState } from 'react';
-import { useStoryStore, Adventure } from '../store/useStoryStore';
+import { useStoryStore, Story } from '../store/useStoryStore';
 import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight } from 'lucide-react';
 
+const formatRelativeTime = (timestamp: number): string => {
+  const diff = Date.now() - timestamp;
+  if (diff < 60 * 1000) return 'Just now';
+  const minutes = Math.floor(diff / (60 * 1000));
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return 'Yesterday';
+  if (days < 7) return `${days} days ago`;
+  return new Date(timestamp).toLocaleDateString();
+};
+
 export const HomeView: React.FC = () => {
-  const { savedStories, selectStory, createStory, deleteStory, setView } = useStoryStore();
+  const { stories, selectStory, createStory, deleteStory, setView } = useStoryStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [charName, setCharName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('Fantasy');
+  
+  // Local state for segmented filtering
+  const [filter, setFilter] = useState<'all' | 'tales' | 'templates'>('all');
 
   const genres = [
     {
       name: 'Fantasy',
       description: 'An ancient land of forgotten magic, runic ruins, and wild forests.',
       defaultTitle: 'The Lost Sanctuary',
-      defaultChar: 'Alandra the Mage',
+      defaultChar: 'Alandra the Ranger',
       emoji: '🧙‍♂️'
     },
     {
       name: 'Sci-Fi',
       description: 'A deep space mining outpost plagued by a mysterious acoustic signal.',
       defaultTitle: 'Acoustic Rift: Europa',
-      defaultChar: 'Eng. Marcus Thorne',
+      defaultChar: 'Dr. Isaac Clarke',
       emoji: '🧑‍🚀'
     },
     {
       name: 'Cyberpunk',
       description: 'Rain-slicked neon streets, corrupt corps, and high-tech deck hacking.',
       defaultTitle: 'Neon Overdrive',
-      defaultChar: 'Vex the Decker',
+      defaultChar: 'Kaelen Vex',
       emoji: '💾'
     },
     {
@@ -56,7 +72,8 @@ export const HomeView: React.FC = () => {
       title.trim(),
       description.trim() || 'A mysterious journey across unknown frontiers.',
       charName.trim(),
-      selectedGenre
+      selectedGenre,
+      'tale' // Playable stories created from Home are tales
     );
 
     // Reset fields
@@ -66,18 +83,28 @@ export const HomeView: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  // Find the story with the most recent updatedAt timestamp
+  const recentStory = stories.length > 0
+    ? [...stories].sort((a, b) => b.updatedAt - a.updatedAt)[0]
+    : null;
+
+  // Filtered list of stories based on pill state
+  const filteredStories = stories.filter((s) => {
+    if (filter === 'all') return true;
+    if (filter === 'tales') return s.type === 'tale';
+    if (filter === 'templates') return s.type === 'template';
+    return true;
+  });
+
   return (
     <div className="max-w-md mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
-      {/* Header */}
       <div>
+        {/* Header - No solo rpg tagline */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-serif tracking-tight text-zinc-100 font-medium">
               OmniTale
             </h1>
-            <p className="text-xs font-sans text-zinc-400 uppercase tracking-widest mt-1">
-              Solo RPG Reader
-            </p>
           </div>
           <button
             onClick={() => setView('settings')}
@@ -88,18 +115,43 @@ export const HomeView: React.FC = () => {
           </button>
         </div>
 
-        {/* Intro */}
-        <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm">
-          <div className="flex items-start gap-3">
-            <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
-            <div>
-              <h2 className="text-sm font-medium text-zinc-200">The Zen E-Reader of Roleplaying</h2>
-              <p className="text-xs text-zinc-300 leading-relaxed mt-1">
-                A minimal space for your thoughts. Choose a narrative, play your character, and build your legend in silence.
-              </p>
+        {/* Dynamic Hero Card (Top Section) */}
+        {!recentStory ? (
+          /* State A: Store is empty */
+          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm">
+            <div className="flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
+              <div>
+                <h2 className="text-sm font-medium text-zinc-200">Forge your world.</h2>
+                <p className="text-xs text-zinc-400 leading-relaxed mt-1">
+                  Shape the narrative and live the adventure. An endless multiverse of interactive stories awaits your command.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          /* State B: Has stories - Quick Resume Card */
+          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm flex flex-col justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
+              <div>
+                <h2 className="text-sm font-medium text-zinc-200">Continue Journey</h2>
+                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[260px]">
+                  {recentStory.title}
+                </p>
+                <p className="text-[10px] text-zinc-400 mt-0.5">
+                  Last played {formatRelativeTime(recentStory.updatedAt)}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => selectStory(recentStory.id)}
+              className="w-full py-2.5 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold text-xs rounded-xl transition active:scale-[0.98]"
+            >
+              Resume
+            </button>
+          </div>
+        )}
 
         {/* Create Button */}
         <button
@@ -113,20 +165,50 @@ export const HomeView: React.FC = () => {
           New Adventure
         </button>
 
-        {/* List of Stories */}
-        <div className="mt-10">
-          <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
-            Your Stories ({savedStories.length})
-          </h3>
-          
-          {savedStories.length === 0 ? (
+        {/* Segmented Filter row replacing YOUR STORIES title */}
+        <div className="mt-10 mb-5 flex gap-2">
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+              filter === 'all'
+                ? 'bg-zinc-100 text-zinc-950'
+                : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+            }`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setFilter('tales')}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+              filter === 'tales'
+                ? 'bg-zinc-100 text-zinc-950'
+                : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+            }`}
+          >
+            Tales
+          </button>
+          <button
+            onClick={() => setFilter('templates')}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+              filter === 'templates'
+                ? 'bg-zinc-100 text-zinc-950'
+                : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+            }`}
+          >
+            Templates
+          </button>
+        </div>
+
+        {/* List of filtered stories */}
+        <div>
+          {filteredStories.length === 0 ? (
             <div className="text-center py-12 border border-dashed border-zinc-800 rounded-xl">
               <BookOpen className="w-8 h-8 text-zinc-400 mx-auto mb-2 stroke-[1.5]" />
-              <p className="text-xs text-zinc-400">No stories active. Launch a new adventure.</p>
+              <p className="text-xs text-zinc-400">No matching stories found.</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {savedStories.map((story: Adventure) => (
+              {filteredStories.map((story: Story) => (
                 <div
                   key={story.id}
                   className="group relative bg-zinc-900/50 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between"
@@ -134,16 +216,27 @@ export const HomeView: React.FC = () => {
                 >
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <h4 className="font-serif text-lg text-zinc-200 group-hover:text-zinc-100 truncate">
+                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                        <h4 className="font-serif text-lg text-zinc-200 group-hover:text-zinc-100 truncate max-w-[180px]">
                           {story.title}
                         </h4>
-                        <span className="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-400 rounded-full shrink-0">
-                          {story.genre || 'Fantasy'}
+                        <span className="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-300 rounded-full shrink-0">
+                          {story.genre}
                         </span>
+                        {/* Type Indicator Badges */}
+                        {story.type === 'tale' ? (
+                          <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 bg-emerald-950/40 text-emerald-400 border border-emerald-900/40 rounded-full shrink-0">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            Playing
+                          </span>
+                        ) : (
+                          <span className="text-[10px] px-2 py-0.5 bg-zinc-900 text-zinc-300 border border-zinc-800 rounded-full shrink-0">
+                            Template
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-zinc-300 line-clamp-2 leading-relaxed">
-                        {story.description}
+                        {story.synopsis}
                       </p>
                     </div>
                     <ChevronRight className="w-5 h-5 text-zinc-400 group-hover:text-zinc-200 shrink-0 self-center transition-transform group-hover:translate-x-0.5" />
@@ -152,7 +245,7 @@ export const HomeView: React.FC = () => {
                   <div className="flex items-center justify-between border-t border-zinc-800/60 mt-4 pt-3 text-[11px] text-zinc-400">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                      {story.lastPlayed}
+                      {formatRelativeTime(story.updatedAt)}
                     </span>
                     <button
                       onClick={(e) => {
@@ -176,7 +269,7 @@ export const HomeView: React.FC = () => {
 
       {/* Footer */}
       <div className="mt-12 pt-6 border-t border-zinc-900 text-center text-[10px] text-zinc-400">
-        OmniTale Reader v1.1.0 • Elegant Minimalist Solo RPG Interface
+        OmniTale Reader v1.2.0 • Elegant Minimalist Solo RPG Interface
       </div>
 
       {/* Creation Modal (Sleek Dialog) */}
@@ -230,7 +323,7 @@ export const HomeView: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. The Forgotten Vault"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-400"
                 />
               </div>
 
@@ -244,7 +337,7 @@ export const HomeView: React.FC = () => {
                   value={charName}
                   onChange={(e) => setCharName(e.target.value)}
                   placeholder="e.g. Gerald the Wise"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-400"
                 />
               </div>
 
@@ -257,7 +350,7 @@ export const HomeView: React.FC = () => {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Write a brief intro to set the scene..."
                   rows={2}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 resize-none"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-400 resize-none"
                 />
               </div>
 
