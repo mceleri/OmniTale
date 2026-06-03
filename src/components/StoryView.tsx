@@ -5,7 +5,7 @@ import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, Mes
 export const StoryView: React.FC = () => {
   const {
     activeStoryId,
-    savedStories,
+    stories,
     messages,
     characterSheet,
     lorebook,
@@ -20,7 +20,7 @@ export const StoryView: React.FC = () => {
     deleteLoreItem
   } = useStoryStore();
 
-  const story = savedStories.find((s) => s.id === activeStoryId);
+  const story = stories.find((s) => s.id === activeStoryId);
 
   const [inputText, setInputText] = useState('');
   const [activeSheet, setActiveSheet] = useState<'character' | 'lore' | 'master' | 'feedback' | null>(null);
@@ -41,9 +41,26 @@ export const StoryView: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Extract character name dynamically from the first line of the character sheet (e.g., "Name: Evelyn")
+  const characterName = React.useMemo(() => {
+    if (!characterSheet) return 'Adventurer';
+    const match = characterSheet.match(/^Name:\s*(.+)$/m);
+    return match ? match[1].trim() : 'Adventurer';
+  }, [characterSheet]);
+
+  // Parse lorebook JSON string to array of LoreItem
+  const parsedLorebook = React.useMemo(() => {
+    try {
+      const parsed = JSON.parse(lorebook);
+      return Array.isArray(parsed) ? (parsed as LoreItem[]) : [];
+    } catch (e) {
+      return [];
+    }
+  }, [lorebook]);
+
   if (!story) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-zinc-950 text-zinc-400">
+      <div className="flex flex-col items-center justify-center h-screen bg-zinc-950 text-zinc-300">
         <p>Story not found.</p>
         <button
           onClick={() => setView('home')}
@@ -88,8 +105,8 @@ export const StoryView: React.FC = () => {
           <h2 className="font-serif text-sm font-medium text-zinc-200 truncate">
             {story.title}
           </h2>
-          <p className="text-[10px] text-zinc-400 font-sans tracking-wider uppercase mt-0.5">
-            Playing as {story.characterName}
+          <p className="text-[10px] text-zinc-300 font-sans tracking-wider uppercase mt-0.5">
+            Playing as {characterName}
           </p>
         </div>
 
@@ -98,13 +115,13 @@ export const StoryView: React.FC = () => {
         </div>
       </header>
 
-      {/* 2. MAIN CHAT / STORY STREAM */}
+      {/* 2. MAIN CHAT / STORY STREAM (Timestamps Removed) */}
       <main
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-8 no-scrollbar scroll-smooth"
       >
         {messages.map((msg: Message) => {
-          const isMaster = msg.sender === 'master';
+          const isMaster = msg.role !== 'player';
           return (
             <div
               key={msg.id}
@@ -113,8 +130,8 @@ export const StoryView: React.FC = () => {
               }`}
             >
               {/* Message Header */}
-              <span className="text-[10px] text-zinc-400 font-sans tracking-wide mb-1 px-1">
-                {isMaster ? 'STORYTELLER' : story.characterName.toUpperCase()}
+              <span className="text-[10px] text-zinc-300 font-sans tracking-wide mb-1 px-1">
+                {isMaster ? 'STORYTELLER' : characterName.toUpperCase()}
               </span>
 
               {/* Message Body */}
@@ -126,7 +143,7 @@ export const StoryView: React.FC = () => {
                 }`}
                 style={{ whiteSpace: 'pre-line' }}
               >
-                {msg.text}
+                {msg.content}
               </div>
             </div>
           );
@@ -193,8 +210,8 @@ export const StoryView: React.FC = () => {
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder={`Instruct ${story.characterName} or respond...`}
-            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-500"
+            placeholder={`Instruct ${characterName} or respond...`}
+            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400"
           />
           <button
             type="submit"
@@ -244,14 +261,15 @@ export const StoryView: React.FC = () => {
           {activeSheet === 'character' && (
             <div className="h-full flex flex-col">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider">
                   Interactive Dossier
                 </span>
-                <span className="text-[10px] text-zinc-400 italic">
+                <span className="text-[10px] text-zinc-300 italic">
                   Changes persist automatically
                 </span>
               </div>
               
+              {/* Clean Sans-serif font for Character Sheet */}
               <textarea
                 value={characterSheet}
                 onChange={(e) => updateCharacterSheet(e.target.value)}
@@ -266,7 +284,7 @@ export const StoryView: React.FC = () => {
             <div className="space-y-6">
               {/* Lore Addition Form */}
               <div className="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
-                <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-wider mb-3">
+                <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wider mb-3">
                   + Add Lore Entry
                 </h4>
                 <form onSubmit={handleCreateLore} className="space-y-3">
@@ -276,7 +294,7 @@ export const StoryView: React.FC = () => {
                     value={newLoreTitle}
                     onChange={(e) => setNewLoreTitle(e.target.value)}
                     placeholder="Entry Title (e.g. Sword of Ruin)"
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-500"
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-400"
                   />
                   <textarea
                     required
@@ -284,7 +302,7 @@ export const StoryView: React.FC = () => {
                     onChange={(e) => setNewLoreContent(e.target.value)}
                     placeholder="Describe this lore, rule, location or faction..."
                     rows={2}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-500 resize-none"
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-400 resize-none"
                   />
                   <button
                     type="submit"
@@ -297,14 +315,14 @@ export const StoryView: React.FC = () => {
 
               {/* Lore Entries List */}
               <div className="space-y-3">
-                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
                   Active Codex Entries
                 </span>
 
-                {lorebook.length === 0 ? (
-                  <p className="text-xs text-zinc-400 italic">No lore cards added yet.</p>
+                {parsedLorebook.length === 0 ? (
+                  <p className="text-xs text-zinc-300 italic">No lore cards added yet.</p>
                 ) : (
-                  lorebook.map((item: LoreItem) => (
+                  parsedLorebook.map((item: LoreItem) => (
                     <div
                       key={item.id}
                       className="bg-zinc-950/60 border border-zinc-800/60 p-4 rounded-xl flex justify-between items-start gap-4"
@@ -332,13 +350,14 @@ export const StoryView: React.FC = () => {
           {activeSheet === 'master' && (
             <div className="h-full flex flex-col">
               <div className="mb-2.5">
-                <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                <h4 className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider">
                   Logical Engine Memory
                 </h4>
-                <p className="text-[10px] text-zinc-400 leading-relaxed mt-0.5">
+                <p className="text-[10px] text-zinc-300 leading-relaxed mt-0.5">
                   Private log of the AI. Write facts, plot secrets, or structural blocks of your narrative here.
                 </p>
               </div>
+              {/* Keep monospace green font EXCLUSIVELY for the Master's Diary */}
               <textarea
                 value={masterJournal}
                 onChange={(e) => updateMasterJournal(e.target.value)}
@@ -352,36 +371,37 @@ export const StoryView: React.FC = () => {
           {activeSheet === 'feedback' && (
             <div className="space-y-4">
               <div>
-                <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+                <h4 className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
                   Secret Instructions to the AI Game Master
                 </h4>
-                <p className="text-[10px] text-zinc-400 leading-relaxed mt-0.5">
+                <p className="text-[10px] text-zinc-300 leading-relaxed mt-0.5">
                   Provide custom prompts, feedback, or narrative limits to mold the storytelling. (UI-only placeholder, doesn't post to the conversation stream).
                 </p>
               </div>
 
               <div className="bg-zinc-950 border border-zinc-850/60 p-4 rounded-xl space-y-3">
-                <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+                <label className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
                   Instruction / Tone
                 </label>
                 <textarea
                   value={masterFeedback}
                   onChange={(e) => updateMasterFeedback(e.target.value)}
                   rows={4}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 focus:outline-none focus:border-zinc-700 placeholder-zinc-500 resize-none"
+                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 focus:outline-none focus:border-zinc-700 placeholder-zinc-400 resize-none"
                   placeholder="e.g. Keep descriptions under 3 paragraphs, don't control my character, focus on high survival stakes..."
                 />
                 
-                <div className="flex items-center gap-1.5 text-[11px] text-emerald-500">
-                  <Check className="w-4 h-4" />
+                <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
+                  <Check className="w-4 h-4 text-emerald-500" />
                   <span>Custom GM parameters verified and active.</span>
                 </div>
               </div>
 
+              {/* Color Contrast Brightened "What is this section" explanation card */}
               <div className="border border-zinc-800/80 rounded-xl p-4 bg-zinc-950/40 text-xs text-zinc-300 flex items-start gap-2.5 leading-relaxed">
-                <HelpCircle className="w-4.5 h-4.5 text-zinc-400 shrink-0 mt-0.5" />
+                <HelpCircle className="w-4.5 h-4.5 text-zinc-300 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-semibold text-zinc-300 block mb-0.5">What is this section?</span>
+                  <span className="font-semibold text-zinc-200 block mb-0.5">What is this section?</span>
                   In a production environment, this feedback stream is appended directly to the AI's system prompt in real-time, tailoring response length, combat pacing, or language on the fly.
                 </div>
               </div>
