@@ -58,6 +58,15 @@ export const StoryView: React.FC = () => {
     }
   }, [lorebook]);
 
+  const isLorebookMarkdown = React.useMemo(() => {
+    try {
+      JSON.parse(lorebook);
+      return false;
+    } catch (e) {
+      return lorebook && lorebook.trim().length > 0;
+    }
+  }, [lorebook]);
+
   if (!story) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-zinc-950 text-zinc-300">
@@ -319,7 +328,13 @@ export const StoryView: React.FC = () => {
                   Active Codex Entries
                 </span>
 
-                {parsedLorebook.length === 0 ? (
+                {isLorebookMarkdown ? (
+                  <div className="bg-zinc-950/60 border border-zinc-800/60 p-4 rounded-xl">
+                    <div className="text-xs text-zinc-300 leading-relaxed font-sans whitespace-pre-wrap">
+                      {lorebook}
+                    </div>
+                  </div>
+                ) : parsedLorebook.length === 0 ? (
                   <p className="text-xs text-zinc-300 italic">No lore cards added yet.</p>
                 ) : (
                   parsedLorebook.map((item: LoreItem) => (
