@@ -90,5 +90,384 @@ const initialStories: Story[] = [
         role: 'master',
         content: 'Welcome to OmniTale. Your solo RPG adventure begins now.\n\nThe damp, cool mist of the Whispering Woods clings to your cloak as you stand before the towering, moss-draped gates of Eldoria. For centuries, this place was declared forbidden. Yet, here you are, guided by the recurring dream of a violet beacon.\n\nThe stone archway is cracked, and a faint hum vibrates through the damp air. Inside, a violet light pulses gently, casting long, dancing shadows.\n\nHow do you proceed, Ranger?'
       },
-      {\n        id: '2',\n        role: 'player',\n        content: 'I check the gate for traps or magical runes, keeping my hand close to my recurve bow.'\n      },\n      {\n        id: '3',\n        role: 'master',\n        content: 'You approach the gate stealthily, your eyes scanning the ancient masonry. Near the base of the left pillar, you spot faint Elven glyphs. They glow with a dull, amber warmth—an alarm rune, sleeping but active.\n\nTo bypass it, you could try to scrape a vital intersection of the rune off with your dagger, or look for an alternative path over the collapsed western wall.\n\nWhat is your choice?'\n      }\n    ],\n    createdAt: 1717372800000, // 2024-06-03 mock date\n    updatedAt: 1717372800000\n  },\n  {\n    id: 'sector7',\n    type: 'tale',\n    title: 'Sector 7: Neon Drift',\n    genre: 'Cyberpunk',\n    synopsis: 'Rain pours over the towering neon monoliths of Sector 7. As a rogue decker, you hold a datachip that megacorporations would burn cities to retrieve.',\n    dynamicState: {\n      characterSheet: 'Name: Kaelen Vex\nRole: Rogue Decker\nCreds: 1,450\n\nAugmentations:\n- Neuro-Link V4 (Neural Jack)\n- Synthetic Cyber-Eye (Thermal/IR)\n- Subdermal Armor Plate\n\nGear:\n- Arasaka Custom Cyberdeck\n- Monomolecular Dagger\n- Silenced heavy pistol (9mm)',\n      lorebook: JSON.stringify([\n        {\n          id: '1',\n          title: 'Sector 7 Underbelly',\n          content: 'The low-life district of Neo-Tokyo. Sprawling slums shaded by massive corporate towers of Shin-Megacorp. Law enforcement is highly corrupt.'\n        },\n        {\n          id: '2',\n          title: 'The Red Chip',\n          content: 'An encrypted, military-grade storage medium recovered from a downed high-security courier. Rumored to hold files on \"Project Lazarus\".'\n        }\n      ]),\n      masterJournal: '// Master AI Notes - Sector 7 Cyberpunk\n// Act 1: The Safehouse Siege\n- Player is currently hiding in a capsule hotel room.\n- Corporate agents are scanning the grid for the chip\'s local signature.\n- Next Beat: A local fixer named \u0027Blue\u0027 offers help, but she might be a double agent.',\n    },\n    messages: [\n      {\n        id: '1',\n        role: 'master',\n        content: 'The neon reflection of Sector 7 dances on the wet concrete. You are inside a cramped, synthetic-smelling capsule room at the \"Midnight Rest\" hotel. The hum of the cheap ventilation is drowned out by the heavy rain outside.\n\nIn your hand, the Red Chip feels warm. You just booted up your cyberdeck, and the virtual console displays a grid-wide lockdown warning. They are searching for you.\n\nSuddenly, the power in your corridor cuts out. Total darkness, save for the cold blue glow of your deck.\n\nWhat is your move?'\n      }\n    ],\n    createdAt: 1717286400000,\n    updatedAt: 1717286400000\n  },\n  {\n    id: 'deepice',\n    type: 'template',\n    title: 'The Deep Ice',\n    genre: 'Sci-Fi',\n    synopsis: 'On Europa\'s frozen ocean, your mining outpost drilled deeper than ever before. Yesterday, the drill stopped. Today, something started tapping back.',\n    dynamicState: {\n      characterSheet: 'Name: Dr. Isaac Clarke\nRole: Lead Xenogeologist\nSanity: 78%\n\nEquipment:\n- Thermal Hardsuit (Level 2)\n- Industrial Plasma Cutter\n- Handheld Spectrometer\n- Portable Oxygen Tank (2 hours remaining)',\n      lorebook: JSON.stringify([\n        {\n          id: '1',\n          title: 'Outpost Boreas',\n          content: 'The deep-crust drilling station established by United Space Alliance on Europa. Hovering 4 kilometers below the ice sheet over a pitch-black abyss.'\n        }\n      ]),\n      masterJournal: '// Master AI Notes - The Deep Ice\n// Act 1: The Silent Shaft\n- Mood: Intense claustrophobia, isolation, slow dread.\n- Primary hazard: Freezing temperatures, power outages.\n- Entity behavior: Communicates through acoustic vibrations.',\n    },\n    messages: [\n      {\n        id: '1',\n        role: 'master',\n        content: 'Outpost Boreas is silent. The structural groans of the 4km-thick ice above you sound like a sleeping beast. In the control module, the monitors flicker with a pale green phosphor.\n\nYour headset crackles with static. Then, a slow, rhythmic tapping sound vibrates through the steel deck beneath your heavy hardsuit boots.\n\nTap... Tap-Tap... Tap-Tap-Tap...\n\nIt is the prime number sequence. It is coming from the drill shaft. The main shaft elevator has just begun ascending from the deep ocean abyss, entirely on its own.\n\nYour move, Doctor.'\n      }\n    ],\n    createdAt: 1717200000000,\n    updatedAt: 1717200000000\n  }\n];\n\n// Custom StateStorage using idb-keyval\nconst idbStorage: StateStorage = {\n  getItem: async (name: string): Promise<string | null> => {\n    return (await get(name)) || null;\n  },\n  setItem: async (name: string, value: string): Promise<void> => {\n    await idbSet(name, value);\n  },\n  removeItem: async (name: string): Promise<void> => {\n    await del(name);\n  },\n};\n\nexport const useStoryStore = create<StoryState>()(\n  persist(\n    (set: any) => ({\n      currentView: 'home',\n      stories: initialStories,\n      activeStoryId: null,\n      messages: [],\n      characterSheet: '',\n      lorebook: '[]',\n      masterJournal: '',\n      masterFeedback: 'Keep the atmosphere dark, descriptive, and mysterious. Emphasize sensory details like damp air, ancient moss, and hums.',\n\n      llmUrl: '',\n      llmKey: '',\n\n      setView: (view: 'home' | 'story' | 'settings') => set({ currentView: view }),\n\n      selectStory: (storyId: string) => set((state: StoryState) => {\n        const story = state.stories.find((s: Story) => s.id === storyId);\n        if (!story) return {};\n\n        // Also update the updatedAt when a story is selected/played\n        const updatedStories = state.stories.map((s: Story) => {\n          if (s.id === storyId) {\n            return { ...s, updatedAt: Date.now() };\n          }\n          return s;\n        });\n\n        return {\n          currentView: 'story',\n          activeStoryId: storyId,\n          messages: story.messages,\n          characterSheet: story.dynamicState.characterSheet,\n          lorebook: story.dynamicState.lorebook,\n          masterJournal: story.dynamicState.masterJournal,\n          stories: updatedStories\n        };\n      }),\n\n      createStory: (title: string, synopsis: string, characterName: string, genre: string, type: 'tale' | 'template' = 'tale', lorebook?: string) => set((state: StoryState) => {\n        const newId = 'story_' + Date.now();\n        const newStory: Story = {\n          id: newId,\n          type,\n          title,\n          genre,\n          synopsis,\n          dynamicState: {\n            characterSheet: `Name: ${characterName}\\nAttributes:\\n- Might: 10\\n- Agility: 10\\n- Intellect: 10\\n- Grit: 10\\n\\nInventory:\\n- Leather Satchel\\n- Rations (3)`,\n            lorebook: lorebook !== undefined ? lorebook : JSON.stringify([\n              {\n                id: '1',\n                title: 'The Journey Begins',\n                content: `This is the lorebook for your journey in \"${title}\". Record locations, characters, and rules here.`\n              }\n            ]),\n            masterJournal: `// AI Master Notes — ${title}\\n// Act 1: The First Step\\n- Character: ${characterName}\\n- Introduce the primary conflict.\\n- Build atmospheric world-building.`\n          },\n          messages: [\n            {\n              id: '1',\n              role: 'master',\n              content: `Welcome to ${title}, ${characterName}.\\n\\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\\n\\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`\n            }\n          ],\n          createdAt: Date.now(),\n          updatedAt: Date.now()\n        };\n\n        const updatedStories = [newStory, ...state.stories];\n\n        if (type === 'template') {\n          return {\n            stories: updatedStories,
-            currentView: 'home',\n            activeStoryId: null,\n            messages: [],\n            characterSheet: '',\n            lorebook: '[]',\n            masterJournal: ''\n          };\n        }\n\n        return {\n          stories: updatedStories,\n          currentView: 'story',\n          activeStoryId: newId,\n          messages: newStory.messages,\n          characterSheet: newStory.dynamicState.characterSheet,\n          lorebook: newStory.dynamicState.lorebook,\n          masterJournal: newStory.dynamicState.masterJournal\n        };\n      }),\n\n      deleteStory: (storyId: string) => set((state: StoryState) => {\n        const updatedStories = state.stories.filter((s: Story) => s.id !== storyId);\n        \n        const wasActive = state.activeStoryId === storyId;\n        return {\n          stories: updatedStories,\n          ...(wasActive ? {\n            activeStoryId: null,\n            currentView: 'home',\n            messages: [],\n            characterSheet: '',\n            lorebook: '[]',\n            masterJournal: '',\n            masterFeedback: ''\n          } : {})\n        };\n      }),\n\n      addMessage: (role: Role, content: string) => set((state: StoryState) => {\n        if (!state.activeStoryId) return {};\n\n        const newMessage: Message = {\n          id: 'msg_' + Date.now() + Math.random().toString(36).substr(2, 4),\n          role,\n          content\n        };\n\n        const updatedMessages = [...state.messages, newMessage];\n\n        // Update in stories list\n        const updatedStories = state.stories.map((story: Story) => {\n          if (story.id === state.activeStoryId) {\n            return {\n              ...story,\n              messages: updatedMessages,\n              updatedAt: Date.now()\n            };\n          }\n          return story;\n        });\n\n        // If player sent a message, schedule a mock master response to maintain game-like interactive feel!\n        if (role === 'player') {\n          setTimeout(() => {\n            const mockResponses = [\n              \"The darkness deepens as you consider your next move. A chilling breeze echoes down the corridor. What do you do?\",\n              \"Your actions ripple through the surroundings. You sense that your choice has drawn attention. How do you prepare?\",\n              \"You move forward with quiet resolve. The pathway ahead reveals new details: a hidden mechanism, a curious inscription, and an eerie silence. Proceed with caution.\",\n              \"An interesting approach. Your skill and intuition reveal a subtle detail you almost missed. How do you capitalize on this?\",\n              \"The air is thick with tension. As you step forward, you hear a faint click underneath your feet. Silence follows. What is your reaction?\"\n            ];\n            const randomText = mockResponses[Math.floor(Math.random() * mockResponses.length)];\n            useStoryStore.getState().addMessage('master', randomText);\n          }, 1000);\n        }\n\n        return {\n          messages: updatedMessages,\n          stories: updatedStories\n        };\n      }),\n\n      updateCharacterSheet: (text: string) => set((state: StoryState) => {\n        if (!state.activeStoryId) return {};\n\n        const updatedStories = state.stories.map((story: Story) => {\n          if (story.id === state.activeStoryId) {\n            return {\n              ...story,\n              dynamicState: {\n                ...story.dynamicState,\n                characterSheet: text\n              },\n              updatedAt: Date.now()\n            };\n          }\n          return story;\n        });\n\n        return {\n          characterSheet: text,\n          stories: updatedStories\n        };\n      }),\n\n      updateMasterJournal: (text: string) => set((state: StoryState) => {\n        if (!state.activeStoryId) return {};\n\n        const updatedStories = state.stories.map((story: Story) => {\n          if (story.id === state.activeStoryId) {\n            return {\n              ...story,\n              dynamicState: {\n                ...story.dynamicState,\n                masterJournal: text\n              },\n              updatedAt: Date.now()\n            };\n          }\n          return story;\n        });\n\n        return {\n          masterJournal: text,\n          stories: updatedStories\n        };\n      }),\n\n      updateMasterFeedback: (text: string) => set(() => {\n        return {\n          masterFeedback: text\n        };\n      }),\n\n      addLoreItem: (title: string, content: string) => set((state: StoryState) => {\n        if (!state.activeStoryId) return {};\n\n        let currentLore: LoreItem[] = [];\n        try {\n          currentLore = JSON.parse(state.lorebook);\n          if (!Array.isArray(currentLore)) currentLore = [];\n        } catch (e) {\n          currentLore = [];\n        }\n\n        const newItem: LoreItem = {\n          id: 'lore_' + Date.now(),\n          title,\n          content\n        };\n\n        const updatedLore = [...currentLore, newItem];\n        const updatedLoreStr = JSON.stringify(updatedLore);\n\n        const updatedStories = state.stories.map((story: Story) => {\n          if (story.id === state.activeStoryId) {\n            return {\n              ...story,\n              dynamicState: {\n                ...story.dynamicState,\n                lorebook: updatedLoreStr\n              },\n              updatedAt: Date.now()\n            };\n          }\n          return story;\n        });\n\n        return {\n          lorebook: updatedLoreStr,\n          stories: updatedStories\n        };\n      }),\n\n      deleteLoreItem: (itemId: string) => set((state: StoryState) => {\n        if (!state.activeStoryId) return {};\n\n        let currentLore: LoreItem[] = [];\n        try {\n          currentLore = JSON.parse(state.lorebook);\n          if (!Array.isArray(currentLore)) currentLore = [];\n        } catch (e) {\n          currentLore = [];\n        }\n\n        const updatedLore = currentLore.filter((item: LoreItem) => item.id !== itemId);\n        const updatedLoreStr = JSON.stringify(updatedLore);\n\n        const updatedStories = state.stories.map((story: Story) => {\n          if (story.id === state.activeStoryId) {\n            return {\n              ...story,\n              dynamicState: {\n                ...story.dynamicState,\n                lorebook: updatedLoreStr\n              },\n              updatedAt: Date.now()\n            };\n          }\n          return story;\n        });\n\n        return {\n          lorebook: updatedLoreStr,\n          stories: updatedStories\n        };\n      }),\n\n      updateLlmSettings: (url: string, key: string) => set(() => {\n        return { llmUrl: url, llmKey: key };\n      })\n    }),\n    {\n      name: 'omnitale-storage-idb',\n      storage: createJSONStorage(() => idbStorage),\n    }\n  )\n);
+      {
+        id: '2',
+        role: 'player',
+        content: 'I check the gate for traps or magical runes, keeping my hand close to my recurve bow.'
+      },
+      {
+        id: '3',
+        role: 'master',
+        content: 'You approach the gate stealthily, your eyes scanning the ancient masonry. Near the base of the left pillar, you spot faint Elven glyphs. They glow with a dull, amber warmth—an alarm rune, sleeping but active.\n\nTo bypass it, you could try to scrape a vital intersection of the rune off with your dagger, or look for an alternative path over the collapsed western wall.\n\nWhat is your choice?'
+      }
+    ],
+    createdAt: 1717372800000, // 2024-06-03 mock date
+    updatedAt: 1717372800000
+  },
+  {
+    id: 'sector7',
+    type: 'tale',
+    title: 'Sector 7: Neon Drift',
+    genre: 'Cyberpunk',
+    synopsis: 'Rain pours over the towering neon monoliths of Sector 7. As a rogue decker, you hold a datachip that megacorporations would burn cities to retrieve.',
+    dynamicState: {
+      characterSheet: 'Name: Kaelen Vex\nRole: Rogue Decker\nCreds: 1,450\n\nAugmentations:\n- Neuro-Link V4 (Neural Jack)\n- Synthetic Cyber-Eye (Thermal/IR)\n- Subdermal Armor Plate\n\nGear:\n- Arasaka Custom Cyberdeck\n- Monomolecular Dagger\n- Silenced heavy pistol (9mm)',
+      lorebook: JSON.stringify([
+        {
+          id: '1',
+          title: 'Sector 7 Underbelly',
+          content: 'The low-life district of Neo-Tokyo. Sprawling slums shaded by massive corporate towers of Shin-Megacorp. Law enforcement is highly corrupt.'
+        },
+        {
+          id: '2',
+          title: 'The Red Chip',
+          content: 'An encrypted, military-grade storage medium recovered from a downed high-security courier. Rumored to hold files on "Project Lazarus".'
+        }
+      ]),
+      masterJournal: '// Master AI Notes - Sector 7 Cyberpunk\n// Act 1: The Safehouse Siege\n- Player is currently hiding in a capsule hotel room.\n- Corporate agents are scanning the grid for the chip\'s local signature.\n- Next Beat: A local fixer named \'Blue\' offers help, but she might be a double agent.',
+    },
+    messages: [
+      {
+        id: '1',
+        role: 'master',
+        content: 'The neon reflection of Sector 7 dances on the wet concrete. You are inside a cramped, synthetic-smelling capsule room at the "Midnight Rest" hotel. The hum of the cheap ventilation is drowned out by the heavy rain outside.\n\nIn your hand, the Red Chip feels warm. You just booted up your cyberdeck, and the virtual console displays a grid-wide lockdown warning. They are searching for you.\n\nSuddenly, the power in your corridor cuts out. Total darkness, save for the cold blue glow of your deck.\n\nWhat is your move?'
+      }
+    ],
+    createdAt: 1717286400000,
+    updatedAt: 1717286400000
+  },
+  {
+    id: 'deepice',
+    type: 'template',
+    title: 'The Deep Ice',
+    genre: 'Sci-Fi',
+    synopsis: 'On Europa\'s frozen ocean, your mining outpost drilled deeper than ever before. Yesterday, the drill stopped. Today, something started tapping back.',
+    dynamicState: {
+      characterSheet: 'Name: Dr. Isaac Clarke\nRole: Lead Xenogeologist\nSanity: 78%\n\nEquipment:\n- Thermal Hardsuit (Level 2)\n- Industrial Plasma Cutter\n- Handheld Spectrometer\n- Portable Oxygen Tank (2 hours remaining)',
+      lorebook: JSON.stringify([
+        {
+          id: '1',
+          title: 'Outpost Boreas',
+          content: 'The deep-crust drilling station established by United Space Alliance on Europa. Hovering 4 kilometers below the ice sheet over a pitch-black abyss.'
+        }
+      ]),
+      masterJournal: '// Master AI Notes - The Deep Ice\n// Act 1: The Silent Shaft\n- Mood: Intense claustrophobia, isolation, slow dread.\n- Primary hazard: Freezing temperatures, power outages.\n- Entity behavior: Communicates through acoustic vibrations.',
+    },
+    messages: [
+      {
+        id: '1',
+        role: 'master',
+        content: 'Outpost Boreas is silent. The structural groans of the 4km-thick ice above you sound like a sleeping beast. In the control module, the monitors flicker with a pale green phosphor.\n\nYour headset crackles with static. Then, a slow, rhythmic tapping sound vibrates through the steel deck beneath your heavy hardsuit boots.\n\nTap... Tap-Tap... Tap-Tap-Tap...\n\nIt is the prime number sequence. It is coming from the drill shaft. The main shaft elevator has just begun ascending from the deep ocean abyss, entirely on its own.\n\nYour move, Doctor.'
+      }
+    ],
+    createdAt: 1717200000000,
+    updatedAt: 1717200000000
+  }
+];
+
+// Custom StateStorage using idb-keyval
+const idbStorage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await idbSet(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
+};
+
+export const useStoryStore = create<StoryState>()(
+  persist(
+    (set: any) => ({
+      currentView: 'home',
+      stories: initialStories,
+      activeStoryId: null,
+      messages: [],
+      characterSheet: '',
+      lorebook: '[]',
+      masterJournal: '',
+      masterFeedback: 'Keep the atmosphere dark, descriptive, and mysterious. Emphasize sensory details like damp air, ancient moss, and hums.',
+
+      llmUrl: '',
+      llmKey: '',
+
+      setView: (view: 'home' | 'story' | 'settings') => set({ currentView: view }),
+
+      selectStory: (storyId: string) => set((state: StoryState) => {
+        const story = state.stories.find((s: Story) => s.id === storyId);
+        if (!story) return {};
+
+        // Also update the updatedAt when a story is selected/played
+        const updatedStories = state.stories.map((s: Story) => {
+          if (s.id === storyId) {
+            return { ...s, updatedAt: Date.now() };
+          }
+          return s;
+        });
+
+        return {
+          currentView: 'story',
+          activeStoryId: storyId,
+          messages: story.messages,
+          characterSheet: story.dynamicState.characterSheet,
+          lorebook: story.dynamicState.lorebook,
+          masterJournal: story.dynamicState.masterJournal,
+          stories: updatedStories
+        };
+      }),
+
+      createStory: (title: string, synopsis: string, characterName: string, genre: string, type: 'tale' | 'template' = 'tale', lorebook?: string) => set((state: StoryState) => {
+        const newId = 'story_' + Date.now();
+        const newStory: Story = {
+          id: newId,
+          type,
+          title,
+          genre,
+          synopsis,
+          dynamicState: {
+            characterSheet: `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
+            lorebook: lorebook !== undefined ? lorebook : JSON.stringify([
+              {
+                id: '1',
+                title: 'The Journey Begins',
+                content: `This is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`
+              }
+            ]),
+            masterJournal: `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`
+          },
+          messages: [
+            {
+              id: '1',
+              role: 'master',
+              content: `Welcome to ${title}, ${characterName}.\n\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\n\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`
+            }
+          ],
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        };
+
+        const updatedStories = [newStory, ...state.stories];
+
+        if (type === 'template') {
+          return {
+            stories: updatedStories,
+            currentView: 'home',
+            activeStoryId: null,
+            messages: [],
+            characterSheet: '',
+            lorebook: '[]',
+            masterJournal: ''
+          };
+        }
+
+        return {
+          stories: updatedStories,
+          currentView: 'story',
+          activeStoryId: newId,
+          messages: newStory.messages,
+          characterSheet: newStory.dynamicState.characterSheet,
+          lorebook: newStory.dynamicState.lorebook,
+          masterJournal: newStory.dynamicState.masterJournal
+        };
+      }),
+
+      deleteStory: (storyId: string) => set((state: StoryState) => {
+        const updatedStories = state.stories.filter((s: Story) => s.id !== storyId);
+        
+        const wasActive = state.activeStoryId === storyId;
+        return {
+          stories: updatedStories,
+          ...(wasActive ? {
+            activeStoryId: null,
+            currentView: 'home',
+            messages: [],
+            characterSheet: '',
+            lorebook: '[]',
+            masterJournal: '',
+            masterFeedback: ''
+          } : {})
+        };
+      }),
+
+      addMessage: (role: Role, content: string) => set((state: StoryState) => {
+        if (!state.activeStoryId) return {};
+
+        const newMessage: Message = {
+          id: 'msg_' + Date.now() + Math.random().toString(36).substr(2, 4),
+          role,
+          content
+        };
+
+        const updatedMessages = [...state.messages, newMessage];
+
+        // Update in stories list
+        const updatedStories = state.stories.map((story: Story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              messages: updatedMessages,
+              updatedAt: Date.now()
+            };
+          }
+          return story;
+        });
+
+        // If player sent a message, schedule a mock master response to maintain game-like interactive feel!
+        if (role === 'player') {
+          setTimeout(() => {
+            const mockResponses = [
+              "The darkness deepens as you consider your next move. A chilling breeze echoes down the corridor. What do you do?",
+              "Your actions ripple through the surroundings. You sense that your choice has drawn attention. How do you prepare?",
+              "You move forward with quiet resolve. The pathway ahead reveals new details: a hidden mechanism, a curious inscription, and an eerie silence. Proceed with caution.",
+              "An interesting approach. Your skill and intuition reveal a subtle detail you almost missed. How do you capitalize on this?",
+              "The air is thick with tension. As you step forward, you hear a faint click underneath your feet. Silence follows. What is your reaction?"
+            ];
+            const randomText = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+            useStoryStore.getState().addMessage('master', randomText);
+          }, 1000);
+        }
+
+        return {
+          messages: updatedMessages,
+          stories: updatedStories
+        };
+      }),
+
+      updateCharacterSheet: (text: string) => set((state: StoryState) => {
+        if (!state.activeStoryId) return {};
+
+        const updatedStories = state.stories.map((story: Story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              dynamicState: {
+                ...story.dynamicState,
+                characterSheet: text
+              },
+              updatedAt: Date.now()
+            };
+          }
+          return story;
+        });
+
+        return {
+          characterSheet: text,
+          stories: updatedStories
+        };
+      }),
+
+      updateMasterJournal: (text: string) => set((state: StoryState) => {
+        if (!state.activeStoryId) return {};
+
+        const updatedStories = state.stories.map((story: Story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              dynamicState: {
+                ...story.dynamicState,
+                masterJournal: text
+              },
+              updatedAt: Date.now()
+            };
+          }
+          return story;
+        });
+
+        return {
+          masterJournal: text,
+          stories: updatedStories
+        };
+      }),
+
+      updateMasterFeedback: (text: string) => set(() => {
+        return {
+          masterFeedback: text
+        };
+      }),
+
+      addLoreItem: (title: string, content: string) => set((state: StoryState) => {
+        if (!state.activeStoryId) return {};
+
+        let currentLore: LoreItem[] = [];
+        try {
+          currentLore = JSON.parse(state.lorebook);
+          if (!Array.isArray(currentLore)) currentLore = [];
+        } catch (e) {
+          currentLore = [];
+        }
+
+        const newItem: LoreItem = {
+          id: 'lore_' + Date.now(),
+          title,
+          content
+        };
+
+        const updatedLore = [...currentLore, newItem];
+        const updatedLoreStr = JSON.stringify(updatedLore);
+
+        const updatedStories = state.stories.map((story: Story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              dynamicState: {
+                ...story.dynamicState,
+                lorebook: updatedLoreStr
+              },
+              updatedAt: Date.now()
+            };
+          }
+          return story;
+        });
+
+        return {
+          lorebook: updatedLoreStr,
+          stories: updatedStories
+        };
+      }),
+
+      deleteLoreItem: (itemId: string) => set((state: StoryState) => {
+        if (!state.activeStoryId) return {};
+
+        let currentLore: LoreItem[] = [];
+        try {
+          currentLore = JSON.parse(state.lorebook);
+          if (!Array.isArray(currentLore)) currentLore = [];
+        } catch (e) {
+          currentLore = [];
+        }
+
+        const updatedLore = currentLore.filter((item: LoreItem) => item.id !== itemId);
+        const updatedLoreStr = JSON.stringify(updatedLore);
+
+        const updatedStories = state.stories.map((story: Story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              dynamicState: {
+                ...story.dynamicState,
+                lorebook: updatedLoreStr
+              },
+              updatedAt: Date.now()
+            };
+          }
+          return story;
+        });
+
+        return {
+          lorebook: updatedLoreStr,
+          stories: updatedStories
+        };
+      }),
+
+      updateLlmSettings: (url: string, key: string) => set(() => {
+        return { llmUrl: url, llmKey: key };
+      })
+    }),
+    {
+      name: 'omnitale-storage-idb',
+      storage: createJSONStorage(() => idbStorage),
+    }
+  )
+);
