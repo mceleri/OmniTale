@@ -42,7 +42,7 @@ export const HomeView: React.FC = () => {
     const synopsis = blocks[0]?.content.trim() || 'A mysterious journey across unknown frontiers.';
     const charBlock = blocks.find(b => b.title.toLowerCase().includes('character'));
     const characterName = charBlock 
-      ? charBlock.content.split('\n')[0].replace(/^(Name:\s*)/i, '').trim() || 'Adventurer' 
+      ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
       : 'Adventurer';
 
     createStory(
@@ -68,7 +68,7 @@ export const HomeView: React.FC = () => {
     const synopsis = blocks[0]?.content.trim() || 'A customizable template for your adventures.';
     const charBlock = blocks.find(b => b.title.toLowerCase().includes('character'));
     const characterName = charBlock 
-      ? charBlock.content.split('\n')[0].replace(/^(Name:\s*)/i, '').trim() || 'Adventurer' 
+      ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
       : 'Adventurer';
 
     createStory(
@@ -134,12 +134,15 @@ export const HomeView: React.FC = () => {
           </div>
         ) : (
           /* State B: Has stories - Quick Resume Card */
-          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm flex flex-col justify-between gap-4">
-            <div className="flex items-start gap-3">
+          <div
+            onClick={() => selectStory(recentStory.id)}
+            className="group bg-zinc-900/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm cursor-pointer transition-all hover:border-zinc-700/60 flex items-center justify-between gap-4"
+          >
+            <div className="flex items-start gap-3 flex-1 min-w-0">
               <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
-              <div>
+              <div className="flex-1 min-w-0">
                 <h2 className="text-sm font-medium text-zinc-200">Continue Journey</h2>
-                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[260px]">
+                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[240px]">
                   {recentStory.title}
                 </p>
                 <p className="text-[10px] text-zinc-400 mt-0.5">
@@ -147,12 +150,7 @@ export const HomeView: React.FC = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => selectStory(recentStory.id)}
-              className="w-full py-2.5 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold text-xs rounded-xl transition active:scale-[0.98]"
-            >
-              Resume
-            </button>
+            <ChevronRight className="w-5 h-5 text-zinc-400 group-hover:text-zinc-200 shrink-0 transition-transform group-hover:translate-x-0.5" />
           </div>
         )}
 
@@ -175,8 +173,8 @@ export const HomeView: React.FC = () => {
             onClick={() => setFilter('all')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
               filter === 'all'
-                ? 'bg-zinc-100 text-zinc-950'
-                : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
+                : 'border border-zinc-800/80 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
             }`}
           >
             All
@@ -185,8 +183,8 @@ export const HomeView: React.FC = () => {
             onClick={() => setFilter('tales')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
               filter === 'tales'
-                ? 'bg-zinc-100 text-zinc-950'
-                : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
+                : 'border border-zinc-800/80 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
             }`}
           >
             Tales
@@ -195,8 +193,8 @@ export const HomeView: React.FC = () => {
             onClick={() => setFilter('templates')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
               filter === 'templates'
-                ? 'bg-zinc-100 text-zinc-950'
-                : 'border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
+                : 'border border-zinc-800/80 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
             }`}
           >
             Templates
@@ -215,15 +213,15 @@ export const HomeView: React.FC = () => {
               {filteredStories.map((story: Story) => (
                 <div
                   key={story.id}
-                  className="group relative bg-zinc-900/50 hover:bg-zinc-900 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between"
+                  className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between"
                   onClick={() => selectStory(story.id)}
                 >
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                        <h4 className="font-serif text-lg text-zinc-200 group-hover:text-zinc-100 truncate max-w-[180px]">
-                          {story.title}
-                        </h4>
+                      <h4 className="font-serif text-lg text-zinc-200 group-hover:text-zinc-100 truncate max-w-[240px] mb-1">
+                        {story.title}
+                      </h4>
+                      <div className="flex flex-row gap-2 items-center mb-2 flex-wrap">
                         <span className="text-[10px] px-2 py-0.5 bg-zinc-800 text-zinc-300 rounded-full shrink-0">
                           {story.genre}
                         </span>
@@ -248,7 +246,7 @@ export const HomeView: React.FC = () => {
 
                   <div className="flex items-center justify-between border-t border-zinc-800/60 mt-4 pt-3 text-[11px] text-zinc-400">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-zinc-400" />
+                      <Clock className="w-3.5 h-3.5" />
                       {formatRelativeTime(story.updatedAt)}
                     </span>
                     <button
@@ -305,7 +303,7 @@ export const HomeView: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. The Forgotten Vault"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-750 placeholder-zinc-500"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-500"
                 />
               </div>
 
