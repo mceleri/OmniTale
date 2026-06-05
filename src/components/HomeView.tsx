@@ -15,10 +15,66 @@ const formatRelativeTime = (timestamp: number): string => {
   return new Date(timestamp).toLocaleDateString();
 };
 
+const parseMarkdownToBlocks = (markdown: string) => {
+  if (!markdown) {
+    return [{ id: Date.now(), title: 'Setting', content: '' }];
+  }
+  
+  // Try to parse as JSON first
+  try {
+    const parsed = JSON.parse(markdown);
+    if (Array.isArray(parsed)) {
+      return parsed.map((item, index) => ({
+        id: item.id ? (typeof item.id === 'number' ? item.id : parseInt(item.id) || (Date.now() + index)) : (Date.now() + index),
+        title: item.title || 'Untitled Aspect',
+        content: item.content || ''
+      }));
+    }
+  } catch (e) {
+    // If not JSON, parse as Markdown
+  }
+
+  // Splitting by '## '
+  const parts = markdown.split(/(?=^##\s)/m);
+  const parsedBlocks = [];
+  
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i].trim();
+    if (!part) continue;
+    
+    if (part.startsWith('##')) {
+      // Find the first newline or end of line for title
+      const lines = part.split('\n');
+      const titleLine = lines[0];
+      const title = titleLine.replace(/^##\s*/, '').trim();
+      const content = lines.slice(1).join('\n').trim();
+      parsedBlocks.push({
+        id: Date.now() + i,
+        title: title || 'Untitled Aspect',
+        content: content
+      });
+    } else {
+      // No '##' prefix, maybe it's just raw content without title
+      parsedBlocks.push({
+        id: Date.now() + i,
+        title: i === 0 ? 'Setting' : 'Untitled Aspect',
+        content: part
+      });
+    }
+  }
+  
+  if (parsedBlocks.length === 0) {
+    return [{ id: Date.now(), title: 'Setting', content: markdown }];
+  }
+  
+  return parsedBlocks;
+};
+
 export const HomeView: React.FC = () => {
-  const { stories, selectStory, createStory, deleteStory, setView } = useStoryStore();
+  const { stories, selectStory, createStory, updateStory, deleteStory, setView } = useStoryStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState('');
+  const [editingStoryId, setEditingStoryId] = useState<string | null>(null);
   
   // Local state for dynamic worldbuilding blocks
   const [blocks, setBlocks] = useState<{ id: number; title: string; content: string }[]>([
@@ -57,6 +113,7 @@ export const HomeView: React.FC = () => {
     // Reset fields
     setTitle('');
     setBlocks([{ id: Date.now(), title: 'Setting', content: '' }]);
+    setEditingStoryId(null);
     setIsModalOpen(false);
   };
 
@@ -71,18 +128,29 @@ export const HomeView: React.FC = () => {
       ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
       : 'Adventurer';
 
-    createStory(
-      title.trim(),
-      synopsis,
-      characterName,
-      'Custom', // Genre is inferred / Custom
-      'template', // Template draft
-      compiledMarkdown
-    );
+    if (editingStoryId) {
+      updateStory(
+        editingStoryId,
+        title.trim(),
+        synopsis,
+        characterName,
+        compiledMarkdown
+      );
+    } else {
+      createStory(
+        title.trim(),
+        synopsis,
+        characterName,
+        'Custom', // Genre is inferred / Custom
+        'template', // Template draft
+        compiledMarkdown
+      );
+    }
 
     // Reset fields
     setTitle('');
     setBlocks([{ id: Date.now(), title: 'Setting', content: '' }]);
+    setEditingStoryId(null);
     setIsModalOpen(false);
   };
 
@@ -135,13 +203,33 @@ export const HomeView: React.FC = () => {
         ) : (
           /* State B: Has stories - Quick Resume Card */
           <div
-            onClick={() => selectStory(recentStory.id)}
-            className="group bg-zinc-900/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm cursor-pointer transition-all hover:border-zinc-700/60 flex items-center justify-between gap-4"
+            onClick={() => {
+              if (recentStory.type === 'template') {
+                const parsedBlocks = parseMarkdownToBlocks(recentStory.dynamicState.lorebook);
+                const hasCharBlock = parsedBlocks.some(b => b.title.toLowerCase().includes('character'));
+                if (!hasCharBlock && recentStory.dynamicState.characterSheet) {
+                  parsedBlocks.push({
+                    id: Date.now() + 999,
+                    title: 'Character',
+                    content: recentStory.dynamicState.characterSheet
+                  });
+                }
+                setTitle(recentStory.title);
+                setBlocks(parsedBlocks);
+                setEditingStoryId(recentStory.id);
+                setIsModalOpen(true);
+              } else {
+                selectStory(recentStory.id);
+              }
+            }}
+            className="group wrapper-card bg-zinc-900/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm cursor-pointer transition-all hover:border-zinc-700/60 flex items-center justify-between gap-4"
           >
             <div className="flex items-start gap-3 flex-1 min-w-0">
               <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
               <div className="flex-1 min-w-0">
-                <h2 className="text-sm font-medium text-zinc-200">Continue Journey</h2>
+                <h2 className="text-sm font-medium text-zinc-200">
+                  {recentStory.type === 'template' ? 'Edit Template' : 'Continue Journey'}
+                </h2>
                 <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[240px]">
                   {recentStory.title}
                 </p>
@@ -159,6 +247,7 @@ export const HomeView: React.FC = () => {
           onClick={() => {
             setBlocks([{ id: Date.now(), title: 'Setting', content: '' }]);
             setTitle('');
+            setEditingStoryId(null);
             setIsModalOpen(true);
           }}
           className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-zinc-100 text-zinc-950 font-medium text-sm rounded-xl transition hover:bg-zinc-200 active:scale-[0.98]"
@@ -214,7 +303,25 @@ export const HomeView: React.FC = () => {
                 <div
                   key={story.id}
                   className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between"
-                  onClick={() => selectStory(story.id)}
+                  onClick={() => {
+                    if (story.type === 'template') {
+                      const parsedBlocks = parseMarkdownToBlocks(story.dynamicState.lorebook);
+                      const hasCharBlock = parsedBlocks.some(b => b.title.toLowerCase().includes('character'));
+                      if (!hasCharBlock && story.dynamicState.characterSheet) {
+                        parsedBlocks.push({
+                          id: Date.now() + 999,
+                          title: 'Character',
+                          content: story.dynamicState.characterSheet
+                        });
+                      }
+                      setTitle(story.title);
+                      setBlocks(parsedBlocks);
+                      setEditingStoryId(story.id);
+                      setIsModalOpen(true);
+                    } else {
+                      selectStory(story.id);
+                    }
+                  }}
                 >
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex-1 min-w-0">
@@ -281,7 +388,9 @@ export const HomeView: React.FC = () => {
             
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/60 shrink-0">
-              <h3 className="font-serif text-xl text-zinc-200">Worldbuilding Canvas</h3>
+              <h3 className="font-serif text-xl text-zinc-200">
+                {editingStoryId ? 'Edit Template' : 'Worldbuilding Canvas'}
+              </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="p-1 hover:bg-zinc-800 rounded-lg text-zinc-400 transition"

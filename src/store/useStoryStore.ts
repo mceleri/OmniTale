@@ -51,6 +51,7 @@ export interface StoryState {
   setView: (view: 'home' | 'story' | 'settings') => void;
   selectStory: (storyId: string) => void;
   createStory: (title: string, synopsis: string, characterName: string, genre: string, type?: 'tale' | 'template', lorebook?: string) => void;
+  updateStory: (storyId: string, title: string, synopsis: string, characterName: string, lorebook: string) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   updateCharacterSheet: (text: string) => void;
@@ -270,6 +271,46 @@ export const useStoryStore = create<StoryState>()(
           characterSheet: newStory.dynamicState.characterSheet,
           lorebook: newStory.dynamicState.lorebook,
           masterJournal: newStory.dynamicState.masterJournal
+        };
+      }),
+
+      updateStory: (storyId: string, title: string, synopsis: string, characterName: string, lorebook: string) => set((state: StoryState) => {
+        const updatedStories = state.stories.map((s: Story) => {
+          if (s.id === storyId) {
+            return {
+              ...s,
+              title,
+              synopsis,
+              dynamicState: {
+                ...s.dynamicState,
+                lorebook,
+                characterSheet: `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
+                masterJournal: `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`
+              },
+              messages: [
+                {
+                  id: '1',
+                  role: 'master',
+                  content: `Welcome to ${title}, ${characterName}.\n\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\n\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`
+                }
+              ],
+              updatedAt: Date.now()
+            };
+          }
+          return s;
+        });
+
+        const wasActive = state.activeStoryId === storyId;
+        const updatedStory = updatedStories.find((s: Story) => s.id === storyId);
+
+        return {
+          stories: updatedStories,
+          ...(wasActive && updatedStory ? {
+            messages: updatedStory.messages,
+            characterSheet: updatedStory.dynamicState.characterSheet,
+            lorebook: updatedStory.dynamicState.lorebook,
+            masterJournal: updatedStory.dynamicState.masterJournal
+          } : {})
         };
       }),
 
