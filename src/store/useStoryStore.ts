@@ -386,13 +386,7 @@ export const useStoryStore = create<StoryState>()(
             ]),
             masterJournal: `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`
           },
-          messages: [
-            {
-              id: '1',
-              role: 'master',
-              content: `Welcome to ${title}, ${characterName}.\n\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\n\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`
-            }
-          ],
+          messages: [], // Initialize empty to trigger Unified Narrative starting scene
           createdAt: Date.now(),
           updatedAt: Date.now()
         };
@@ -435,13 +429,7 @@ export const useStoryStore = create<StoryState>()(
                 characterSheet: `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
                 masterJournal: `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`
               },
-              messages: [
-                {
-                  id: '1',
-                  role: 'master',
-                  content: `Welcome to ${title}, ${characterName}.\n\nYour journey is a blank page waiting to be written. The world stretches before you, rich with secrets, danger, and opportunity.\n\nDescribe your surroundings, your goal, or how you wish to take your first step into this story...`
-                }
-              ],
+              messages: [], // Reset message history for edited template/story to start fresh
               updatedAt: Date.now()
             };
           }
@@ -503,21 +491,6 @@ export const useStoryStore = create<StoryState>()(
           return story;
         });
 
-        // If player sent a message, schedule a mock master response to maintain game-like interactive feel!
-        if (role === 'player') {
-          setTimeout(() => {
-            const mockResponses = [
-              "The darkness deepens as you consider your next move. A chilling breeze echoes down the corridor. What do you do?",
-              "Your actions ripple through the surroundings. You sense that your choice has drawn attention. How do you prepare?",
-              "You move forward with quiet resolve. The pathway ahead reveals new details: a hidden mechanism, a curious inscription, and an eerie silence. Proceed with caution.",
-              "An interesting approach. Your skill and intuition reveal a subtle detail you almost missed. How do you capitalize on this?",
-              "The air is thick with tension. As you step forward, you hear a faint click underneath your feet. Silence follows. What is your reaction?"
-            ];
-            const randomText = mockResponses[Math.floor(Math.random() * mockResponses.length)];
-            useStoryStore.getState().addMessage('master', randomText);
-          }, 1000);
-        }
-
         return {
           messages: updatedMessages,
           stories: updatedStories
@@ -525,34 +498,43 @@ export const useStoryStore = create<StoryState>()(
       }),
 
       sendMessage: async (content: string) => {
-        if (!content.trim()) return;
+        const isStart = get().messages.length === 0;
+        if (!content.trim() && !isStart) return;
 
-        // 1. Create and append the player's message
-        const newMessage: Message = {
-          id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
-          role: 'player',
-          content: content.trim()
-        };
+        let finalPlayerMessages = get().messages;
 
-        set((state: StoryState) => {
-          if (!state.activeStoryId) return {};
-          const updatedMessages = [...state.messages, newMessage];
-          const updatedStories = state.stories.map((story: Story) => {
-            if (story.id === state.activeStoryId) {
-              return {
-                ...story,
-                messages: updatedMessages,
-                updatedAt: Date.now()
-              };
-            }
-            return story;
-          });
-          return {
-            messages: updatedMessages,
-            stories: updatedStories,
-            isGeneratingStory: true
+        if (content.trim()) {
+          // 1. Create and append the player's message
+          const newPlayerMessage: Message = {
+            id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
+            role: 'player',
+            content: content.trim()
           };
-        });
+
+          set((state: StoryState) => {
+            if (!state.activeStoryId) return {};
+            const updatedMessages = [...state.messages, newPlayerMessage];
+            const updatedStories = state.stories.map((story: Story) => {
+              if (story.id === state.activeStoryId) {
+                return {
+                  ...story,
+                  messages: updatedMessages,
+                  updatedAt: Date.now()
+                };
+              }
+              return story;
+            });
+            return {
+              messages: updatedMessages,
+              stories: updatedStories,
+              isGeneratingStory: true
+            };
+          });
+
+          finalPlayerMessages = [...get().messages];
+        } else if (isStart) {
+          set({ isGeneratingStory: true });
+        }
 
         const currentState = get() as StoryState;
         const activeTale = currentState.stories.find(s => s.id === currentState.activeStoryId);
@@ -567,10 +549,25 @@ export const useStoryStore = create<StoryState>()(
           const charSheet = activeTale.dynamicState.characterSheet;
           const journal = activeTale.dynamicState.masterJournal;
 
-          const UNIFIED_PROMPT = `You are the AI Game Master of an immersive text-based RPG. Your writing style is literary, descriptive, and atmospheric. Show, don't tell.\n\n[WORLD & LORE]\n${lore}\n\n[CHARACTER SHEET]\n${charSheet}\n\n[MASTER'S SECRET JOURNAL - DO NOT REVEAL TO PLAYER]\n${journal}\n\n[DIRECTIVES]\n1. If the conversation history is empty, START THE STORY: set the initial scene vividly, place the character in the world, and provide an initial hook or obstacle.\n2. If there is a history, resolve the player's last action fairly based on the world's logic, describe the consequences, and advance the plot.\n3. NEVER dictate the player character's thoughts, actions, or dialogue.\n4. Always conclude your turn by implicitly or explicitly passing the initiative back to the player.`;
+          const UNIFIED_PROMPT = `You are the AI Game Master of an immersive text-based RPG. Your writing style is literary, descriptive, and atmospheric. Show, don't tell.
+
+[WORLD & LORE]
+${lore}
+
+[CHARACTER SHEET]
+${charSheet}
+
+[MASTER'S SECRET JOURNAL - DO NOT REVEAL TO PLAYER]
+${journal}
+
+[DIRECTIVES]
+1. If the conversation history is empty, START THE STORY: set the initial scene vividly, place the character in the world, and provide an initial hook or obstacle.
+2. If there is a history, resolve the player's last action fairly based on the world's logic, describe the consequences, and advance the plot.
+3. NEVER dictate the player character's thoughts, actions, or dialogue.
+4. Always conclude your turn by implicitly or explicitly passing the initiative back to the player.`;
 
           // Only the System Prompt + the LAST 10 MESSAGES from the array
-          const last10Messages = activeTale.messages.slice(-10);
+          const last10Messages = finalPlayerMessages.slice(-10);
 
           const url = currentState.llmUrl;
           const key = currentState.llmKey;
