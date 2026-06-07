@@ -3,14 +3,15 @@ import { useStoryStore } from '../store/useStoryStore';
 import { ArrowLeft, Save, Check } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { llmUrl, llmKey, updateLlmSettings, setView } = useStoryStore();
+  const { llmUrl, llmKey, modelName, updateLlmSettings, setView } = useStoryStore();
   const [url, setUrl] = useState(llmUrl);
   const [key, setKey] = useState(llmKey);
+  const [model, setModel] = useState(modelName);
   const [saved, setSaved] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateLlmSettings(url.trim(), key.trim());
+    updateLlmSettings(url.trim(), key.trim(), model.trim());
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -62,6 +63,19 @@ export const SettingsView: React.FC = () => {
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
                 placeholder="Enter your LLM API Key"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
+                Model Name
+              </label>
+              <input
+                type="text"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                placeholder="google/gemini-2.5-flash"
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
               />
             </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useStoryStore, Message, LoreItem } from '../store/useStoryStore';
-import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader } from 'lucide-react';
 
 export const StoryView: React.FC = () => {
   const {
@@ -11,8 +11,11 @@ export const StoryView: React.FC = () => {
     lorebook,
     masterJournal,
     masterFeedback,
+    isGeneratingStory,
+    isUpdatingLorebook,
+    isUpdatingJournal,
     setView,
-    addMessage,
+    sendMessage,
     updateCharacterSheet,
     updateMasterJournal,
     updateMasterFeedback,
@@ -81,11 +84,13 @@ export const StoryView: React.FC = () => {
     );
   }
 
+  const isAnyLoading = isGeneratingStory || isUpdatingLorebook || isUpdatingJournal;
+
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || isAnyLoading) return;
 
-    addMessage('player', inputText.trim());
+    sendMessage(inputText.trim());
     setInputText('');
   };
 
@@ -124,7 +129,7 @@ export const StoryView: React.FC = () => {
         </div>
       </header>
 
-      {/* 2. MAIN CHAT / STORY STREAM (Timestamps Removed) */}
+      {/* 2. MAIN CHAT / STORY STREAM */}
       <main
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-8 no-scrollbar scroll-smooth"
@@ -162,7 +167,7 @@ export const StoryView: React.FC = () => {
 
       {/* 3. BOTTOM INPUT BAR & CONTROLS */}
       <footer className="sticky bottom-0 bg-zinc-950 border-t border-zinc-900/80 p-4 z-20 space-y-3">
-        {/* Quick Sheet Buttons (No labels, icons only) */}
+        {/* Quick Sheet Buttons */}
         <div className="flex items-center justify-around border-b border-zinc-900 pb-3">
           <button
             onClick={() => setActiveSheet('character')}
@@ -177,27 +182,37 @@ export const StoryView: React.FC = () => {
           </button>
 
           <button
-            onClick={() => setActiveSheet('lore')}
+            onClick={() => !isUpdatingLorebook && setActiveSheet('lore')}
+            disabled={isUpdatingLorebook}
             className={`flex items-center justify-center p-2 rounded-lg text-xs transition ${
               activeSheet === 'lore'
                 ? 'bg-zinc-900 text-zinc-100 border border-zinc-800'
                 : 'text-zinc-400 hover:text-zinc-200'
-            }`}
+            } ${isUpdatingLorebook ? 'opacity-50 cursor-not-allowed' : ''}`}
             title="Lorebook"
           >
-            <BookOpen className="w-5 h-5" />
+            {isUpdatingLorebook ? (
+              <Loader className="w-5 h-5 animate-spin" />
+            ) : (
+              <BookOpen className="w-5 h-5" />
+            )}
           </button>
 
           <button
-            onClick={() => setActiveSheet('master')}
+            onClick={() => !isUpdatingJournal && setActiveSheet('master')}
+            disabled={isUpdatingJournal}
             className={`flex items-center justify-center p-2 rounded-lg text-xs transition ${
               activeSheet === 'master'
                 ? 'bg-zinc-900 text-zinc-100 border border-zinc-800'
                 : 'text-zinc-400 hover:text-zinc-200'
-            }`}
+            } ${isUpdatingJournal ? 'opacity-50 cursor-not-allowed' : ''}`}
             title="AI Master"
           >
-            <Eye className="w-5 h-5" />
+            {isUpdatingJournal ? (
+              <Loader className="w-5 h-5 animate-spin" />
+            ) : (
+              <Eye className="w-5 h-5" />
+            )}
           </button>
 
           <button
@@ -219,12 +234,13 @@ export const StoryView: React.FC = () => {
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder={`Instruct ${characterName} or respond...`}
-            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400"
+            disabled={isAnyLoading}
+            placeholder={isAnyLoading ? "AI Game Master is thinking..." : `Instruct ${characterName} or respond...`}
+            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             type="submit"
-            disabled={!inputText.trim()}
+            disabled={isAnyLoading || !inputText.trim()}
             className="p-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 rounded-xl transition disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:scale-100 active:scale-95 shrink-0"
           >
             <Send className="w-4 h-4 fill-zinc-950" />
@@ -278,7 +294,6 @@ export const StoryView: React.FC = () => {
                 </span>
               </div>
               
-              {/* Clean Sans-serif font for Character Sheet */}
               <textarea
                 value={characterSheet}
                 onChange={(e) => updateCharacterSheet(e.target.value)}
@@ -372,7 +387,6 @@ export const StoryView: React.FC = () => {
                   Private log of the AI. Write facts, plot secrets, or structural blocks of your narrative here.
                 </p>
               </div>
-              {/* Keep monospace green font EXCLUSIVELY for the Master's Diary */}
               <textarea
                 value={masterJournal}
                 onChange={(e) => updateMasterJournal(e.target.value)}
