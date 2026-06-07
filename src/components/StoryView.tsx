@@ -44,6 +44,13 @@ export const StoryView: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Automatic LLM invocation to START THE STORY if the message history is empty
+  useEffect(() => {
+    if (story && story.type === 'tale' && messages.length === 0 && !isGeneratingStory) {
+      sendMessage('');
+    }
+  }, [story, messages, isGeneratingStory, sendMessage]);
+
   // Extract character name dynamically from the first line of the character sheet (e.g., "Name: Evelyn")
   const characterName = React.useMemo(() => {
     if (!characterSheet) return 'Adventurer';
