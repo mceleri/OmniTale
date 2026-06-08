@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useStoryStore, Message, LoreItem } from '../store/useStoryStore';
 import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader } from 'lucide-react';
+import { MarkdownText } from './MarkdownText';
 
 export const StoryView: React.FC = () => {
   const {
@@ -151,7 +152,7 @@ export const StoryView: React.FC = () => {
               }`}
             >
               {/* Message Header */}
-              <span className="text-[10px] text-zinc-300 font-sans tracking-wide mb-1 px-1">
+              <span className="text-[10px] text-zinc-300 font-sans tracking-wider mb-1 px-1">
                 {isMaster ? 'STORYTELLER' : characterName.toUpperCase()}
               </span>
 
@@ -162,9 +163,12 @@ export const StoryView: React.FC = () => {
                     ? 'font-serif text-[15px] text-zinc-300 font-normal pr-4'
                     : 'bg-zinc-900/80 border border-zinc-800/80 px-4 py-3 font-sans text-sm shadow-sm'
                 }`}
-                style={{ whiteSpace: 'pre-line' }}
               >
-                {msg.content}
+                {isMaster ? (
+                  <MarkdownText text={msg.content} />
+                ) : (
+                  <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
+                )}
               </div>
             </div>
           );
@@ -236,24 +240,40 @@ export const StoryView: React.FC = () => {
         </div>
 
         {/* TextInput Bar */}
-        <form onSubmit={handleSend} className="flex items-center gap-2">
-          <input
-            type="text"
+        <form onSubmit={handleSend} className="flex items-end gap-2">
+          <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (inputText.trim() && !isAnyLoading) {
+                  sendMessage(inputText.trim());
+                  setInputText('');
+                }
+              }
+            }}
             disabled={isAnyLoading}
+            rows={1}
             placeholder={isAnyLoading ? "AI Game Master is thinking..." : `Instruct ${characterName} or respond...`}
-            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[44px] max-h-[120px] overflow-y-auto"
+            style={{ height: 'auto' }}
           />
-          <button
-            type="submit"
-            disabled={isAnyLoading || !inputText.trim()}
-            className="p-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 rounded-xl transition disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:scale-100 active:scale-95 shrink-0"
-          >
-            <Send className="w-4 h-4 fill-zinc-950" />
-          </button>
+          {isGeneratingStory ? (
+            <div className="p-3 flex items-center justify-center shrink-0 w-11 h-11 bg-zinc-900/60 border border-zinc-850/80 rounded-xl">
+              <Loader className="w-5 h-5 text-zinc-400 animate-spin" />
+            </div>
+          ) : (
+            <button
+              type="submit"
+              disabled={isAnyLoading || !inputText.trim()}
+              className="p-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 rounded-xl transition disabled:opacity-30 disabled:hover:bg-zinc-100 disabled:scale-100 active:scale-95 shrink-0 w-11 h-11 flex items-center justify-center"
+            >
+              <Send className="w-4 h-4 fill-zinc-950" />
+            </button>
+          )}
         </form>
-      </footer>
+      </footer >
 
       {/* 4. BOTTOM SHEETS (SLIDE-UP OVERLAYS) */}
       
