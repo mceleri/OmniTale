@@ -67,6 +67,7 @@ export interface StoryState {
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
   updateLlmSettings: (url: string, key: string, modelName: string) => void;
+  importStore: (data: any) => void;
 }
 
 const initialStories: Story[] = [
@@ -234,8 +235,7 @@ const triggerBackgroundUpdates = async (
   currentLorebook: string,
   currentJournal: string,
   last10Messages: Message[],
-  set: any,
-  get: any
+  set: any
 ) => {
   const recentMessagesText = last10Messages
     .map((msg) => `${msg.role === 'player' ? 'Player' : 'Master'}: ${msg.content}`)
@@ -472,7 +472,7 @@ export const useStoryStore = create<StoryState>()(
         if (!state.activeStoryId) return {};
 
         const newMessage: Message = {
-          id: 'msg_' + Date.now() + Math.random().toString(36).substr(2, 4),
+          id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
           role,
           content
         };
@@ -564,7 +564,8 @@ ${journal}
 1. If the conversation history is empty, START THE STORY: set the initial scene vividly, place the character in the world, and provide an initial hook or obstacle.
 2. If there is a history, resolve the player's last action fairly based on the world's logic, describe the consequences, and advance the plot.
 3. NEVER dictate the player character's thoughts, actions, or dialogue.
-4. Always conclude your turn by implicitly or explicitly passing the initiative back to the player.`;
+4. Always conclude your turn by implicitly or explicitly passing the initiative back to the player.
+5. Always write your response in the same language used by the player in their last message. If the conversation is just starting and there are no player messages yet, write the opening scene in the same language as the story's Title and Synopsis. (e.g., if the Title/Synopsis is in Italian, write in Italian; if in English, write in English).`;
 
           // Only the System Prompt + the LAST 10 MESSAGES from the array
           const last10Messages = finalPlayerMessages.slice(-10);
@@ -604,7 +605,7 @@ ${journal}
           // 6. Check the amount of master messages in the active Tale.
           const updatedActiveTale = get().stories.find((s: Story) => s.id === currentState.activeStoryId);
           if (updatedActiveTale) {
-            const masterMessagesCount = updatedActiveTale.messages.filter((m) => m.role === 'master').length;
+            const masterMessagesCount = updatedActiveTale.messages.filter((m: Message) => m.role === 'master').length;
             if (masterMessagesCount > 0 && masterMessagesCount % 5 === 0) {
               // Trigger background update functions
               triggerBackgroundUpdates(
@@ -614,8 +615,7 @@ ${journal}
                 updatedActiveTale.dynamicState.lorebook,
                 updatedActiveTale.dynamicState.masterJournal,
                 updatedActiveTale.messages.slice(-10),
-                set,
-                get
+                set
               );
             }
           }
@@ -775,6 +775,22 @@ ${journal}
 
       updateLlmSettings: (url: string, key: string, modelName: string) => set(() => {
         return { llmUrl: url, llmKey: key, modelName: modelName };
+      }),
+
+      importStore: (data: any) => set((state: StoryState) => {
+        return {
+          currentView: data.currentView || 'home',
+          stories: data.stories || [],
+          activeStoryId: data.activeStoryId || null,
+          messages: data.messages || [],
+          characterSheet: data.characterSheet || '',
+          lorebook: data.lorebook || '[]',
+          masterJournal: data.masterJournal || '',
+          masterFeedback: data.masterFeedback || 'Keep the atmosphere dark, descriptive, and mysterious. Emphasize sensory details like damp air, ancient moss, and hums.',
+          llmUrl: state.llmUrl,
+          llmKey: state.llmKey,
+          modelName: state.modelName,
+        };
       })
     }),
     {
