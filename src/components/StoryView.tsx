@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useStoryStore, Message, LoreItem } from '../store/useStoryStore';
-import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader } from 'lucide-react';
+import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit } from 'lucide-react';
 import { MarkdownText } from './MarkdownText';
 
 export const StoryView: React.FC = () => {
@@ -21,13 +21,19 @@ export const StoryView: React.FC = () => {
     updateMasterJournal,
     updateMasterFeedback,
     addLoreItem,
-    deleteLoreItem
+    deleteLoreItem,
+    editLastPlayerMessage,
+    deleteLastMessage
   } = useStoryStore();
 
   const story = stories.find((s) => s.id === activeStoryId);
 
   const [inputText, setInputText] = useState('');
   const [activeSheet, setActiveSheet] = useState<'character' | 'lore' | 'master' | 'feedback' | null>(null);
+
+  // Local state for editing messages
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState<string>('');
 
   // Lore Creation State
   const [newLoreTitle, setNewLoreTitle] = useState('');
@@ -58,6 +64,13 @@ export const StoryView: React.FC = () => {
     const match = characterSheet.match(/^Name:\s*(.+)$/m);
     return match ? match[1].trim() : 'Adventurer';
   }, [characterSheet]);
+
+  // Find the last player message ID
+  const lastPlayerMessageId = React.useMemo(() => {
+    const playerMsgs = messages.filter(m => m.role === 'player');
+    if (playerMsgs.length === 0) return null;
+    return playerMsgs[playerMsgs.length - 1].id;
+  }, [messages]);
 
   // Parse lorebook JSON string to array of LoreItem
   const parsedLorebook = React.useMemo(() => {
@@ -118,9 +131,10 @@ export const StoryView: React.FC = () => {
       <header className="sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900/60 h-14 flex items-center justify-between px-4 z-20">
         <button
           onClick={() => setView('home')}
-          className="p-1.5 hover:bg-zinc-900 rounded-lg text-zinc-400 hover:text-zinc-200 transition"
+          className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-lg text-zinc-300 hover:text-zinc-100 transition text-xs font-medium shrink-0"
         >
-          <ArrowLeft className="w-5 h-5 stroke-[1.8]" />
+          <ArrowLeft className="w-4 h-4 stroke-[2]" />
+          <span>Indietro</span>
         </button>
         
         <div className="flex-1 text-center px-4 overflow-hidden">
@@ -142,8 +156,52 @@ export const StoryView: React.FC = () => {
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-8 no-scrollbar scroll-smooth"
       >
-        {messages.map((msg: Message) => {
+        {messages.map((msg: Message, index: number) => {
           const isMaster = msg.role !== 'player';
+          const isLastMessage = index === messages.length - 1;
+          const isLastPlayerMessage = msg.id === lastPlayerMessageId;
+
+          if (editingMessageId === msg.id) {
+            return (
+              <div
+                key={msg.id}
+                className="flex flex-col max-w-[90%] ml-auto items-end text-right transition-all animate-fade-in"
+              >
+                <span className="text-[10px] text-zinc-300 font-sans tracking-wider mb-1 px-1">
+                  {characterName.toUpperCase()} (EDITING)
+                </span>
+                <div className="bg-zinc-900/80 border border-zinc-800/80 p-3 rounded-2xl w-full">
+                  <textarea
+                    value={editingText}
+                    onChange={(e) => setEditingText(e.target.value)}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700 resize-none"
+                    rows={3}
+                  />
+                  <div className="flex justify-end gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMessageId(null)}
+                      className="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-xs flex items-center gap-1 transition"
+                    >
+                      <X className="w-3.5 h-3.5" /> Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!editingText.trim()) return;
+                        setEditingMessageId(null);
+                        await editLastPlayerMessage(editingText.trim());
+                      }}
+                      className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+                    >
+                      <Check className="w-3.5 h-3.5" /> Save & Regenerate
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div
               key={msg.id}
@@ -170,6 +228,39 @@ export const StoryView: React.FC = () => {
                   <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
                 )}
               </div>
+
+              {/* Message Actions */}
+              {(isLastPlayerMessage || isLastMessage) && (
+                <div className="flex items-center gap-2 mt-1.5 px-1">
+                  {isLastPlayerMessage && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingMessageId(msg.id);
+                        setEditingText(msg.content);
+                      }}
+                      className="text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                      title="Edit last action and regenerate response"
+                    >
+                      <Edit className="w-3 h-3" /> Edit
+                    </button>
+                  )}
+                  {isLastMessage && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm('Delete this message?')) {
+                          deleteLastMessage();
+                        }
+                      }}
+                      className="text-[11px] text-zinc-400 hover:text-red-400 flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                      title="Delete last message"
+                    >
+                      <Trash2 className="w-3 h-3" /> Delete
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
