@@ -61,6 +61,8 @@ export interface StoryState {
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   sendMessage: (content: string) => Promise<void>;
+  editLastPlayerMessage: (newContent: string) => Promise<void>;
+  deleteLastMessage: () => void;
   updateCharacterSheet: (text: string) => void;
   updateMasterJournal: (text: string) => void;
   updateMasterFeedback: (text: string) => void;
@@ -646,6 +648,160 @@ ${journal}
           });
         }
       },
+
+      editLastPlayerMessage: async (newContent: string) => {
+        const messages = [...get().messages];
+        const lastPlayerIdx = messages.map(m => m.role).lastIndexOf('player');
+        if (lastPlayerIdx === -1) return;
+
+        // Update that message and remove everything after it
+        messages[lastPlayerIdx].content = newContent;
+        const updatedMessages = messages.slice(0, lastPlayerIdx + 1);
+
+        set((state: StoryState) => {
+          if (!state.activeStoryId) return {};
+          const updatedStories = state.stories.map((story: Story) => {
+            if (story.id === state.activeStoryId) {
+              return {
+                ...story,
+                messages: updatedMessages,
+                updatedAt: Date.now()
+              };
+            }
+            return story;
+          });
+          return {
+            messages: updatedMessages,
+            stories: updatedStories,
+            isGeneratingStory: true
+          };
+        });
+
+        // Now, generate master response!
+        const currentState = get() as StoryState;
+        const activeTale = currentState.stories.find(s => s.id === currentState.activeStoryId);
+        if (!activeTale) {
+          set({ isGeneratingStory: false });
+          return;
+        }
+
+        try {
+          const lore = activeTale.dynamicState.lorebook;
+          const charSheet = activeTale.dynamicState.characterSheet;
+          const journal = activeTale.dynamicState.masterJournal;
+
+          const UNIFIED_PROMPT = `You are the AI Game Master of an immersive text-based RPG. Your writing style is literary, descriptive, and atmospheric. Show, don't tell.
+
+[WORLD & LORE]
+${lore}
+
+[CHARACTER SHEET]
+${charSheet}
+
+[MASTER'S SECRET JOURNAL - DO NOT REVEAL TO PLAYER]
+${journal}
+
+[DIRECTIVES]
+1. If the conversation history is empty, START THE STORY: set the initial scene vividly, place the character in the world, and provide an initial hook or obstacle.
+2. If there is a history, resolve the player's last action fairly based on the world's logic, describe the consequences, and advance the plot.
+3. NEVER dictate the player character's thoughts, actions, or dialogue.
+4. Always conclude your turn by implicitly or explicitly passing the initiative back to the player.
+5. Always write your response in the same language used by the player in their last message. If the conversation is just starting and there are no player messages yet, write the opening scene in the same language as the story's Title and Synopsis. (e.g., if the Title/Synopsis is in Italian, write in Italian; if in English, write in English).`;
+
+          const last10Messages = updatedMessages.slice(-10);
+          const url = currentState.llmUrl;
+          const key = currentState.llmKey;
+          const model = currentState.modelName || 'google/gemini-2.5-flash';
+
+          const masterResponseText = await fetchNarrative(url, key, model, UNIFIED_PROMPT, last10Messages);
+
+          const masterMessage: Message = {
+            id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
+            role: 'master',
+            content: masterResponseText
+          };
+
+          set((state: StoryState) => {
+            const finalMessages = [...state.messages, masterMessage];
+            const updatedStories = state.stories.map((story: Story) => {
+              if (story.id === state.activeStoryId) {
+                return {
+                  ...story,
+                  messages: finalMessages,
+                  updatedAt: Date.now()
+                };
+              }
+              return story;
+            });
+            return {
+              messages: finalMessages,
+              stories: updatedStories,
+              isGeneratingStory: false
+            };
+          });
+
+          // Trigger background updates if needed
+          const updatedActiveTale = get().stories.find((s: Story) => s.id === currentState.activeStoryId);
+          if (updatedActiveTale) {
+            const masterMessagesCount = updatedActiveTale.messages.filter((m: Message) => m.role === 'master').length;
+            if (masterMessagesCount > 0 && masterMessagesCount % 5 === 0) {
+              triggerBackgroundUpdates(
+                url,
+                key,
+                model,
+                updatedActiveTale.dynamicState.lorebook,
+                updatedActiveTale.dynamicState.masterJournal,
+                updatedActiveTale.messages.slice(-10),
+                set
+              );
+            }
+          }
+        } catch (error: any) {
+          console.error('Narrative generation error during edit:', error);
+          const errorMsg: Message = {
+            id: 'msg_err_' + Date.now(),
+            role: 'system_feedback',
+            content: `Error connecting to AI GM: ${error?.message || error}. Please check your connection or LLM settings in the top-right / settings menu.`
+          };
+          set((state: StoryState) => {
+            const finalMessages = [...state.messages, errorMsg];
+            const updatedStories = state.stories.map((story: Story) => {
+              if (story.id === state.activeStoryId) {
+                return {
+                  ...story,
+                  messages: finalMessages,
+                  updatedAt: Date.now()
+                };
+              }
+              return story;
+            });
+            return {
+              messages: finalMessages,
+              stories: updatedStories,
+              isGeneratingStory: false
+            };
+          });
+        }
+      },
+
+      deleteLastMessage: () => set((state: StoryState) => {
+        if (!state.activeStoryId || state.messages.length === 0) return {};
+        const updatedMessages = state.messages.slice(0, -1);
+        const updatedStories = state.stories.map((story: Story) => {
+          if (story.id === state.activeStoryId) {
+            return {
+              ...story,
+              messages: updatedMessages,
+              updatedAt: Date.now()
+            };
+          }
+          return story;
+        });
+        return {
+          messages: updatedMessages,
+          stories: updatedStories
+        };
+      }),
 
       updateCharacterSheet: (text: string) => set((state: StoryState) => {
         if (!state.activeStoryId) return {};
