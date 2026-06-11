@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useStoryStore, Message, LoreItem } from '../store/useStoryStore';
+import { useStoryStore, Message } from '../store/useStoryStore';
+import { parseMarkdownToBlocks } from '../utils/markdownParser';
 import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit } from 'lucide-react';
 import { MarkdownText } from './MarkdownText';
 
@@ -7,10 +8,6 @@ export const StoryView: React.FC = () => {
   const {
     activeStoryId,
     stories,
-    messages,
-    characterSheet,
-    lorebook,
-    masterJournal,
     masterFeedback,
     isGeneratingStory,
     isUpdatingLorebook,
@@ -27,6 +24,10 @@ export const StoryView: React.FC = () => {
   } = useStoryStore();
 
   const story = stories.find((s) => s.id === activeStoryId);
+  const messages = story ? story.messages : [];
+  const characterSheet = story ? story.dynamicState.characterSheet : '';
+  const lorebook = story ? story.dynamicState.lorebook : '';
+  const masterJournal = story ? story.dynamicState.masterJournal : '';
 
   const [inputText, setInputText] = useState('');
   const [activeSheet, setActiveSheet] = useState<'character' | 'lore' | 'master' | 'feedback' | null>(null);
@@ -41,7 +42,6 @@ export const StoryView: React.FC = () => {
 
   // Refs for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -72,23 +72,9 @@ export const StoryView: React.FC = () => {
     return playerMsgs[playerMsgs.length - 1].id;
   }, [messages]);
 
-  // Parse lorebook JSON string to array of LoreItem
+  // Parse lorebook Markdown string to array of LoreItem (LoreBlock)
   const parsedLorebook = React.useMemo(() => {
-    try {
-      const parsed = JSON.parse(lorebook);
-      return Array.isArray(parsed) ? (parsed as LoreItem[]) : [];
-    } catch (e) {
-      return [];
-    }
-  }, [lorebook]);
-
-  const isLorebookMarkdown = React.useMemo(() => {
-    try {
-      JSON.parse(lorebook);
-      return false;
-    } catch (e) {
-      return lorebook && lorebook.trim().length > 0;
-    }
+    return parseMarkdownToBlocks(lorebook);
   }, [lorebook]);
 
   if (!story) {
@@ -153,7 +139,6 @@ export const StoryView: React.FC = () => {
 
       {/* 2. MAIN CHAT / STORY STREAM */}
       <main
-        ref={chatContainerRef}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-8 no-scrollbar scroll-smooth"
       >
         {messages.map((msg: Message, index: number) => {
@@ -364,7 +349,7 @@ export const StoryView: React.FC = () => {
             </button>
           )}
         </form>
-      </footer >
+      </footer>
 
       {/* 4. BOTTOM SHEETS (SLIDE-UP OVERLAYS) */}
       
@@ -461,23 +446,17 @@ export const StoryView: React.FC = () => {
                   Active Codex Entries
                 </span>
 
-                {isLorebookMarkdown ? (
-                  <div className="bg-zinc-950/60 border border-zinc-800/60 p-4 rounded-xl">
-                    <div className="text-xs text-zinc-300 leading-relaxed font-sans whitespace-pre-wrap">
-                      {lorebook}
-                    </div>
-                  </div>
-                ) : parsedLorebook.length === 0 ? (
+                {parsedLorebook.length === 0 ? (
                   <p className="text-xs text-zinc-300 italic">No lore cards added yet.</p>
                 ) : (
-                  parsedLorebook.map((item: LoreItem) => (
+                  parsedLorebook.map((item) => (
                     <div
                       key={item.id}
                       className="bg-zinc-950/60 border border-zinc-800/60 p-4 rounded-xl flex justify-between items-start gap-4"
                     >
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h5 className="text-xs font-bold text-zinc-200 mb-1">{item.title}</h5>
-                        <p className="text-[11px] text-zinc-300 leading-relaxed font-sans">
+                        <p className="text-[11px] text-zinc-300 leading-relaxed font-sans break-words whitespace-pre-line">
                           {item.content}
                         </p>
                       </div>
