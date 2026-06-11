@@ -2,6 +2,8 @@
 
 An elegant, minimalist, and privacy-first solo text-based RPG interface powered by Large Language Models. 
 
+### 🚀 [Play Now in Your Browser](https://mceleri.github.io/OmniTale/)
+
 OmniTale acts as a local visual layer and prompt engine for your AI Game Master, giving you complete control over your character sheets, lore codex, and master journals.
 
 > 🚧 **Work in Progress**: This app is a passion project under active development, built for fun, exploration, and continuous improvement.
@@ -10,6 +12,7 @@ OmniTale acts as a local visual layer and prompt engine for your AI Game Master,
 
 ## Key Features
 
+- **📱 Smartphone-First Design**: Optimized from the ground up for mobile browsers with a compact, single-thumb layout and slide-up drawers, making it perfect for casual gaming on your phone.
 - **Worldbuilding Canvas**: Create custom campaign templates with dynamic world aspects (magic systems, factions, geography) before starting your journey.
 - **Dynamic Character Dossier**: Keep track of attributes, inventory, and health inside an interactive, auto-saving character sheet.
 - **Automated Codex (Lorebook)**: The AI Game Master analyzes your adventure periodically to automatically update key world facts and characters in Markdown.
