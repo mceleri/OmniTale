@@ -20,14 +20,15 @@ export const SettingsView: React.FC = () => {
 
   const handleExport = () => {
     const state = useStoryStore.getState();
+    const activeStory = state.stories.find(s => s.id === state.activeStoryId);
     const dataToExport = {
       stories: state.stories,
       currentView: state.currentView,
       activeStoryId: state.activeStoryId,
-      messages: state.messages,
-      characterSheet: state.characterSheet,
-      lorebook: state.lorebook,
-      masterJournal: state.masterJournal,
+      messages: activeStory ? activeStory.messages : [],
+      characterSheet: activeStory ? activeStory.dynamicState.characterSheet : '',
+      lorebook: activeStory ? activeStory.dynamicState.lorebook : '',
+      masterJournal: activeStory ? activeStory.dynamicState.masterJournal : '',
       masterFeedback: state.masterFeedback,
     };
     

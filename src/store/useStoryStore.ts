@@ -345,6 +345,9 @@ ${feedback}
 5. Always write your response in the same language used by the player in their last message. If the conversation is just starting and there are no player messages yet, write the opening scene in the same language as the story's Title and Synopsis. (e.g., if the Title/Synopsis is in Italian, write in Italian; if in English, write in English).`;
 
   try {
+    if (!key) {
+      throw new Error("API Key is missing. Please click the Settings gear icon in the top-right of the Home screen to configure your LLM API Key.");
+    }
     const last10Messages = updatedMessages.slice(-10);
     const masterResponseText = await fetchNarrative(url, key, model, UNIFIED_PROMPT, last10Messages);
 
@@ -392,7 +395,9 @@ ${feedback}
     const errorMsg: Message = {
       id: 'msg_err_' + Date.now(),
       role: 'system_feedback',
-      content: `Error connecting to AI GM: ${error?.message || error}. Please check your connection or LLM settings in the top-right / settings menu.`
+      content: error?.message?.includes("API Key is missing")
+        ? error.message
+        : `Error connecting to AI GM: ${error?.message || error}. Please check your connection or LLM settings in the top-right / settings menu.`
     };
     
     set((s: StoryState) => {
@@ -419,18 +424,18 @@ ${feedback}
 export const useStoryStore = create<StoryState>()(
   persist(
     (set: any, get: any) => ({
-      currentView: 'home',
+      currentView: 'home' as 'home' | 'story' | 'settings',
       stories: initialStories,
-      activeStoryId: null,
+      activeStoryId: null as string | null,
       masterFeedback: 'Keep the atmosphere dark, descriptive, and mysterious. Emphasize sensory details like damp air, ancient moss, and hums.',
 
       llmUrl: '',
       llmKey: '',
       modelName: 'google/gemini-2.5-flash',
 
-      isGeneratingStory: false,
-      isUpdatingLorebook: false,
-      isUpdatingJournal: false,
+      isGeneratingStory: false as boolean,
+      isUpdatingLorebook: false as boolean,
+      isUpdatingJournal: false as boolean,
 
       setView: (view: 'home' | 'story' | 'settings') => set({ currentView: view }),
 
@@ -497,7 +502,7 @@ export const useStoryStore = create<StoryState>()(
         storyId: string,
         title: string,
         synopsis: string,
-        characterName: string,
+        _characterName: string,
         lorebook: string,
         characterSheet?: string,
         masterJournal?: string

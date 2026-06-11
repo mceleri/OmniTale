@@ -9,6 +9,8 @@ export const MarkdownText: React.FC<MarkdownProps> = ({ text }) => {
   const elements: React.ReactNode[] = [];
   
   let currentList: { type: 'ul' | 'ol'; items: string[] } | null = null;
+  let inCodeBlock = false;
+  let codeBlockContent = '';
   
   const flushList = (key: string | number) => {
     if (!currentList) return null;
@@ -39,12 +41,31 @@ export const MarkdownText: React.FC<MarkdownProps> = ({ text }) => {
   };
 
   const renderInline = (inlineText: string) => {
-    // Basic regex for bold (**bold**) and italic (*italic*)
-    const boldParts = inlineText.split(/(\*\*.*?\*\*)/g);
+    // Split by `inline code` first
+    const codeParts = inlineText.split(/(`.*?`)/g);
+    return codeParts.map((part, idx) => {
+      if (part.startsWith('`') && part.endsWith('`')) {
+        const cleanCode = part.slice(1, -1);
+        return (
+          <code key={idx} className="bg-zinc-900 border border-zinc-800/60 px-1.5 py-0.5 rounded font-mono text-[11px] text-zinc-100 mx-0.5">
+            {cleanCode}
+          </code>
+        );
+      }
+      return <React.Fragment key={idx}>{renderBold(part)}</React.Fragment>;
+    });
+  };
+
+  const renderBold = (boldText: string) => {
+    const boldParts = boldText.split(/(\*\*.*?\*\*)/g);
     return boldParts.map((part, idx) => {
       if (part.startsWith('**') && part.endsWith('**')) {
         const cleanBold = part.slice(2, -2);
-        return <strong key={idx} className="font-bold text-zinc-100">{renderItalic(cleanBold)}</strong>;
+        return (
+          <strong key={idx} className="font-bold text-zinc-100">
+            {renderItalic(cleanBold)}
+          </strong>
+        );
       }
       return <React.Fragment key={idx}>{renderItalic(part)}</React.Fragment>;
     });
@@ -67,6 +88,31 @@ export const MarkdownText: React.FC<MarkdownProps> = ({ text }) => {
     const line = lines[i];
     const trimmed = line.trim();
     
+    // Check for code block start/end
+    if (trimmed.startsWith('```')) {
+      if (currentList) {
+        elements.push(flushList(`list-${elementKey++}`));
+      }
+      
+      if (inCodeBlock) {
+        elements.push(
+          <pre key={`code-${elementKey++}`} className="bg-zinc-900/60 border border-zinc-800/60 rounded-xl p-4 my-3 font-mono text-xs overflow-x-auto text-emerald-400 max-w-full">
+            <code>{codeBlockContent}</code>
+          </pre>
+        );
+        inCodeBlock = false;
+        codeBlockContent = '';
+      } else {
+        inCodeBlock = true;
+      }
+      continue;
+    }
+    
+    if (inCodeBlock) {
+      codeBlockContent += (codeBlockContent ? '\n' : '') + line;
+      continue;
+    }
+
     // Check if empty line
     if (trimmed === '') {
       if (currentList) {
@@ -148,7 +194,7 @@ export const MarkdownText: React.FC<MarkdownProps> = ({ text }) => {
     }
     
     let pContent = [trimmed];
-    while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !lines[i + 1].trim().match(/^(#{1,6})\s+/) && !lines[i + 1].trim().startsWith('>') && !lines[i + 1].match(/^(\s*)[-*+]\s+/) && !lines[i + 1].match(/^(\s*)\d+\.\s+/)) {
+    while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !lines[i + 1].trim().match(/^(#{1,6})\s+/) && !lines[i + 1].trim().startsWith('>') && !lines[i + 1].match(/^(\s*)[-*+]\s+/) && !lines[i + 1].match(/^(\s*)\d+\.\s+/) && !lines[i + 1].trim().startsWith('```')) {
       i++;
       pContent.push(lines[i].trim());
     }
@@ -167,6 +213,14 @@ export const MarkdownText: React.FC<MarkdownProps> = ({ text }) => {
   
   if (currentList) {
     elements.push(flushList(`list-${elementKey++}`));
+  }
+
+  if (inCodeBlock && codeBlockContent) {
+    elements.push(
+      <pre key={`code-${elementKey++}`} className="bg-zinc-900/60 border border-zinc-800/60 rounded-xl p-4 my-3 font-mono text-xs overflow-x-auto text-emerald-400 max-w-full">
+        <code>{codeBlockContent}</code>
+      </pre>
+    );
   }
   
   return <div className="space-y-1">{elements}</div>;
