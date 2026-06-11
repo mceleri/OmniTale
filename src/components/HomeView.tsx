@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStoryStore, Story } from '../store/useStoryStore';
+import { parseMarkdownToBlocks, compileBlocksToMarkdown } from '../utils/markdownParser';
 import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight } from 'lucide-react';
 
 const formatRelativeTime = (timestamp: number): string => {
@@ -15,61 +16,6 @@ const formatRelativeTime = (timestamp: number): string => {
   return new Date(timestamp).toLocaleDateString();
 };
 
-const parseMarkdownToBlocks = (markdown: string) => {
-  if (!markdown) {
-    return [{ id: Date.now(), title: 'Setting', content: '' }];
-  }
-  
-  // Try to parse as JSON first
-  try {
-    const parsed = JSON.parse(markdown);
-    if (Array.isArray(parsed)) {
-      return parsed.map((item, index) => ({
-        id: item.id ? (typeof item.id === 'number' ? item.id : parseInt(item.id) || (Date.now() + index)) : (Date.now() + index),
-        title: item.title || 'Untitled Aspect',
-        content: item.content || ''
-      }));
-    }
-  } catch (e) {
-    // If not JSON, parse as Markdown
-  }
-
-  // Splitting by '## '
-  const parts = markdown.split(/(?=^##\s)/m);
-  const parsedBlocks = [];
-  
-  for (let i = 0; i < parts.length; i++) {
-    const part = parts[i].trim();
-    if (!part) continue;
-    
-    if (part.startsWith('##')) {
-      // Find the first newline or end of line for title
-      const lines = part.split('\n');
-      const titleLine = lines[0];
-      const title = titleLine.replace(/^##\s*/, '').trim();
-      const content = lines.slice(1).join('\n').trim();
-      parsedBlocks.push({
-        id: Date.now() + i,
-        title: title || 'Untitled Aspect',
-        content: content
-      });
-    } else {
-      // No '##' prefix, maybe it's just raw content without title
-      parsedBlocks.push({
-        id: Date.now() + i,
-        title: i === 0 ? 'Setting' : 'Untitled Aspect',
-        content: part
-      });
-    }
-  }
-  
-  if (parsedBlocks.length === 0) {
-    return [{ id: Date.now(), title: 'Setting', content: markdown }];
-  }
-  
-  return parsedBlocks;
-};
-
 export const HomeView: React.FC = () => {
   const { stories, selectStory, createStory, updateStory, deleteStory, setView } = useStoryStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,29 +23,39 @@ export const HomeView: React.FC = () => {
   const [editingStoryId, setEditingStoryId] = useState<string | null>(null);
   
   // Local state for dynamic worldbuilding blocks
-  const [blocks, setBlocks] = useState<{ id: number; title: string; content: string }[]>([
-    { id: 1, title: 'Setting', content: '' }
+  const [blocks, setBlocks] = useState<{ id: string; title: string; content: string }[]>([
+    { id: '1', title: 'Setting', content: '' }
   ]);
 
   // Local state for segmented filtering
   const [filter, setFilter] = useState<'all' | 'tales' | 'templates'>('all');
 
-  const compileMarkdown = () => {
-    return blocks
-      .map(b => `## ${b.title || 'Untitled Aspect'}\n\n${b.content || ''}`)
-      .join('\n\n');
+  const processCanvasBlocks = () => {
+    const charBlock = blocks.find(b => b.title.toLowerCase().includes('character'));
+    const characterName = charBlock 
+      ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
+      : 'Adventurer';
+    
+    const characterSheetContent = charBlock ? charBlock.content : `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`;
+
+    const otherBlocks = blocks.filter(b => !b.title.toLowerCase().includes('character'));
+    const compiledLorebookMarkdown = compileBlocksToMarkdown(otherBlocks);
+
+    const synopsis = otherBlocks[0]?.content.trim() || 'A mysterious journey across unknown frontiers.';
+
+    return {
+      characterName,
+      characterSheetContent,
+      compiledLorebookMarkdown,
+      synopsis
+    };
   };
 
   const handleStartJourney = (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!title.trim()) return;
 
-    const compiledMarkdown = compileMarkdown();
-    const synopsis = blocks[0]?.content.trim() || 'A mysterious journey across unknown frontiers.';
-    const charBlock = blocks.find(b => b.title.toLowerCase().includes('character'));
-    const characterName = charBlock 
-      ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
-      : 'Adventurer';
+    const { characterName, characterSheetContent, compiledLorebookMarkdown, synopsis } = processCanvasBlocks();
 
     createStory(
       title.trim(),
@@ -107,12 +63,13 @@ export const HomeView: React.FC = () => {
       characterName,
       'Custom', // Genre is inferred / Custom
       'tale', // Active tale
-      compiledMarkdown
+      compiledLorebookMarkdown,
+      characterSheetContent
     );
 
     // Reset fields
     setTitle('');
-    setBlocks([{ id: Date.now(), title: 'Setting', content: '' }]);
+    setBlocks([{ id: String(Date.now()), title: 'Setting', content: '' }]);
     setEditingStoryId(null);
     setIsModalOpen(false);
   };
@@ -121,12 +78,7 @@ export const HomeView: React.FC = () => {
     if (e) e.preventDefault();
     if (!title.trim()) return;
 
-    const compiledMarkdown = compileMarkdown();
-    const synopsis = blocks[0]?.content.trim() || 'A customizable template for your adventures.';
-    const charBlock = blocks.find(b => b.title.toLowerCase().includes('character'));
-    const characterName = charBlock 
-      ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
-      : 'Adventurer';
+    const { characterName, characterSheetContent, compiledLorebookMarkdown, synopsis } = processCanvasBlocks();
 
     if (editingStoryId) {
       updateStory(
@@ -134,7 +86,8 @@ export const HomeView: React.FC = () => {
         title.trim(),
         synopsis,
         characterName,
-        compiledMarkdown
+        compiledLorebookMarkdown,
+        characterSheetContent
       );
     } else {
       createStory(
@@ -143,15 +96,36 @@ export const HomeView: React.FC = () => {
         characterName,
         'Custom', // Genre is inferred / Custom
         'template', // Template draft
-        compiledMarkdown
+        compiledLorebookMarkdown,
+        characterSheetContent
       );
     }
 
     // Reset fields
     setTitle('');
-    setBlocks([{ id: Date.now(), title: 'Setting', content: '' }]);
+    setBlocks([{ id: String(Date.now()), title: 'Setting', content: '' }]);
     setEditingStoryId(null);
     setIsModalOpen(false);
+  };
+
+  const handleSelectStoryOrTemplate = (story: Story) => {
+    if (story.type === 'template') {
+      const parsedBlocks = parseMarkdownToBlocks(story.dynamicState.lorebook);
+      const hasCharBlock = parsedBlocks.some(b => b.title.toLowerCase().includes('character'));
+      if (!hasCharBlock && story.dynamicState.characterSheet) {
+        parsedBlocks.push({
+          id: 'char_temp_' + Date.now(),
+          title: 'Character',
+          content: story.dynamicState.characterSheet
+        });
+      }
+      setTitle(story.title);
+      setBlocks(parsedBlocks);
+      setEditingStoryId(story.id);
+      setIsModalOpen(true);
+    } else {
+      selectStory(story.id);
+    }
   };
 
   // Find the story with the most recent updatedAt timestamp
@@ -203,25 +177,7 @@ export const HomeView: React.FC = () => {
         ) : (
           /* State B: Has stories - Quick Resume Card */
           <div
-            onClick={() => {
-              if (recentStory.type === 'template') {
-                const parsedBlocks = parseMarkdownToBlocks(recentStory.dynamicState.lorebook);
-                const hasCharBlock = parsedBlocks.some(b => b.title.toLowerCase().includes('character'));
-                if (!hasCharBlock && recentStory.dynamicState.characterSheet) {
-                  parsedBlocks.push({
-                    id: Date.now() + 999,
-                    title: 'Character',
-                    content: recentStory.dynamicState.characterSheet
-                  });
-                }
-                setTitle(recentStory.title);
-                setBlocks(parsedBlocks);
-                setEditingStoryId(recentStory.id);
-                setIsModalOpen(true);
-              } else {
-                selectStory(recentStory.id);
-              }
-            }}
+            onClick={() => handleSelectStoryOrTemplate(recentStory)}
             className="group wrapper-card bg-zinc-900/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm cursor-pointer transition-all hover:border-zinc-700/60 flex items-center justify-between gap-4"
           >
             <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -245,7 +201,7 @@ export const HomeView: React.FC = () => {
         {/* Create Button */}
         <button
           onClick={() => {
-            setBlocks([{ id: Date.now(), title: 'Setting', content: '' }]);
+            setBlocks([{ id: '1', title: 'Setting', content: '' }]);
             setTitle('');
             setEditingStoryId(null);
             setIsModalOpen(true);
@@ -303,28 +259,10 @@ export const HomeView: React.FC = () => {
                 <div
                   key={story.id}
                   className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between"
-                  onClick={() => {
-                    if (story.type === 'template') {
-                      const parsedBlocks = parseMarkdownToBlocks(story.dynamicState.lorebook);
-                      const hasCharBlock = parsedBlocks.some(b => b.title.toLowerCase().includes('character'));
-                      if (!hasCharBlock && story.dynamicState.characterSheet) {
-                        parsedBlocks.push({
-                          id: Date.now() + 999,
-                          title: 'Character',
-                          content: story.dynamicState.characterSheet
-                        });
-                      }
-                      setTitle(story.title);
-                      setBlocks(parsedBlocks);
-                      setEditingStoryId(story.id);
-                      setIsModalOpen(true);
-                    } else {
-                      selectStory(story.id);
-                    }
-                  }}
+                  onClick={() => handleSelectStoryOrTemplate(story)}
                 >
                   <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1 min-w-0">
+                     <div className="flex-1 min-w-0">
                       <h4 className="font-serif text-lg text-zinc-200 group-hover:text-zinc-100 truncate max-w-[240px] mb-1">
                         {story.title}
                       </h4>
@@ -465,7 +403,7 @@ export const HomeView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setBlocks([...blocks, { id: Date.now(), title: '', content: '' }]);
+                    setBlocks([...blocks, { id: 'block_' + Date.now(), title: '', content: '' }]);
                   }}
                   className="w-full py-3 flex items-center justify-center gap-1.5 border border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl text-xs text-zinc-400 hover:text-zinc-200 transition active:scale-[0.99]"
                 >
