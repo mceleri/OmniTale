@@ -226,9 +226,21 @@ const triggerBackgroundUpdates = async (
   const updateLorebookPromise = (async () => {
     set({ isUpdatingLorebook: true });
     try {
-      const lorePrompt = `Analyze the recent story events. Identify any newly introduced characters, locations, items, or important world facts. Output an updated markdown lorebook combining the old lore with the new facts. If nothing significant was added, reply strictly with 'NO_CHANGES'.`;
-      const userContent = `[CURRENT LOREBOOK]\n${currentLorebook}\n\n[RECENT EVENTS]\n${recentMessagesText}`;
+      const lorePrompt = `You are a meticulous Game Master assistant. Your task is to update the CURRENT LOREBOOK based on RECENT EVENTS.
 
+RULES:
+1. ADD newly introduced characters, locations, items, or important world facts.
+2. UPDATE existing entries if their status changed in the recent events (e.g., an NPC died, an item was lost).
+3. CRITICAL: DO NOT delete, shorten, or summarize older facts, characters, or locations just because they are absent from the recent events. Retain ALL old knowledge exactly as it was.
+4. Output the result in clean Markdown format.
+5. If the recent events contain no significant worldbuilding facts to add or update, reply strictly with the exact string 'NO_CHANGES' and nothing else.`;
+
+      const userContent = `[CURRENT LOREBOOK]
+${currentLorebook}
+
+[RECENT EVENTS]
+${recentMessagesText}`;
+      
       const response = await fetchNarrative(url, key, modelName, lorePrompt, [
         { id: 'temp_lore', role: 'player', content: userContent }
       ]);
