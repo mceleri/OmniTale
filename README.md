@@ -102,16 +102,19 @@ The static, single-page application will build inside the `/dist` directory.
 
 ## 🎮 How to Play
 
-1. **Configure API**: Click the **Settings (gear icon)** in the top-right corner of the Home screen. Enter your API Key, LLM URL and Model Name.
+- **Configure API**: Click the **Settings (gear icon)** in the top-right corner of the Home screen. Enter your API Key, LLM URL and Model Name.
 > **OpenRouter Example**
 > 
 > LLM URL: https://openrouter.ai/api/v1/chat/completions
 > 
-> LLM KEY: yout key
+> LLM KEY: your key
 > 
 > Model Name: google/gemma-4-31b-it:free
 
-2a. **Design a World...**: Click **New Adventure** on the Home screen to open the Worldbuilding Canvas.
-2b. **... OR Customize a template**: Define your character's starting parameters and create setting aspects. You can either save it as a customizable campaign template or click **Start Journey** to begin playing immediately.
-3. **Interact**: Type your actions or instructions to the GM in the text area at the bottom.
-4. **Manage State**: Use the buttons above the chat input to toggle drawers and update your Character Sheet, Codex, or private AI Master notes as your adventure progresses.
+- **Design a World...**: Click **New Adventure** on the Home screen to open the Worldbuilding Canvas.
+  
+- **... OR Customize a template**: Define your character's starting parameters and create setting aspects. You can either save it as a customizable campaign template or click **Start Journey** to begin playing immediately.
+
+- **Interact**: Type your actions or instructions to the GM in the text area at the bottom.
+
+- **Manage State**: Use the buttons above the chat input to toggle drawers and update your Character Sheet, Codex, or private AI Master notes as your adventure progresses.
