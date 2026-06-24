@@ -75,7 +75,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/OmniTale.git
+   git clone https://github.com/mceleri/OmniTale.git
    cd OmniTale
    ```
 
