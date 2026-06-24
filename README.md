@@ -102,6 +102,8 @@ The static, single-page application will build inside the `/dist` directory.
 
 ## 🎮 How to Play
 
+- 🚀 [Play Now in Your Browser](https://mceleri.github.io/OmniTale/)
+
 - **Configure API**: Click the **Settings (gear icon)** in the top-right corner of the Home screen. Enter your API Key, LLM URL and Model Name.
 > **OpenRouter Example**
 > 
