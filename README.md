@@ -26,14 +26,16 @@ OmniTale acts as a local visual layer and prompt engine for your AI Game Master,
 
 ---
 
-## 🔒 Privacy & Architecture
+## 🔒 Architecture & Privacy-First Design
 
-OmniTale is a **browser-only frontend application** (Single Page App) with zero server backends involved. 
+OmniTale is designed as a **browser-only frontend application** (Single Page App) with a strict zero-backend philosophy, ensuring both maximum privacy for the user and extreme cost-efficiency.
 
-- **Local Storage & Database**: Your story sessions, templates, logs, and notes are saved directly in your browser's local sandbox using IndexedDB.
-- **Local API Connections**: Direct connections from your browser to your selected LLM endpoints.
-- **No Data Harvesting**: Your API keys, settings, and story content are never sent to any third-party servers, excluding the LLM host itself.
-- **Database Backups**: Full database export and import functionality to backup or migrate your games as simple `.json` files.
+- **Serverless & Zero-Cost Infrastructure**: By pairing GitHub Pages for static hosting with browser-native IndexedDB and LocalStorage for data persistence, the application completely eliminates the need for backend servers and cloud databases. This translates to zero hosting costs and infinite scalability.
+- **Automated CI/CD Pipeline**: The project leverages GitHub Actions for seamless continuous integration and deployment. Every push to the main branch automatically triggers a build workflow, compiling the application and deploying the optimized `/dist` bundle directly to production.
+- **Local Database & Storage**: All story sessions, campaign templates, logs, and notes are saved strictly in your browser's local sandbox. 
+- **Direct LLM Connections**: The app establishes direct API connections from your client to your selected LLM endpoints. 
+- **No Data Harvesting**: Your API keys, settings, and story content are never routed through or stored on any middleman servers. You only communicate with your chosen LLM provider.
+- **Portable State**: Full database export and import functionality allows you to backup, restore, or migrate your entire game state as simple `.json` files.
 
 ---
 
