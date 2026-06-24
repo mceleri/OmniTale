@@ -2,6 +2,10 @@
 
 An elegant, minimalist, and privacy-first solo text-based RPG interface powered by Large Language Models. 
 
+​### 🧪 The "Extreme Vibe Coding" Experiment
+
+This application started as a strict experiment in mobile-only development. The entire initial MVP—from architecture to deployment—was built exclusively from a smartphone using AI-assisted vibe coding. Today, OmniTale is a living project that I personally use and continuously improve. I've adopted a hybrid workflow: leveraging mobile vibe coding for quick prototyping and on-the-go feature ideation, while using desktop IDEs (like Antigravity) for deep code refactoring and architectural optimization. It’s an ongoing exploration of how AI radically accelerates full-stack development across all form factors.
+
 ### 🚀 [Play Now in Your Browser](https://mceleri.github.io/OmniTale/)
 
 OmniTale acts as a local visual layer and prompt engine for your AI Game Master, giving you complete control over your character sheets, lore codex, and master journals.
