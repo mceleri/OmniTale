@@ -61,11 +61,17 @@ This approach demonstrates a paradigm shift in UX design: replacing traditional,
 
 ## 🚀 Getting Started
 
-### Prerequisites
+> **My Hybrid Workflow**
+> While OmniTale's initial MVP was strictly built on a smartphone via AI vibe coding, I now maintain the project using a hybrid development lifecycle. I push quick features and prompt updates on-the-go directly from my mobile browser, while utilizing desktop IDEs for deep code refactoring and architectural optimization.
 
-You need [Node.js](https://nodejs.org/) installed on your machine.
+### Local Desktop Setup
 
-### Installation
+If you want to run the project locally, experiment with the code, or contribute (via Fork and Pull Request), standard desktop development is fully supported.
+
+**Prerequisites**
+Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
+
+**Installation & Development**
 
 1. Clone this repository:
    ```bash
