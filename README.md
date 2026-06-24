@@ -48,11 +48,14 @@ To use OmniTale, you connect it to the LLM model of your choice:
 
 ---
 
-## 🌐 Auto-Multilingual
+## 🌐 Dynamic Auto-Multilingual (Zero-Config)
 
-OmniTale's prompt engine automatically instructs the AI Game Master to match the language of your adventure:
-- If your story Title & Synopsis are in Italian, the AI opens the scene in Italian.
-- If you reply or instruct your character in Spanish or German, the AI immediately switches its response language on the fly.
+OmniTale showcases the flexibility of modern LLMs through dynamic, context-aware prompt engineering. Instead of relying on hardcoded language selectors or rigid localization files, the prompt engine instructs the AI Game Master to organically adapt to your input:
+
+- **Context-Aware Initialization**: If your custom Campaign Title and Synopsis are written in Italian, the AI autonomously processes the context and generates the opening scene and initial lore in Italian.
+- **Seamless On-the-Fly Transitions**: If you suddenly reply, instruct your character, or provide secret GM feedback in Spanish or German, the AI immediately detects the linguistic shift and matches your language in its next response.
+
+This approach demonstrates a paradigm shift in UX design: replacing traditional, static UI localization with fluid, AI-driven contextual interaction.
 
 ---
 
