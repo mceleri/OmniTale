@@ -14,8 +14,8 @@ export const initialStories: Story[] = [
     },
     messages: [
     ],
-    createdAt: 1717372800000,
-    updatedAt: 1717372800000
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
   },
   {
     id: 'sector7',
@@ -30,8 +30,8 @@ export const initialStories: Story[] = [
     },
     messages: [
     ],
-    createdAt: 1717286400000,
-    updatedAt: 1717286400000
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
   },
   {
     id: 'deepice',
@@ -46,8 +46,8 @@ export const initialStories: Story[] = [
     },
     messages: [
     ],
-    createdAt: 1717200000000,
-    updatedAt: 1717200000000
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
   },
   {
     id: 'tariald-chronicles',
@@ -62,7 +62,23 @@ export const initialStories: Story[] = [
     },
     messages: [
     ],
-    createdAt: 1717400000000,
-    updatedAt: 1717400000000
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
+  },
+  {
+    id: 'blackout',
+    type: 'template',
+    title: 'Blackout',
+    genre: 'Psychological Thriller',
+    synopsis: 'You wake up in a luxury penthouse at night, with absolutely no memory of who you are or how you got there. No name, no date, no past.',
+    dynamicState: {
+      characterSheet: 'Name: [Player Choice / Undiscovered]\nRole: [Undiscovered]\nCondition: Complete declarative amnesia. Procedural memory intact.\n\nInventory / Immediate Surroundings:\n- High-quality tailored clothing\n- Wall safe (combination remembered purely via muscle memory)\n- Inside safe: Large amount of cash, passport (first identity clue), photograph with a second person whose face is blacked out with a marker.\n- Dead cell phone. Once charged: "M. - do not come tonight, it is dangerous" (sent yesterday).',
+      lorebook: `## The Setting\nA contemporary, unnamed Western metropolis. Vertical skyline, financial district, stark separation between luxury and working-class neighborhoods. Frequent rain, neon reflections, constant traffic.\n\n## The Penthouse\nTop floor, private elevator, numeric keypad. Minimalist, expensive, impersonal. A dark, unidentified stain on the entrance rug, partially hidden by a smaller rug. No signs of forced entry.\n\n## NPC Compartmentalization Rule\n**Crucial:** NPCs ONLY know the info in their sections. They do NOT communicate off-screen. If presented with new info, they react with realistic surprise, suspicion, or denial.\n\n## NPCs\n**Avery Quinn (Personal Assistant):** Knows your professional schedule (last 2 weeks). Knows you canceled a major meeting 3 days ago and were unusually nervous. Eager to please, might invent plausible details out of job insecurity.\n**Marsh Calloway (Old Friend):** Knows vague past details. Knows you asked for a discreet cash loan 3 days ago. Warm, but shows subtle non-verbal inconsistencies.\n**Detective Renata Boyle (Police):** Investigating an anonymous noise/altercation complaint from the penthouse tonight. Dry, procedural. Needs a warrant to see your safe or phone.\n**Dana Voss (Hostile Figure):** Believes you wronged her (e.g., broken trust, failed deal). Cold, uses social leverage. Genuinely believes she is right.\n**Walter Briggs (Doorman):** Knows entry/exit logs. Reports an unidentified person asked for you tonight but left before being announced. Respectful, reserved, speaks only when asked.`,
+      masterJournal: '// Master AI Notes - Blackout\n// STRICT RULE: Choose ONE Hidden Truth below at the start of the game and NEVER deviate. NPCs only know their specific fragments.\n// Truth A (Victim): Protagonist discovered something compromising, was drugged/robbed of memories to be kept quiet.\n// Truth B (Culprit): Protagonist did something terrible last night; amnesia is self-induced dissociative trauma. The clues are consequences of their own actions.\n// Truth C (Tool): Protagonist was used as a pawn/frontman for months. Started asking questions, so the handlers wiped their recent memory.\n// \n// Act 1: The Awakening\n- Never impose a name or appearance until the player discovers it (passport) or defines it.\n- Reveal only ONE concrete clue per scene. Let the player drive the pacing.\n- Keep track of what has been revealed to each NPC to maintain strict compartmentalization.',
+    },
+    messages: [
+    ],
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
   }
 ];
