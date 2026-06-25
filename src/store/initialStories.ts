@@ -48,5 +48,21 @@ export const initialStories: Story[] = [
     ],
     createdAt: 1717200000000,
     updatedAt: 1717200000000
+  },
+  {
+    id: 'tariald-chronicles',
+    type: 'template',
+    title: 'Tariald Chronicles',
+    genre: 'Dark Fantasy',
+    synopsis: 'In the wealthy and ancient city of Tariald, the Great Portal brings endless riches. You are Zor, a low-ranking mage from the distant empire of Osys, working grueling shifts at the portal. But beneath your arcane duties lies a deadly secret: a demon trapped within your mind.',
+    dynamicState: {
+      characterSheet: 'Name: Zor\nRole: Low-Ranking Osys Mage\nAffinity: Demonic Magic (Forbidden in Tariald)\n\nTraits:\n- The Curse of Osys: Harbors a bound demon within his conscience. Constant struggle for control.\n- Manipulative and cunning; successfully deceives Tariald Academy officials.\n\nKey Allies:\n- Valerius (Osys Supervisor, silent accomplice)\n\nEquipment:\n- Reagent Containers (Reinforced glass, lead-lined with consecrated salt)\n- Standard Osys robes',
+      lorebook: `## Tariald & Surroundings\nAn ancient city governed by a Council of guilds and nobles. To the North lie perilous lava fields and "Outposts" mining volatile minerals; West are rich mines; East, an immense ancient forest; South, trade routes to other kingdoms.\n\n## Magic & The Curse of Osys\nMagic alters its user. Demonic magic and necromancy are strictly forbidden in Tariald. However, all Mages of Osys secretly harbor a trapped demon within their minds (The Curse of Osys). They draw immense power from it, but face execution by their own specialized guards if they lose control. Clashes with demonic entities leave residue like sulfur and skin sparks, which Osys mages cunningly use as a cover for their forbidden arts.\n\n## The Great Portal\nA massive gateway maintained by the Tariald Academy with the "generous" help of the Osys enclave. It brings immense wealth through instant trade. With great effort, it can expel magical anomalies into interdimensional limbo.\n\n## Notable Entities & Dangers\n- **Forest Entity:** An ancient, dark being seeking human hosts, feared even by the Osys demons.\n- **Obsidian Fragment:** An interdimensional anchor radiating absolute cold. Touching it marks the soul, emitting a black vapor and psionic resonance.\n- **Academy Inquisitors:** Ruthless Tariald officials seeking forbidden magic traces, capable of forced conscience extraction.`,
+      masterJournal: '// Master AI Notes - Tariald Chronicles\n// Act 1: The Portal\'s Secret\n- Player (Zor) is ending a grueling shift at the Great Portal.\n- Tension: Hiding the internal demon from Tariald\'s ruthless Academy Inquisitors.\n- Plot Hook: Supervisor Valerius suspects Zor\'s true potential and might cover for him when a strange anomaly (possibly the Obsidian Fragment) appears at the portal.',
+    },
+    messages: [
+    ],
+    createdAt: 1717400000000,
+    updatedAt: 1717400000000
   }
 ];
