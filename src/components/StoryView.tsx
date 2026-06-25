@@ -120,7 +120,6 @@ export const StoryView: React.FC = () => {
           className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-lg text-zinc-300 hover:text-zinc-100 transition text-xs font-medium shrink-0"
         >
           <ArrowLeft className="w-4 h-4 stroke-[2]" />
-          <span>Indietro</span>
         </button>
         
         <div className="flex-1 text-center px-4 overflow-hidden">
