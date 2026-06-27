@@ -177,7 +177,7 @@ const generateMasterResponse = async (
 
   const url = state.llmUrl;
   const key = state.llmKey;
-  const model = state.modelName || 'google/gemini-2.5-flash';
+  const model = state.modelName;
   const lore = activeStory.dynamicState.lorebook;
   const charSheet = activeStory.dynamicState.characterSheet;
   const journal = activeStory.dynamicState.masterJournal;
@@ -294,7 +294,7 @@ export const useStoryStore = create<StoryState>()(
 
       llmUrl: '',
       llmKey: '',
-      modelName: 'google/gemini-2.5-flash',
+      modelName: '',
 
       isGeneratingStory: false as boolean,
       isUpdatingLorebook: false as boolean,
