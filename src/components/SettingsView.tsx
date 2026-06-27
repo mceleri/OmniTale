@@ -113,7 +113,7 @@ export const SettingsView: React.FC = () => {
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://api.openai.com/v1 or custom URL"
+                  placeholder="https://openrouter.ai/api/v1/chat/completions or custom URL"
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
                 />
               </div>
@@ -139,7 +139,7 @@ export const SettingsView: React.FC = () => {
                   type="text"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  placeholder="google/gemini-2.5-flash"
+                  placeholder="google/gemma-4-31b-it:free"
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
                 />
               </div>
