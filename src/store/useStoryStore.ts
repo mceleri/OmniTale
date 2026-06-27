@@ -3,16 +3,7 @@ import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
 import { initialStories } from './initialStories';
-
-export type Role = 'master' | 'player' | 'system_feedback';
-
-export interface Message {
-  id: string;
-  role: Role;
-  content: string;
-}
-
-export type LoreItem = LoreBlock;
+import { Role, Message, LoreItem } from '../types/story.ts';
 
 export interface Story {
   id: string;
