@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useStoryStore, Message } from '../store/useStoryStore';
+import { useStoryStore } from '../store/useStoryStore';
+import { Message } from '../types/story';
 import { parseMarkdownToBlocks } from '../utils/markdownParser';
 import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit } from 'lucide-react';
 import { MarkdownText } from './MarkdownText';
@@ -80,7 +81,7 @@ export const StoryView: React.FC = () => {
   if (!story) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-zinc-950 text-zinc-300">
-        <p>Story not found.</p>
+        <p>Story not found.</p>\
         <button
           onClick={() => setView('home')}
           className="mt-4 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg text-sm"
@@ -158,7 +159,7 @@ export const StoryView: React.FC = () => {
                   <textarea
                     value={editingText}
                     onChange={(e) => setEditingText(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700 resize-none"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-500 resize-none"
                     rows={3}
                   />
                   <div className="flex justify-end gap-2 mt-2">
@@ -400,7 +401,7 @@ export const StoryView: React.FC = () => {
                 value={characterSheet}
                 onChange={(e) => updateCharacterSheet(e.target.value)}
                 rows={12}
-                className="w-full flex-1 bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-xs font-sans text-zinc-300 leading-relaxed focus:outline-none focus:border-zinc-700 resize-none shadow-inner"
+                className="w-full flex-1 bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-xs font-sans text-zinc-300 leading-relaxed focus:outline-none focus:border-zinc-700 resize-none shadow-inner placeholder-zinc-500"
                 placeholder="Enter character sheet details..."
               />
             </div>
@@ -487,7 +488,7 @@ export const StoryView: React.FC = () => {
                 value={masterJournal}
                 onChange={(e) => updateMasterJournal(e.target.value)}
                 rows={12}
-                className="w-full flex-1 bg-zinc-950 border border-zinc-850 rounded-xl p-4 text-xs font-mono text-emerald-400 leading-relaxed focus:outline-none focus:border-zinc-750 resize-none shadow-inner"
+                className="w-full flex-1 bg-zinc-950 border border-zinc-850 rounded-xl p-4 text-xs font-mono text-emerald-400 leading-relaxed focus:outline-none focus:border-zinc-750 resize-none shadow-inner placeholder-zinc-500"
                 placeholder="// Enter logical blocks here..."
               />
             </div>
@@ -507,7 +508,7 @@ export const StoryView: React.FC = () => {
               <div className="bg-zinc-950 border border-zinc-850/60 p-4 rounded-xl space-y-3">
                 <label className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
                   Instruction / Tone
-                </label>
+                </label>\
                 <textarea
                   value={masterFeedback}
                   onChange={(e) => updateMasterFeedback(e.target.value)}
