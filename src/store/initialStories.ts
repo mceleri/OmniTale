@@ -1,4 +1,4 @@
-import type { Story } from './useStoryStore'; 
+import type { Story } from '../types/story';
 
 export const initialStories: Story[] = [
   {
@@ -12,8 +12,7 @@ export const initialStories: Story[] = [
       lorebook: `## Eldoria Ruins\nOnce a grand temple sanctuary of the Sun Elves, now swallowed by the Whispering Woods. It is said a rift in the weave of magic lies deep in its heart.\n\n## The Violet Beacon\nA crystalline pillar at the center of the ruins. It has glowed with a soft, pulsing light since the Great Eclipse, drawing travelers close.`,
       masterJournal: '// Master AI Notes - Eldoria Adventure\n// Act 1: The Gates of Eldoria\n- Player has arrived at the exterior gate.\n- Theme: Eldritch fantasy, ancient secrets.\n- Key Encounter: Crystalline Guardian at the inner courtyard.\n- Lore hint: The violet light is feeding on nearby life force.',
     },
-    messages: [
-    ],
+    messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
   },
@@ -28,8 +27,7 @@ export const initialStories: Story[] = [
       lorebook: `## Sector 7 Underbelly\nThe low-life district of Neo-Tokyo. Sprawling slums shaded by massive corporate towers of Shin-Megacorp. Law enforcement is highly corrupt.\n\n## The Red Chip\nAn encrypted, military-grade storage medium recovered from a downed high-security courier. Rumored to hold files on "Project Lazarus".`,
       masterJournal: '// Master AI Notes - Sector 7 Cyberpunk\n// Act 1: The Safehouse Siege\n- Player is currently hiding in a capsule hotel room.\n- Corporate agents are scanning the grid for the chip\'s local signature.\n- Next Beat: A local fixer named \'Blue\' offers help, but she might be a double agent.',
     },
-    messages: [
-    ],
+    messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
   },
@@ -44,8 +42,7 @@ export const initialStories: Story[] = [
       lorebook: `## Outpost Boreas\nThe deep-crust drilling station established by United Space Alliance on Europa. Hovering 4 kilometers below the ice sheet over a pitch-black abyss.`,
       masterJournal: '// Master AI Notes - The Deep Ice\n// Act 1: The Silent Shaft\n- Mood: Intense claustrophobia, isolation, slow dread.\n- Primary hazard: Freezing temperatures, power outages.\n- Entity behavior: Communicates through acoustic vibrations.',
     },
-    messages: [
-    ],
+    messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
   },
@@ -60,8 +57,7 @@ export const initialStories: Story[] = [
       lorebook: `## Tariald & Surroundings\nAn ancient city governed by a Council of guilds and nobles. To the North lie perilous lava fields and "Outposts" mining volatile minerals; West are rich mines; East, an immense ancient forest; South, trade routes to other kingdoms.\n\n## Magic & The Curse of Osys\nMagic alters its user. Demonic magic and necromancy are strictly forbidden in Tariald. However, all Mages of Osys secretly harbor a trapped demon within their minds (The Curse of Osys). They draw immense power from it, but face execution by their own specialized guards if they lose control. Clashes with demonic entities leave residue like sulfur and skin sparks, which Osys mages cunningly use as a cover for their forbidden arts.\n\n## The Great Portal\nA massive gateway maintained by the Tariald Academy with the "generous" help of the Osys enclave. It brings immense wealth through instant trade. With great effort, it can expel magical anomalies into interdimensional limbo.\n\n## Notable Entities & Dangers\n- **Forest Entity:** An ancient, dark being seeking human hosts, feared even by the Osys demons.\n- **Obsidian Fragment:** An interdimensional anchor radiating absolute cold. Touching it marks the soul, emitting a black vapor and psionic resonance.\n- **Academy Inquisitors:** Ruthless Tariald officials seeking forbidden magic traces, capable of forced conscience extraction.`,
       masterJournal: '// Master AI Notes - Tariald Chronicles\n// Act 1: The Portal\'s Secret\n- Player (Zor) is ending a grueling shift at the Great Portal.\n- Tension: Hiding the internal demon from Tariald\'s ruthless Academy Inquisitors.\n- Plot Hook: Supervisor Valerius suspects Zor\'s true potential and might cover for him when a strange anomaly (possibly the Obsidian Fragment) appears at the portal.',
     },
-    messages: [
-    ],
+    messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
   },
@@ -76,8 +72,7 @@ export const initialStories: Story[] = [
       lorebook: `## The Setting\nA contemporary, unnamed Western metropolis. Vertical skyline, financial district, stark separation between luxury and working-class neighborhoods. Frequent rain, neon reflections, constant traffic.\n\n## The Penthouse\nTop floor, private elevator, numeric keypad. Minimalist, expensive, impersonal. A dark, unidentified stain on the entrance rug, partially hidden by a smaller rug. No signs of forced entry.\n\n## NPC Compartmentalization Rule\n**Crucial:** NPCs ONLY know the info in their sections. They do NOT communicate off-screen. If presented with new info, they react with realistic surprise, suspicion, or denial.\n\n## NPCs\n**Avery Quinn (Personal Assistant):** Knows your professional schedule (last 2 weeks). Knows you canceled a major meeting 3 days ago and were unusually nervous. Eager to please, might invent plausible details out of job insecurity.\n**Marsh Calloway (Old Friend):** Knows vague past details. Knows you asked for a discreet cash loan 3 days ago. Warm, but shows subtle non-verbal inconsistencies.\n**Detective Renata Boyle (Police):** Investigating an anonymous noise/altercation complaint from the penthouse tonight. Dry, procedural. Needs a warrant to see your safe or phone.\n**Dana Voss (Hostile Figure):** Believes you wronged her (e.g., broken trust, failed deal). Cold, uses social leverage. Genuinely believes she is right.\n**Walter Briggs (Doorman):** Knows entry/exit logs. Reports an unidentified person asked for you tonight but left before being announced. Respectful, reserved, speaks only when asked.`,
       masterJournal: '// Master AI Notes - Blackout\n// STRICT RULE: Choose ONE Hidden Truth below at the start of the game and NEVER deviate. NPCs only know their specific fragments.\n// Truth A (Victim): Protagonist discovered something compromising, was drugged/robbed of memories to be kept quiet.\n// Truth B (Culprit): Protagonist did something terrible last night; amnesia is self-induced dissociative trauma. The clues are consequences of their own actions.\n// Truth C (Tool): Protagonist was used as a pawn/frontman for months. Started asking questions, so the handlers wiped their recent memory.\n// \n// Act 1: The Awakening\n- Never impose a name or appearance until the player discovers it (passport) or defines it.\n- Reveal only ONE concrete clue per scene. Let the player drive the pacing.\n- Keep track of what has been revealed to each NPC to maintain strict compartmentalization.',
     },
-    messages: [
-    ],
+    messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
   }

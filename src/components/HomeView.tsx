@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useStoryStore, Story } from '../store/useStoryStore';
+import { useStoryStore } from '../store/useStoryStore';
+import { Story } from '../types/story';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown } from '../utils/markdownParser';
 import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight } from 'lucide-react';
 
@@ -303,7 +304,7 @@ export const HomeView: React.FC = () => {
                       }}
                       className="p-1 text-zinc-400 hover:text-red-400 rounded transition"
                       title="Delete story"
-                    >
+                    >\
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -343,7 +344,7 @@ export const HomeView: React.FC = () => {
               <div>
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
                   Adventure Title
-                </label>
+                </label>\
                 <input
                   type="text"
                   required
