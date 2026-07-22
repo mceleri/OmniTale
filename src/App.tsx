@@ -4,6 +4,7 @@ import { HomeView } from './components/HomeView';
 import { StoryView } from './components/StoryView';
 import { SettingsView } from './components/SettingsView';
 import { AnalyticsView } from './components/AnalyticsView';
+import './laptop.css';
 
 const App: React.FC = () => {
   const { currentView, setView } = useStoryStore();
@@ -34,15 +35,17 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-300 font-sans selection:bg-zinc-800 selection:text-zinc-100 antialiased overflow-x-hidden">
-      {currentView === 'home' ? (
-        <HomeView />
-      ) : currentView === 'settings' ? (
-        <SettingsView />
-      ) : currentView === 'analytics' ? (
-        <AnalyticsView />
-      ) : (
-        <StoryView />
-      )}
+      <div className="laptop-container">
+        {currentView === 'home' ? (
+          <HomeView />
+        ) : currentView === 'settings' ? (
+          <SettingsView />
+        ) : currentView === 'analytics' ? (
+          <AnalyticsView />
+        ) : (
+          <StoryView />
+        )}
+      </div>
     </div>
   );
 };
