@@ -1,12 +1,8 @@
 @media (min-width: 1024px) {
-  .min-h-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
   .laptop-container {
     width: 100%;
-    max-width: 1200px; /* Or any other max-width you prefer */
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
