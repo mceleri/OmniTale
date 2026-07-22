@@ -1,1 +1,0 @@
-@media (min-width: 1024px){.min-h-screen{display:flex;flex-direction:column;align-items:center}.laptop-container{width:100%;max-width:1024px}}@layer base{body{@apply bg-zinc-950 text-zinc-300 antialiased;}}
