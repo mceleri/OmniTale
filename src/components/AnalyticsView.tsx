@@ -35,7 +35,7 @@ export const AnalyticsView: React.FC = () => {
   // If no story is loaded or selected, render an error state
   if (!story) {
     return (
-      <div className="max-w-md mx-auto min-h-screen px-6 py-8 flex flex-col justify-center items-center">
+      <div className="max-w-md lg:max-w-5xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-center items-center">
         <p className="text-zinc-400 text-sm mb-4">No active story selected for analysis.</p>
         <button
           onClick={() => setView('home')}
@@ -213,7 +213,7 @@ export const AnalyticsView: React.FC = () => {
   }, [filteredChartMessages, chartViewMode, maxVal, xStep]);
 
   return (
-    <div className="max-w-md mx-auto min-h-screen px-4 py-6 flex flex-col justify-between">
+    <div className="max-w-md lg:max-w-5xl mx-auto min-h-screen px-4 py-6 flex flex-col justify-between">
       <div>
         {/* Navigation & Header */}
         <div className="flex items-center gap-3 mb-6">
@@ -233,7 +233,7 @@ export const AnalyticsView: React.FC = () => {
         </div>
 
         {/* Bento Grid Metrics Summary */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
           {/* Total Story Tokens */}
           <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3.5 flex flex-col justify-between">
             <div>
@@ -290,7 +290,9 @@ export const AnalyticsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Diagnostic Segmented Tabs */}
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-start">
+          <div className="lg:col-span-7">
+            {/* Diagnostic Segmented Tabs */}
         <div className="flex border-b border-zinc-900 mb-4 bg-zinc-950/40 rounded-lg p-0.5">
           <button
             onClick={() => setActiveTab('chart')}
@@ -726,9 +728,10 @@ export const AnalyticsView: React.FC = () => {
             </div>
           </div>
         )}
+          </div>
 
-        {/* Detailed Message Inspector (Searchable log of all messages) */}
-        <div className="mt-6">
+          {/* Detailed Message Inspector (Searchable log of all messages) */}
+          <div className="lg:col-span-5 mt-6 lg:mt-0">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider flex items-center gap-1.5">
               <FileText className="w-4 h-4 text-zinc-400" />
@@ -807,6 +810,7 @@ export const AnalyticsView: React.FC = () => {
               ))}
             </div>
           )}
+        </div>
         </div>
       </div>
 

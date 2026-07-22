@@ -94,7 +94,7 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
+    <div className="max-w-md lg:max-w-3xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
       <div>
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
@@ -119,8 +119,8 @@ export const SettingsView: React.FC = () => {
         <div className="space-y-6">
           {/* LLM Settings Form */}
           <form onSubmit={handleSave} className="space-y-6">
-            <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 space-y-4 backdrop-blur-sm">
-              <div>
+            <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 lg:p-6 space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 backdrop-blur-sm">
+              <div className="lg:col-span-2">
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
                   LLM Provider
                 </label>
@@ -194,7 +194,7 @@ export const SettingsView: React.FC = () => {
                 />
               </div>
 
-              <div>
+              <div className="lg:col-span-2">
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
                   Model Name
                 </label>

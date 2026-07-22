@@ -135,7 +135,7 @@ export const StoryView: React.FC = () => {
   };
 
   return (
-    <div className="relative max-w-md mx-auto h-screen bg-zinc-950 flex flex-col overflow-hidden select-none">
+    <div className="relative max-w-md lg:max-w-4xl mx-auto h-screen bg-zinc-950 flex flex-col overflow-hidden select-none">
       
       {/* 1. TOP BAR */}
       <header className="sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900/60 h-14 flex items-center justify-between px-4 z-20">
@@ -215,7 +215,7 @@ export const StoryView: React.FC = () => {
           return (
             <div
               key={msg.id}
-              className={`flex flex-col max-w-[90%] transition-all animate-fade-in ${
+              className={`flex flex-col max-w-[90%] lg:max-w-[75%] transition-all animate-fade-in ${
                 isMaster ? 'mr-auto items-start' : 'ml-auto items-end text-right'
               }`}
             >
@@ -228,7 +228,7 @@ export const StoryView: React.FC = () => {
               <div
                 className={`rounded-2xl leading-relaxed text-zinc-300 ${
                   isMaster
-                    ? 'font-serif text-[15px] text-zinc-300 font-normal pr-4'
+                    ? 'font-serif text-[15px] lg:text-base lg:leading-loose lg:tracking-wide text-zinc-300 font-normal pr-4'
                     : 'bg-zinc-900/80 border border-zinc-800/80 px-4 py-3 font-sans text-sm shadow-sm'
                 }`}
               >
@@ -396,7 +396,7 @@ export const StoryView: React.FC = () => {
 
       {/* Slide-up Bottom Sheet */}
       <div
-        className={`fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-zinc-900 border-t border-zinc-800/80 rounded-t-2xl z-40 overflow-hidden shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
+        className={`fixed bottom-0 left-0 right-0 max-w-md lg:max-w-4xl mx-auto bg-zinc-900 border-t border-zinc-800/80 rounded-t-2xl z-40 overflow-hidden shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
           activeSheet !== null ? 'translate-y-0 h-[65vh]' : 'translate-y-full h-[65vh]'
         }`}
       >
@@ -441,7 +441,7 @@ export const StoryView: React.FC = () => {
           )}
 
           {activeSheet === 'lore' && (
-            <div className="space-y-6">
+            <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6">
               {/* Lore Addition Form */}
               <div className="bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
                 <h4 className="text-xs font-bold text-zinc-200 uppercase tracking-wider mb-3">
@@ -538,30 +538,32 @@ export const StoryView: React.FC = () => {
                 </p>
               </div>
 
-              <div className="bg-zinc-950 border border-zinc-850/60 p-4 rounded-xl space-y-3">
-                <label className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
-                  Instruction / Tone
-                </label>\
-                <textarea
-                  value={masterFeedback}
-                  onChange={(e) => updateMasterFeedback(e.target.value)}
-                  rows={4}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 focus:outline-none focus:border-zinc-700 placeholder-zinc-400 resize-none"
-                  placeholder="e.g. Keep descriptions under 3 paragraphs, don't control my character, focus on high survival stakes..."
-                />
-                
-                <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
-                  <Check className="w-4 h-4 text-emerald-500" />
-                  <span>Custom GM parameters verified and active.</span>
+              <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6">
+                <div className="bg-zinc-950 border border-zinc-850/60 p-4 rounded-xl space-y-3">
+                  <label className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
+                    Instruction / Tone
+                  </label>\
+                  <textarea
+                    value={masterFeedback}
+                    onChange={(e) => updateMasterFeedback(e.target.value)}
+                    rows={4}
+                    className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 focus:outline-none focus:border-zinc-700 placeholder-zinc-400 resize-none"
+                    placeholder="e.g. Keep descriptions under 3 paragraphs, don't control my character, focus on high survival stakes..."
+                  />
+                  
+                  <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
+                    <Check className="w-4 h-4 text-emerald-500" />
+                    <span>Custom GM parameters verified and active.</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* Color Contrast Brightened "What is this section" explanation card */}
-              <div className="border border-zinc-800/80 rounded-xl p-4 bg-zinc-950/40 text-xs text-zinc-300 flex items-start gap-2.5 leading-relaxed">
-                <HelpCircle className="w-4.5 h-4.5 text-zinc-300 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-semibold text-zinc-200 block mb-0.5">What is this section?</span>
-                  In a production environment, this feedback stream is appended directly to the AI's system prompt in real-time, tailoring response length, combat pacing, or language on the fly.
+                {/* Color Contrast Brightened "What is this section" explanation card */}
+                <div className="border border-zinc-800/80 rounded-xl p-4 bg-zinc-950/40 text-xs text-zinc-300 flex items-start gap-2.5 leading-relaxed">
+                  <HelpCircle className="w-4.5 h-4.5 text-zinc-300 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold text-zinc-200 block mb-0.5">What is this section?</span>
+                    In a production environment, this feedback stream is appended directly to the AI's system prompt in real-time, tailoring response length, combat pacing, or language on the fly.
+                  </div>
                 </div>
               </div>
             </div>

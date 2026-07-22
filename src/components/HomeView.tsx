@@ -249,7 +249,7 @@ export const HomeView: React.FC = () => {
   });
 
   return (
-    <div className="max-w-md mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
+    <div className="max-w-md lg:max-w-5xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
       <div>
         {/* Header - No solo rpg tagline */}
         <div className="flex items-center justify-between mb-8">
@@ -270,7 +270,7 @@ export const HomeView: React.FC = () => {
         {/* Dynamic Hero Card (Top Section) */}
         {!recentStory ? (
           /* State A: Store is empty */
-          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm">
+          <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm lg:max-w-xl lg:mx-auto lg:w-full">
             <div className="flex items-start gap-3">
               <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
               <div>
@@ -285,7 +285,7 @@ export const HomeView: React.FC = () => {
           /* State B: Has stories - Quick Resume Card */
           <div
             onClick={() => handleSelectStoryOrTemplate(recentStory)}
-            className="group wrapper-card bg-zinc-900/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm cursor-pointer transition-all hover:border-zinc-700/60 flex items-center justify-between gap-4"
+            className="group wrapper-card bg-zinc-900/40 hover:bg-zinc-900/80 border border-zinc-800/60 rounded-xl p-5 mb-8 backdrop-blur-sm cursor-pointer transition-all hover:border-zinc-700/60 flex items-center justify-between gap-4 lg:max-w-xl lg:mx-auto lg:w-full"
           >
             <div className="flex items-start gap-3 flex-1 min-w-0">
               <Sparkles className="w-5 h-5 text-zinc-300 mt-0.5 shrink-0" />
@@ -293,7 +293,7 @@ export const HomeView: React.FC = () => {
                 <h2 className="text-sm font-medium text-zinc-200">
                   {recentStory.type === 'template' ? 'Edit Template' : 'Continue Journey'}
                 </h2>
-                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[240px]">
+                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[240px] lg:max-w-[340px]">
                   {recentStory.title}
                 </p>
                 <p className="text-[10px] text-zinc-400 mt-0.5">
@@ -313,14 +313,14 @@ export const HomeView: React.FC = () => {
             setEditingStoryId(null);
             setIsModalOpen(true);
           }}
-          className="w-full flex items-center justify-center gap-2 py-3.5 px-4 bg-zinc-100 text-zinc-950 font-medium text-sm rounded-xl transition hover:bg-zinc-200 active:scale-[0.98]"
+          className="w-full lg:max-w-xs lg:mx-auto flex items-center justify-center gap-2 py-3.5 px-4 bg-zinc-100 text-zinc-950 font-medium text-sm rounded-xl transition hover:bg-zinc-200 active:scale-[0.98]"
         >
           <Plus className="w-4 h-4" />
           New Adventure
         </button>
 
         {/* Segmented Filter row replacing YOUR STORIES title */}
-        <div className="mt-10 mb-5 flex gap-2">
+        <div className="mt-10 mb-5 flex gap-2 lg:justify-center lg:mt-12 lg:mb-8">
           <button
             onClick={() => setFilter('all')}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
@@ -361,16 +361,16 @@ export const HomeView: React.FC = () => {
               <p className="text-xs text-zinc-400">No matching stories found.</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 lg:space-y-0 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-6 lg:pb-6 lg:snap-x lg:snap-proximity">
               {filteredStories.map((story: Story) => (
                 <div
                   key={story.id}
-                  className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between"
+                  className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between lg:min-w-[340px] lg:max-w-[380px] lg:h-[280px] lg:shrink-0 lg:snap-start"
                   onClick={() => handleSelectStoryOrTemplate(story)}
                 >
                   <div className="flex justify-between items-start gap-4">
                      <div className="flex-1 min-w-0">
-                      <h4 className="font-serif text-lg text-zinc-200 group-hover:text-zinc-100 truncate max-w-[240px] mb-1">
+                      <h4 className="font-serif text-lg lg:text-xl text-zinc-200 group-hover:text-zinc-100 truncate max-w-[240px] lg:max-w-[280px] mb-1">
                         {story.title}
                       </h4>
                       <div className="flex flex-row gap-2 items-center mb-2 flex-wrap">
@@ -389,7 +389,7 @@ export const HomeView: React.FC = () => {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-zinc-300 line-clamp-2 leading-relaxed">
+                      <p className="text-xs lg:text-sm text-zinc-300 line-clamp-2 lg:line-clamp-4 leading-relaxed">
                         {story.synopsis}
                       </p>
                     </div>
@@ -441,7 +441,7 @@ export const HomeView: React.FC = () => {
       {/* Creation Modal (Sleek Dialog - Worldbuilding Canvas) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-zinc-900 border border-zinc-800/80 rounded-2xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden animate-scale-up">
+          <div className="bg-zinc-900 border border-zinc-800/80 rounded-2xl w-full max-w-md lg:max-w-xl max-h-[85vh] flex flex-col overflow-hidden animate-scale-up">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/60 shrink-0">
