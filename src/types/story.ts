@@ -6,6 +6,8 @@ export interface Message {
   id: string;
   role: Role;
   content: string;
+  tokens?: number;
+  promptTokens?: number;
 }
 
 export type LoreItem = LoreBlock;
@@ -16,6 +18,7 @@ export interface Story {
   title: string;
   genre: string;
   synopsis: string;
+  language?: string;
   dynamicState: {
     characterSheet: string;
     lorebook: string;
@@ -27,12 +30,13 @@ export interface Story {
 }
 
 export interface StoryState {
-  currentView: 'home' | 'story' | 'settings';
+  currentView: 'home' | 'story' | 'settings' | 'analytics';
   stories: Story[];
   activeStoryId: string | null;
   masterFeedback: string;
   
   // Settings
+  llmProvider: 'openrouter' | 'gemini' | 'openai';
   llmUrl: string;
   llmKey: string;
   modelName: string;
@@ -43,7 +47,7 @@ export interface StoryState {
   isUpdatingJournal: boolean;
   
   // Actions
-  setView: (view: 'home' | 'story' | 'settings') => void;
+  setView: (view: 'home' | 'story' | 'settings' | 'analytics') => void;
   selectStory: (storyId: string) => void;
   createStory: (
     title: string,
@@ -53,7 +57,8 @@ export interface StoryState {
     type?: 'tale' | 'template',
     lorebook?: string,
     characterSheet?: string,
-    masterJournal?: string
+    masterJournal?: string,
+    language?: string
   ) => void;
   updateStory: (
     storyId: string,
@@ -74,6 +79,6 @@ export interface StoryState {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
-  updateLlmSettings: (url: string, key: string, modelName: string) => void;
+  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string) => void;
   importStore: (data: any) => void;
 }

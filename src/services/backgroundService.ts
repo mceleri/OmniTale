@@ -13,12 +13,14 @@ export interface BackgroundUpdatesResult {
 }
 
 export const executeBackgroundUpdates = async (
+  provider: 'openrouter' | 'gemini' | 'openai',
   url: string,
   key: string,
   modelName: string,
   currentLorebook: string,
   currentJournal: string,
-  last10Messages: Message[],
+  recentMessages: Message[],
+  language: string | undefined,
   onLorebookStart: () => void,
   onLorebookSuccess: (updatedLorebook: string) => void,
   onLorebookComplete: () => void,
@@ -26,7 +28,7 @@ export const executeBackgroundUpdates = async (
   onJournalSuccess: (updatedJournal: string) => void,
   onJournalComplete: () => void
 ): Promise<void> => {
-  const recentMessagesText = last10Messages
+  const recentMessagesText = recentMessages
     .map((msg) => `${msg.role === 'player' ? 'Player' : 'Master'}: ${msg.content}`)
     .join('\n\n');
 
@@ -34,10 +36,10 @@ export const executeBackgroundUpdates = async (
   const updateLorebookPromise = (async () => {
     onLorebookStart();
     try {
-      const lorePrompt = getLorebookSystemPrompt();
+      const lorePrompt = getLorebookSystemPrompt(language);
       const userContent = formatLorebookPrompt(currentLorebook, recentMessagesText);
       
-      const response = await fetchNarrative(url, key, modelName, lorePrompt, [
+      const response = await fetchNarrative(provider, url, key, modelName, lorePrompt, [
         { id: 'temp_lore', role: 'player', content: userContent }
       ]);
 
@@ -56,10 +58,10 @@ export const executeBackgroundUpdates = async (
   const updateJournalPromise = (async () => {
     onJournalStart();
     try {
-      const journalPrompt = getJournalSystemPrompt();
+      const journalPrompt = getJournalSystemPrompt(language);
       const userContent = formatJournalPrompt(currentJournal, recentMessagesText);
 
-      const response = await fetchNarrative(url, key, modelName, journalPrompt, [
+      const response = await fetchNarrative(provider, url, key, modelName, journalPrompt, [
         { id: 'temp_journal', role: 'player', content: userContent }
       ]);
 

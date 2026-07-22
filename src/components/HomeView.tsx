@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
 import { Story } from '../types/story';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown } from '../utils/markdownParser';
-import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight, BarChart2, Loader } from 'lucide-react';
+import { fetchNarrative } from '../services/llmService';
 
 const formatRelativeTime = (timestamp: number): string => {
   const diff = Date.now() - timestamp;
@@ -17,11 +18,35 @@ const formatRelativeTime = (timestamp: number): string => {
   return new Date(timestamp).toLocaleDateString();
 };
 
+const LANGUAGES = [
+  { name: 'English', flag: '🇺🇸', native: 'English' },
+  { name: 'Italiano', flag: '🇮🇹', native: 'Italiano' },
+  { name: 'Español', flag: '🇪🇸', native: 'Español' },
+  { name: 'Français', flag: '🇫🇷', native: 'Français' },
+  { name: 'Deutsch', flag: '🇩🇪', native: 'Deutsch' },
+  { name: 'Português', flag: '🇵🇹', native: 'Português' },
+  { name: '日本語', flag: '🇯🇵', native: '日本語' },
+  { name: '中文', flag: '🇨🇳', native: '中文' },
+];
+
 export const HomeView: React.FC = () => {
   const { stories, selectStory, createStory, updateStory, deleteStory, setView } = useStoryStore();
+  const [storyIdToDelete, setStoryIdToDelete] = useState<string | null>(null);
+  const storyToDelete = stories.find(s => s.id === storyIdToDelete);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [pendingJourneyData, setPendingJourneyData] = useState<{
+    title: string;
+    synopsis: string;
+    characterName: string;
+    compiledLorebookMarkdown: string;
+    characterSheetContent: string;
+  } | null>(null);
   const [title, setTitle] = useState('');
   const [editingStoryId, setEditingStoryId] = useState<string | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translationStatus, setTranslationStatus] = useState('');
   
   // Local state for dynamic worldbuilding blocks
   const [blocks, setBlocks] = useState<{ id: string; title: string; content: string }[]>([
@@ -58,14 +83,93 @@ export const HomeView: React.FC = () => {
 
     const { characterName, characterSheetContent, compiledLorebookMarkdown, synopsis } = processCanvasBlocks();
 
-    createStory(
-      title.trim(),
+    // Set pending data and trigger language modal
+    setPendingJourneyData({
+      title: title.trim(),
       synopsis,
       characterName,
-      'Custom', // Genre is inferred / Custom
-      'tale', // Active tale
       compiledLorebookMarkdown,
       characterSheetContent
+    });
+    setIsLanguageModalOpen(true);
+  };
+
+  const handleConfirmLanguage = async () => {
+    if (!pendingJourneyData) return;
+
+    const state = useStoryStore.getState();
+    const key = state.llmKey;
+    const url = state.llmUrl;
+    const model = state.modelName;
+
+    let finalTitle = pendingJourneyData.title;
+    let finalSynopsis = pendingJourneyData.synopsis;
+    let finalLorebook = pendingJourneyData.compiledLorebookMarkdown;
+    let finalCharSheet = pendingJourneyData.characterSheetContent;
+    let finalJournal = `// AI Master Notes — ${finalTitle}\n// Act 1: The First Step\n- Character: ${pendingJourneyData.characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`;
+
+    if (key) {
+      setIsTranslating(true);
+      setTranslationStatus('Traduzione in corso...');
+      try {
+        const translateField = async (text: string, systemPrompt: string): Promise<string> => {
+          if (!text.trim()) return text;
+          try {
+            const result = await fetchNarrative(
+              url,
+              key,
+              model,
+              systemPrompt,
+              [{ id: 'trans_' + Date.now() + Math.random(), role: 'player', content: text }]
+            );
+            return result.trim() || text;
+          } catch (err) {
+            console.error('Field translation error:', err);
+            return text;
+          }
+        };
+
+        const titlePrompt = `You are a professional translator. Translate the following adventure title into ${selectedLanguage}. Make it sound natural, evocative, and epic in ${selectedLanguage}. Return ONLY the translated title text, with no explanations, no quotes, and no extra commentary.`;
+        const synopsisPrompt = `You are an expert fantasy/RPG translator. Translate the following adventure synopsis into ${selectedLanguage}. Keep it engaging, dramatic, and atmospheric. Return ONLY the translated synopsis text, with no explanations or metadata.`;
+        const charSheetPrompt = `You are an expert RPG system translator. Translate the following character sheet into ${selectedLanguage}. Translate labels (like 'Name', 'Attributes', 'Might', 'Agility', 'Intellect', 'Grit', 'Inventory', 'Rations') and description/item names (like 'Leather Satchel') so they sound natural and standard in ${selectedLanguage}. Preserve the original text structure, layout, newlines, and colon style exactly. Return ONLY the translated character sheet.`;
+        const lorebookPrompt = `You are an expert fantasy worldbuilding translator. Translate the following lorebook markdown content into ${selectedLanguage}. Translate all prose, titles, and headers naturally, but preserve all markdown syntax (headers, bullet points, bold/italic, etc.) exactly. Return ONLY the translated markdown.`;
+        const journalPrompt = `You are a Game Master assistant. Translate the following GM notes/journal into ${selectedLanguage}. Translate all descriptions, goals, and act titles, but preserve the format, bullet points, and comment markers (like '//') exactly. Return ONLY the translated notes.`;
+
+        const [translatedTitle, translatedSynopsis, translatedCharSheet, translatedLorebook, translatedJournal] = await Promise.all([
+          translateField(finalTitle, titlePrompt),
+          translateField(finalSynopsis, synopsisPrompt),
+          translateField(finalCharSheet, charSheetPrompt),
+          translateField(finalLorebook, lorebookPrompt),
+          translateField(finalJournal, journalPrompt),
+        ]);
+
+        finalTitle = translatedTitle;
+        finalSynopsis = translatedSynopsis;
+        finalCharSheet = translatedCharSheet;
+        finalLorebook = translatedLorebook;
+        finalJournal = translatedJournal;
+
+      } catch (error) {
+        console.error('Translation process error:', error);
+      } finally {
+        setIsTranslating(false);
+        setTranslationStatus('');
+      }
+    }
+
+    const charNameMatch = finalCharSheet.match(/^Name:\s*(.+)$/m) || finalCharSheet.match(/^Nome:\s*(.+)$/m) || finalCharSheet.match(/^Nombre:\s*(.+)$/m) || finalCharSheet.match(/^Nom:\s*(.+)$/m);
+    const finalCharName = charNameMatch ? charNameMatch[1].trim() : pendingJourneyData.characterName;
+
+    createStory(
+      finalTitle,
+      finalSynopsis,
+      finalCharName,
+      'Custom', // Genre is inferred / Custom
+      'tale', // Active tale
+      finalLorebook,
+      finalCharSheet,
+      finalJournal, // Pass the translated journal
+      selectedLanguage
     );
 
     // Reset fields
@@ -73,6 +177,8 @@ export const HomeView: React.FC = () => {
     setBlocks([{ id: String(Date.now()), title: 'Setting', content: '' }]);
     setEditingStoryId(null);
     setIsModalOpen(false);
+    setIsLanguageModalOpen(false);
+    setPendingJourneyData(null);
   };
 
   const handleSaveTemplate = (e?: React.FormEvent | React.MouseEvent) => {
@@ -295,18 +401,30 @@ export const HomeView: React.FC = () => {
                       <Clock className="w-3.5 h-3.5" />
                       {formatRelativeTime(story.updatedAt)}
                     </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm(`Are you sure you want to delete "${story.title}"? This cannot be undone.`)) {
-                          deleteStory(story.id);
-                        }
-                      }}
-                      className="p-1 text-zinc-400 hover:text-red-400 rounded transition"
-                      title="Delete story"
-                    >\
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          useStoryStore.setState({ activeStoryId: story.id, currentView: 'analytics' });
+                        }}
+                        className="p-1 text-zinc-400 hover:text-emerald-400 rounded transition flex items-center gap-1"
+                        title="View Token Analytics & Diagnostics"
+                      >
+                        <BarChart2 className="w-3.5 h-3.5" />
+                        <span className="font-sans font-medium text-[10px]">Stats</span>
+                      </button>
+                      <span className="text-zinc-800 select-none">|</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setStoryIdToDelete(story.id);
+                        }}
+                        className="p-1 text-zinc-400 hover:text-red-400 rounded transition"
+                        title="Delete story"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -317,7 +435,7 @@ export const HomeView: React.FC = () => {
 
       {/* Footer */}
       <div className="mt-12 pt-6 border-t border-zinc-900 text-center text-[10px] text-zinc-400">
-        OmniTale Reader v1.2.0 • Elegant Minimalist Solo RPG Interface
+        OmniTale Reader v1.3.0 • Elegant Minimalist Solo RPG Interface
       </div>
 
       {/* Creation Modal (Sleek Dialog - Worldbuilding Canvas) */}
@@ -434,6 +552,127 @@ export const HomeView: React.FC = () => {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* Language Selection Modal */}
+      {isLanguageModalOpen && (
+        <div className="fixed inset-0 bg-zinc-950/85 backdrop-blur-md flex items-center justify-center p-4 z-[60] animate-fade-in" id="language-selection-modal">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-6 flex flex-col space-y-6 shadow-2xl animate-scale-up">
+            
+            {/* Header */}
+            <div className="text-center space-y-1">
+              <h3 className="font-serif text-xl text-zinc-100 font-medium">
+                Lingua dell'Avventura
+              </h3>
+              <p className="text-xs text-zinc-400">
+                Seleziona la lingua principale per la narrazione dell'AI Game Master.
+              </p>
+            </div>
+
+            {/* Languages Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {LANGUAGES.map((lang) => {
+                const isSelected = selectedLanguage === lang.name;
+                return (
+                  <button
+                    key={lang.name}
+                    type="button"
+                    disabled={isTranslating}
+                    onClick={() => setSelectedLanguage(lang.name)}
+                    className={`flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all duration-200 active:scale-[0.98] ${
+                      isSelected
+                        ? 'bg-zinc-100 border-zinc-100 text-zinc-950 font-semibold shadow-md shadow-zinc-100/5'
+                        : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:text-zinc-100 hover:border-zinc-700/80'
+                    } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <span className="text-2xl" role="img" aria-label={lang.name}>
+                      {lang.flag}
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-sans truncate">{lang.native}</span>
+                      <span className={`text-[9px] ${isSelected ? 'text-zinc-600' : 'text-zinc-500'} font-sans truncate`}>
+                        {lang.name}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Hint Box */}
+            <div className="bg-zinc-950/40 border border-zinc-850/60 rounded-xl p-3 text-[10px] text-zinc-400 leading-relaxed font-sans">
+              💡 <strong>System Instruction Vincolante:</strong> L'AI Master genererà l'inizio della storia e tutte le risposte in <strong>{selectedLanguage}</strong>. Si adeguerà anche dinamicamente alla lingua che userai nei tuoi messaggi!
+            </div>
+
+            {/* Actions */}
+            {isTranslating ? (
+              <div className="flex flex-col items-center justify-center py-2 space-y-2 bg-zinc-950/30 border border-zinc-850/40 rounded-xl p-3">
+                <Loader className="w-5 h-5 text-zinc-400 animate-spin" />
+                <span className="text-xs text-zinc-400 font-sans font-medium">{translationStatus}</span>
+              </div>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLanguageModalOpen(false);
+                    setPendingJourneyData(null);
+                  }}
+                  className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs font-semibold rounded-xl transition"
+                >
+                  Annulla
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmLanguage}
+                  className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 text-xs font-bold rounded-xl transition shadow-lg shadow-zinc-100/5"
+                >
+                  Inizia Avventura
+                </button>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {storyIdToDelete && storyToDelete && (
+        <div className="fixed inset-0 bg-zinc-950/85 backdrop-blur-md flex items-center justify-center p-4 z-[70] animate-fade-in" id="delete-confirmation-modal">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-xs p-6 flex flex-col space-y-5 shadow-2xl animate-scale-up">
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 rounded-full bg-red-950/40 border border-red-900/40 flex items-center justify-center mx-auto text-red-400">
+                <Trash2 className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-lg text-zinc-100 font-medium">
+                Elimina Avventura
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Sei sicuro di voler eliminare definitivamente <strong>"{storyToDelete.title}"</strong>? Questa azione non può essere annullata.
+              </p>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setStoryIdToDelete(null)}
+                className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs font-semibold rounded-xl transition"
+              >
+                Annulla
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  deleteStory(storyToDelete.id);
+                  setStoryIdToDelete(null);
+                }}
+                className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-red-600/10"
+              >
+                Elimina
+              </button>
+            </div>
           </div>
         </div>
       )}

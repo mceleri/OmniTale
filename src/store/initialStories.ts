@@ -75,5 +75,64 @@ export const initialStories: Story[] = [
     messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
+  },
+  {
+    id: 'echoes-of-the-void',
+    type: 'template',
+    title: 'Echoes of the Void',
+    genre: 'Sci-Fi / Space Opera',
+    synopsis: "Humanity has scattered across a thousand frontier colonies in the Sector, while ancient alien threats have splintered into feral swarms and hostile factions. You are Lyra, one of the last survivors of the elite 'Ghost' program. Gifted with psionic powers and a refractive stealth suit that renders you invisible, you wander the stars haunted by voices in your mind and a moral compass that drives you to protect the weak... even if it constantly gets you into trouble.",
+    dynamicState: {
+      characterSheet: `Name: Lyra
+Role: Ex-Elite Special Agent ("Ghost")
+Psychic Condition: Constant psionic echoes (hears voices from the void)
+
+Powers & Implants:
+- Psionic Cloaking: Tactical optical-refraction stealth suit (rechargeable battery)
+- Psionic Aptitude: Latent telepathy, short-range premonition, amplified sensory awareness
+
+Equipment:
+- "Solaria" High-Output Impulse Sniper Rifle (Solar-recharged, extreme range)
+- Conventional Kinetic Sidearm
+- Monocrystalline Combat Blade
+- Lightweight Tactical Infiltration Under-suit
+- Emergency Medikit & Field Rations`,
+      lorebook: `## The Frontier Sector
+A lawless sprawl of star systems once united under rigid galactic empires, now reduced to a shifting mosaic of dusty mining colonies, outlaw outposts, and ruthless corporate mercenary syndicates.
+
+## Feral & Shattered Alien Threats
+The massive insectoid swarms and zealot psionic alien crusaders of the past have fractured. Now, feral sub-swarms, rogue bio-forms, and fanatic alien splinter groups roam the shipping lanes, preying on remote human settlements.
+
+## The Ghost Program
+A defunct, highly classified black-budget military program that engineered lethal operatives through cybernetic enhancement and forced psychic awakening. Officially disbanded, the few surviving Ghosts are either hunted fugitives or solitary mercenaries, plagued by the severe neural side-effects of their conditioning.
+
+## Voices of the Void
+A haunting byproduct of Lyra's psionic conditioning. She perceives psychic ripples, emotional residues of the living and the dead, or even the alien hive-mind's leftover murmurs. Discerning reality from hallucinatory echoes in high-stress environments is a constant struggle.`,
+      masterJournal: `// AI Master Notes — Echoes of the Void
+// Act 1: Fire on the Frontier
+
+[CORE CONFLICT POINTS FOR THE DM]
+1. THE MERCENARY EXTORTION:
+- A ruthless corporate security force ("Vanguard Syndicate") is extorting a local, defenseless mining settlement on a desolate desert planet.
+- Tension: If Lyra steps in to defend the miners, she must expose her high-tech gear and psionic abilities, which will alert the mercenary scouts and reveal her location to active bounty hunters searching for rogue Ghosts.
+
+2. THE FERAL SWARM OUTBREAK:
+- Beneath the colony's metallic scrap heaps, a dormant nest of ravenous, insectoid carapaced predators ("Chitin Crawlers") has awakened, hungry and aggressive.
+- Tension: The local sheriff is planning a suicidal descent into the nest to save trapped children. Lyra can support from the shadows using her Solaria rifle, but the echoes of the hive-mind will flood her head, risking a psychic overload or hallucinations at a critical moment.
+
+3. THE SPLINTERED CRUSADER'S RELIC:
+- A rogue, fanatic alien warrior is hunting a powerful psionic relic buried near the town's water supply. The relic's frequency is amplifying Lyra's "voices," making them loud and painful, but also giving her flashes of future events.
+- Tension: The alien views humans as contaminants. Lyra can try to communicate telepathically with this alien, but doing so could burn out her neural pathways or reveal her mind to the wider hive-mind remaining in the sector.
+
+4. THE CORRUPT COLONY LEADER:
+- The mayor of the settlement is secretly working with the Vanguard Syndicate, planning to sell out the local workers in exchange for passage off-world.
+- Tension: A child miner has stolen a datapad containing proof of this betrayal and has fled to the desert wastes. Lyra is the only one who can navigate the sandstorms to track them before the corporate death squads do.
+
+[TONE & ATMOSPHERE]
+- Gritty space western, isolation, deep psychological burden, high-stakes tactical combat, and the overwhelming, haunting whisper of the void.`
+    },
+    messages: [],
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
   }
 ];

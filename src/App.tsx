@@ -3,6 +3,7 @@ import { useStoryStore } from './store/useStoryStore';
 import { HomeView } from './components/HomeView';
 import { StoryView } from './components/StoryView';
 import { SettingsView } from './components/SettingsView';
+import { AnalyticsView } from './components/AnalyticsView';
 
 const App: React.FC = () => {
   const { currentView, setView } = useStoryStore();
@@ -37,6 +38,8 @@ const App: React.FC = () => {
         <HomeView />
       ) : currentView === 'settings' ? (
         <SettingsView />
+      ) : currentView === 'analytics' ? (
+        <AnalyticsView />
       ) : (
         <StoryView />
       )}

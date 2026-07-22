@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
 import { Message } from '../types/story';
 import { parseMarkdownToBlocks } from '../utils/markdownParser';
-import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit } from 'lucide-react';
+import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit, ArrowDown } from 'lucide-react';
 import { MarkdownText } from './MarkdownText';
 
 export const StoryView: React.FC = () => {
@@ -43,13 +43,29 @@ export const StoryView: React.FC = () => {
 
   // Refs for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showScrollArrow, setShowScrollArrow] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    // Show arrow if we are more than 150px away from the bottom of the scrollable container
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+    setShowScrollArrow(!isNearBottom);
+  };
+
+  // Whenever messages change, scroll to bottom and reset arrow visibility
   useEffect(() => {
     scrollToBottom();
+    const timer = setTimeout(() => {
+      handleScroll();
+    }, 100);
+    return () => clearTimeout(timer);
   }, [messages]);
 
   // Automatic LLM invocation to START THE STORY if the message history is empty
@@ -94,12 +110,19 @@ export const StoryView: React.FC = () => {
 
   const isAnyLoading = isGeneratingStory || isUpdatingLorebook || isUpdatingJournal;
 
+  const resetTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  };
+
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim() || isAnyLoading) return;
 
     sendMessage(inputText.trim());
     setInputText('');
+    resetTextareaHeight();
   };
 
   const handleCreateLore = (e: React.FormEvent) => {
@@ -139,6 +162,8 @@ export const StoryView: React.FC = () => {
 
       {/* 2. MAIN CHAT / STORY STREAM */}
       <main
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-8 no-scrollbar scroll-smooth"
       >
         {messages.map((msg: Message, index: number) => {
@@ -318,21 +343,29 @@ export const StoryView: React.FC = () => {
         {/* TextInput Bar */}
         <form onSubmit={handleSend} className="flex items-end gap-2">
           <textarea
+            ref={textareaRef}
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => {
+              setInputText(e.target.value);
+              if (textareaRef.current) {
+                textareaRef.current.style.height = 'auto';
+                textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 160)}px`;
+              }
+            }}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
+              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 if (inputText.trim() && !isAnyLoading) {
                   sendMessage(inputText.trim());
                   setInputText('');
+                  resetTextareaHeight();
                 }
               }
             }}
             disabled={isAnyLoading}
             rows={1}
             placeholder={isAnyLoading ? "AI Game Master is thinking..." : `Instruct ${characterName} or respond...`}
-            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[44px] max-h-[120px] overflow-y-auto"
+            className="flex-1 bg-zinc-900/60 border border-zinc-850/80 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700/80 focus:bg-zinc-900 transition placeholder-zinc-400 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[44px] max-h-[160px] overflow-y-auto"
             style={{ height: 'auto' }}
           />
           {isGeneratingStory ? (
@@ -535,6 +568,18 @@ export const StoryView: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Scroll to Bottom Floating Arrow */}
+      {showScrollArrow && (
+        <button
+          onClick={scrollToBottom}
+          className="absolute bottom-[135px] right-5 z-30 p-2 bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 rounded-full shadow-lg transition-all duration-300 animate-fade-in hover:scale-105 active:scale-95 flex items-center justify-center opacity-85 hover:opacity-100 cursor-pointer"
+          title="Scroll in fondo"
+          id="scroll-to-bottom-btn"
+        >
+          <ArrowDown className="w-5 h-5 animate-bounce text-zinc-300" />
+        </button>
+      )}
 
     </div>
   );

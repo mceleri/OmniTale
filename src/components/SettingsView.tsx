@@ -3,7 +3,8 @@ import { useStoryStore } from '../store/useStoryStore';
 import { ArrowLeft, Save, Check, Download, Upload } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { llmUrl, llmKey, modelName, updateLlmSettings, setView, importStore } = useStoryStore();
+  const { llmProvider, llmUrl, llmKey, modelName, updateLlmSettings, setView, importStore } = useStoryStore();
+  const [provider, setProvider] = useState<'openrouter' | 'gemini' | 'openai'>(llmProvider || 'openrouter');
   const [url, setUrl] = useState(llmUrl);
   const [key, setKey] = useState(llmKey);
   const [model, setModel] = useState(modelName);
@@ -11,9 +12,23 @@ export const SettingsView: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleProviderChange = (newProvider: 'openrouter' | 'gemini' | 'openai') => {
+    setProvider(newProvider);
+    if (newProvider === 'openrouter') {
+      setUrl('https://openrouter.ai/api/v1/chat/completions');
+      setModel('google/gemma-2-9b-it:free');
+    } else if (newProvider === 'gemini') {
+      setUrl('https://generativelanguage.googleapis.com/v1beta');
+      setModel('gemini-flash-lite-latest');
+    } else if (newProvider === 'openai') {
+      setUrl('https://api.openai.com/v1');
+      setModel('gpt-4o-mini');
+    }
+  };
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateLlmSettings(url.trim(), key.trim(), model.trim());
+    updateLlmSettings(provider, url.trim(), key.trim(), model.trim());
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -106,6 +121,32 @@ export const SettingsView: React.FC = () => {
           <form onSubmit={handleSave} className="space-y-6">
             <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 space-y-4 backdrop-blur-sm">
               <div>
+                <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
+                  LLM Provider
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['openrouter', 'gemini', 'openai'] as const).map((p) => {
+                    const label = p === 'openrouter' ? 'OpenRouter' : p === 'gemini' ? 'Gemini' : 'OpenAI';
+                    const active = provider === p;
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => handleProviderChange(p)}
+                        className={`py-2 px-1 text-xs font-medium rounded-lg border transition text-center ${
+                          active
+                            ? 'bg-zinc-100 border-zinc-100 text-zinc-950'
+                            : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
                   LLM URL
                 </label>
@@ -113,9 +154,25 @@ export const SettingsView: React.FC = () => {
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://openrouter.ai/api/v1/chat/completions or custom URL"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
+                  disabled={provider !== 'openai'}
+                  placeholder={
+                    provider === 'openrouter'
+                      ? 'https://openrouter.ai/api/v1/chat/completions'
+                      : provider === 'gemini'
+                      ? 'https://generativelanguage.googleapis.com/v1beta'
+                      : 'https://api.openai.com/v1'
+                  }
+                  className={`w-full bg-zinc-950 border rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none placeholder-zinc-500 transition ${
+                    provider !== 'openai'
+                      ? 'border-zinc-900 text-zinc-500 cursor-not-allowed bg-zinc-950/40'
+                      : 'border-zinc-800 text-zinc-200 focus:border-zinc-600'
+                  }`}
                 />
+                {provider !== 'openai' && (
+                  <p className="text-[10px] text-zinc-500 font-sans mt-1">
+                    URL is automatically configured for {provider === 'openrouter' ? 'OpenRouter' : 'Gemini'}.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -126,7 +183,13 @@ export const SettingsView: React.FC = () => {
                   type="password"
                   value={key}
                   onChange={(e) => setKey(e.target.value)}
-                  placeholder="Enter your LLM API Key"
+                  placeholder={
+                    provider === 'openrouter'
+                      ? 'Enter OpenRouter API Key (sk-or-...)'
+                      : provider === 'gemini'
+                      ? 'Enter Gemini API Key'
+                      : 'Enter OpenAI API Key'
+                  }
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
                 />
               </div>
@@ -139,7 +202,7 @@ export const SettingsView: React.FC = () => {
                   type="text"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
-                  placeholder="google/gemma-4-31b-it:free"
+                  placeholder="e.g. google/gemma-2-9b-it:free"
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
                 />
               </div>

@@ -4,15 +4,17 @@ import { initialStories } from './initialStories';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
 import { fetchNarrative } from '../services/llmService';
 import { executeBackgroundUpdates } from '../services/backgroundService';
-import { formatUnifiedPrompt } from '../utils/prompts/storyPrompts';
+import { formatUnifiedPrompt, getInitialJournalGenerationPrompt } from '../utils/prompts/storyPrompts';
+import { estimateTokens } from '../utils/tokenEstimator';
 
 export interface StorySlice {
-  currentView: 'home' | 'story' | 'settings';
+  currentView: 'home' | 'story' | 'settings' | 'analytics';
   stories: Story[];
   activeStoryId: string | null;
   masterFeedback: string;
 
   // Settings
+  llmProvider: 'openrouter' | 'gemini' | 'openai';
   llmUrl: string;
   llmKey: string;
   modelName: string;
@@ -23,7 +25,7 @@ export interface StorySlice {
   isUpdatingJournal: boolean;
 
   // Actions
-  setView: (view: 'home' | 'story' | 'settings') => void;
+  setView: (view: 'home' | 'story' | 'settings' | 'analytics') => void;
   selectStory: (storyId: string) => void;
   createStory: (
     title: string,
@@ -54,7 +56,7 @@ export interface StorySlice {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
-  updateLlmSettings: (url: string, key: string, modelName: string) => void;
+  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string) => void;
   importStore: (data: any) => void;
 }
 
@@ -64,20 +66,23 @@ export const createStorySlice: StateCreator<
   [],
   StorySlice
 > = (set, get) => ({
-  currentView: 'home' as 'home' | 'story' | 'settings',
+  currentView: 'home' as 'home' | 'story' | 'settings' | 'analytics',
   stories: initialStories,
   activeStoryId: null as string | null,
   masterFeedback: 'Keep the atmosphere dark, descriptive, and mysterious. Emphasize sensory details like damp air, ancient moss, and hums.',
 
-  llmUrl: '',
-  llmKey: '',
-  modelName: '',
+  llmProvider: (import.meta.env.VITE_LLM_URL?.includes('generativelanguage') || import.meta.env.VITE_MODEL_NAME?.toLowerCase().startsWith('gemini'))
+    ? 'gemini'
+    : 'openrouter' as 'openrouter' | 'gemini' | 'openai',
+  llmUrl: import.meta.env.VITE_LLM_URL || 'https://openrouter.ai/api/v1/chat/completions',
+  llmKey: import.meta.env.VITE_LLM_KEY || '',
+  modelName: import.meta.env.VITE_MODEL_NAME || 'google/gemma-2-9b-it:free',
 
   isGeneratingStory: false,
   isUpdatingLorebook: false,
   isUpdatingJournal: false,
 
-  setView: (view: 'home' | 'story' | 'settings') => set({ currentView: view }),
+  setView: (view: 'home' | 'story' | 'settings' | 'analytics') => set({ currentView: view }),
 
   selectStory: (storyId: string) => set((state: StoryState) => {
     const updatedStories = state.stories.map((s: Story) => {
@@ -102,7 +107,8 @@ export const createStorySlice: StateCreator<
     type: 'tale' | 'template' = 'tale',
     lorebook?: string,
     characterSheet?: string,
-    masterJournal?: string
+    masterJournal?: string,
+    language?: string
   ) => set((state: StoryState) => {
     const newId = 'story_' + Date.now();
     const newStory: Story = {
@@ -111,6 +117,7 @@ export const createStorySlice: StateCreator<
       title,
       genre,
       synopsis,
+      language,
       dynamicState: {
         characterSheet: characterSheet !== undefined ? characterSheet : `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
         lorebook: lorebook !== undefined ? lorebook : `## The Journey Begins\n\nThis is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`,
@@ -189,6 +196,7 @@ export const createStorySlice: StateCreator<
       id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
       role,
       content,
+      tokens: estimateTokens(content),
     };
 
     const updatedStories = state.stories.map((story: Story) => {
@@ -209,6 +217,11 @@ export const createStorySlice: StateCreator<
 
   sendMessage: async (content: string) => {
     const state = get() as StoryState;
+    if (state.isGeneratingStory) {
+      console.warn("sendMessage ignored: generation already in progress.");
+      return;
+    }
+
     const activeStory = state.stories.find((s: Story) => s.id === state.activeStoryId);
     if (!activeStory) return;
 
@@ -222,6 +235,7 @@ export const createStorySlice: StateCreator<
         id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
         role: 'player',
         content: content.trim(),
+        tokens: estimateTokens(content.trim()),
       };
 
       updatedMessages = [...activeStory.messages, newPlayerMessage];
@@ -248,6 +262,11 @@ export const createStorySlice: StateCreator<
 
   editLastPlayerMessage: async (newContent: string) => {
     const state = get() as StoryState;
+    if (state.isGeneratingStory) {
+      console.warn("editLastPlayerMessage ignored: generation already in progress.");
+      return;
+    }
+
     const activeStory = state.stories.find((s: Story) => s.id === state.activeStoryId);
     if (!activeStory) return;
 
@@ -256,6 +275,7 @@ export const createStorySlice: StateCreator<
     if (lastPlayerIdx === -1) return;
 
     messages[lastPlayerIdx].content = newContent;
+    messages[lastPlayerIdx].tokens = estimateTokens(newContent);
     const updatedMessages = messages.slice(0, lastPlayerIdx + 1);
 
     set((s: StoryState) => {
@@ -409,8 +429,8 @@ export const createStorySlice: StateCreator<
     };
   }),
 
-  updateLlmSettings: (url: string, key: string, modelName: string) => set(() => {
-    return { llmUrl: url, llmKey: key, modelName: modelName };
+  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string) => set(() => {
+    return { llmProvider: provider, llmUrl: url, llmKey: key, modelName: modelName };
   }),
 
   importStore: (data: any) => set((state: StoryState) => {
@@ -430,6 +450,7 @@ export const createStorySlice: StateCreator<
       stories: importedStories.length > 0 ? importedStories : state.stories,
       activeStoryId: typeof data.activeStoryId === 'string' ? data.activeStoryId : null,
       masterFeedback: typeof data.masterFeedback === 'string' ? data.masterFeedback : state.masterFeedback,
+      llmProvider: state.llmProvider,
       llmUrl: state.llmUrl,
       llmKey: state.llmKey,
       modelName: state.modelName,
@@ -451,24 +472,93 @@ const generateMasterResponse = async (
     return;
   }
 
+  const provider = state.llmProvider || 'openrouter';
   const url = state.llmUrl;
   const key = state.llmKey;
   const model = state.modelName;
   const lore = activeStory.dynamicState.lorebook;
   const charSheet = activeStory.dynamicState.characterSheet;
-  const journal = activeStory.dynamicState.masterJournal;
   const feedback = state.masterFeedback || '';
 
-  const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback);
+  const isStart = updatedMessages.length === 0;
+  let journal = activeStory.dynamicState.masterJournal;
+
+  if (isStart) {
+    set({ isUpdatingJournal: true });
+    try {
+      const journalPrompt = getInitialJournalGenerationPrompt(
+        activeStory.title,
+        activeStory.synopsis,
+        activeStory.genre,
+        charSheet,
+        activeStory.language
+      );
+      
+      console.log("[generateMasterResponse] Generating initial secret Master Journal...");
+      const generatedJournal = await fetchNarrative(
+        provider,
+        url,
+        key,
+        model,
+        journalPrompt,
+        []
+      );
+
+      if (generatedJournal && generatedJournal.trim()) {
+        journal = generatedJournal.trim();
+        
+        // Update the master journal in store state
+        set((s: StoryState) => {
+          const updatedStories = s.stories.map((story: Story) => {
+            if (story.id === s.activeStoryId) {
+              return {
+                ...story,
+                dynamicState: {
+                  ...story.dynamicState,
+                  masterJournal: journal,
+                },
+                updatedAt: Date.now(),
+              };
+            }
+            return story;
+          });
+          return { stories: updatedStories };
+        });
+      }
+    } catch (journalError) {
+      console.error("Error generating initial master journal, proceeding with default:", journalError);
+    } finally {
+      set({ isUpdatingJournal: false });
+    }
+  }
+
+  const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
 
   try {
     const last10Messages = updatedMessages.slice(-10);
-    const masterResponseText = await fetchNarrative(url, key, model, UNIFIED_PROMPT, last10Messages);
+    
+    let apiPromptTokens = 0;
+    let apiCompletionTokens = 0;
+
+    const masterResponseText = await fetchNarrative(
+      provider,
+      url,
+      key,
+      model,
+      UNIFIED_PROMPT,
+      last10Messages,
+      (usage) => {
+        apiPromptTokens = usage.prompt_tokens;
+        apiCompletionTokens = usage.completion_tokens;
+      }
+    );
 
     const masterMessage: Message = {
       id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
       role: 'master',
       content: masterResponseText,
+      tokens: apiCompletionTokens || estimateTokens(masterResponseText),
+      promptTokens: apiPromptTokens || undefined,
     };
 
     const finalMessages = [...updatedMessages, masterMessage];
@@ -495,12 +585,14 @@ const generateMasterResponse = async (
     const masterMessagesCount = finalMessages.filter((m: Message) => m.role === 'master').length;
     if (masterMessagesCount > 0 && masterMessagesCount % 5 === 0) {
       await executeBackgroundUpdates(
+        provider,
         url,
         key,
         model,
         lore,
         journal,
-        finalMessages.slice(-10),
+        finalMessages.slice(-25),
+        activeStory.language,
         () => set({ isUpdatingLorebook: true }),
         (response) => set((state: StoryState) => {
           const updatedStories = state.stories.map((s) => {

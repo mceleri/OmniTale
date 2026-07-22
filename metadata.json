@@ -1,0 +1,8 @@
+{
+  "name": "OmniTale",
+  "description": "An elegant, minimalist Solo RPG Reader and AI Dungeon Master. Forge your world, shape your narrative, and live the adventure.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
