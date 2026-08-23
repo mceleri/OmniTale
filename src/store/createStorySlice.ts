@@ -35,7 +35,9 @@ export interface StorySlice {
     type?: 'tale' | 'template',
     lorebook?: string,
     characterSheet?: string,
-    masterJournal?: string
+    masterJournal?: string,
+    language?: string,
+    masterFeedback?: string
   ) => void;
   updateStory: (
     storyId: string,
@@ -44,7 +46,8 @@ export interface StorySlice {
     characterName: string,
     lorebook: string,
     characterSheet?: string,
-    masterJournal?: string
+    masterJournal?: string,
+    masterFeedback?: string
   ) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
@@ -69,7 +72,7 @@ export const createStorySlice: StateCreator<
   currentView: 'home' as 'home' | 'story' | 'settings' | 'analytics',
   stories: initialStories,
   activeStoryId: null as string | null,
-  masterFeedback: 'Keep the atmosphere dark, descriptive, and mysterious. Emphasize sensory details like damp air, ancient moss, and hums.',
+  masterFeedback: '',
 
   llmProvider: (import.meta.env.VITE_LLM_URL?.includes('generativelanguage') || import.meta.env.VITE_MODEL_NAME?.toLowerCase().startsWith('gemini'))
     ? 'gemini'
@@ -85,8 +88,10 @@ export const createStorySlice: StateCreator<
   setView: (view: 'home' | 'story' | 'settings' | 'analytics') => set({ currentView: view }),
 
   selectStory: (storyId: string) => set((state: StoryState) => {
+    let selectedStoryFeedback = '';
     const updatedStories = state.stories.map((s: Story) => {
       if (s.id === storyId) {
+        selectedStoryFeedback = s.dynamicState.masterFeedback || '';
         return { ...s, updatedAt: Date.now() };
       }
       return s;
@@ -95,6 +100,7 @@ export const createStorySlice: StateCreator<
     return {
       currentView: 'story',
       activeStoryId: storyId,
+      masterFeedback: selectedStoryFeedback,
       stories: updatedStories,
     };
   }),
@@ -108,9 +114,11 @@ export const createStorySlice: StateCreator<
     lorebook?: string,
     characterSheet?: string,
     masterJournal?: string,
-    language?: string
+    language?: string,
+    masterFeedback?: string
   ) => set((state: StoryState) => {
     const newId = 'story_' + Date.now();
+    const storyFeedback = masterFeedback !== undefined ? masterFeedback : '';
     const newStory: Story = {
       id: newId,
       type,
@@ -122,6 +130,7 @@ export const createStorySlice: StateCreator<
         characterSheet: characterSheet !== undefined ? characterSheet : `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
         lorebook: lorebook !== undefined ? lorebook : `## The Journey Begins\n\nThis is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`,
         masterJournal: masterJournal !== undefined ? masterJournal : `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`,
+        masterFeedback: storyFeedback,
       },
       messages: [],
       createdAt: Date.now(),
@@ -142,6 +151,7 @@ export const createStorySlice: StateCreator<
       stories: updatedStories,
       currentView: 'story',
       activeStoryId: newId,
+      masterFeedback: storyFeedback,
     };
   }),
 
@@ -152,7 +162,8 @@ export const createStorySlice: StateCreator<
     _characterName: string,
     lorebook: string,
     characterSheet?: string,
-    masterJournal?: string
+    masterJournal?: string,
+    masterFeedback?: string
   ) => set((state: StoryState) => {
     const updatedStories = state.stories.map((s: Story) => {
       if (s.id === storyId) {
@@ -165,6 +176,7 @@ export const createStorySlice: StateCreator<
             lorebook,
             characterSheet: characterSheet !== undefined ? characterSheet : s.dynamicState.characterSheet,
             masterJournal: masterJournal !== undefined ? masterJournal : s.dynamicState.masterJournal,
+            masterFeedback: masterFeedback !== undefined ? masterFeedback : s.dynamicState.masterFeedback,
           },
           updatedAt: Date.now(),
         };
@@ -174,6 +186,7 @@ export const createStorySlice: StateCreator<
 
     return {
       stories: updatedStories,
+      ...(state.activeStoryId === storyId && masterFeedback !== undefined ? { masterFeedback } : {}),
     };
   }),
 
@@ -361,9 +374,24 @@ export const createStorySlice: StateCreator<
     };
   }),
 
-  updateMasterFeedback: (text: string) => set(() => {
+  updateMasterFeedback: (text: string) => set((state: StoryState) => {
+    const updatedStories = state.stories.map((story: Story) => {
+      if (story.id === state.activeStoryId) {
+        return {
+          ...story,
+          dynamicState: {
+            ...story.dynamicState,
+            masterFeedback: text,
+          },
+          updatedAt: Date.now(),
+        };
+      }
+      return story;
+    });
+
     return {
       masterFeedback: text,
+      stories: updatedStories,
     };
   }),
 
@@ -478,7 +506,9 @@ const generateMasterResponse = async (
   const model = state.modelName;
   const lore = activeStory.dynamicState.lorebook;
   const charSheet = activeStory.dynamicState.characterSheet;
-  const feedback = state.masterFeedback || '';
+  const feedback = activeStory.dynamicState.masterFeedback !== undefined
+    ? activeStory.dynamicState.masterFeedback
+    : (state.masterFeedback || '');
 
   const isStart = updatedMessages.length === 0;
   let journal = activeStory.dynamicState.masterJournal;

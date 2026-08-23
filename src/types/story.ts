@@ -23,6 +23,7 @@ export interface Story {
     characterSheet: string;
     lorebook: string;
     masterJournal: string;
+    masterFeedback?: string;
   };
   messages: Message[];
   updatedAt: number;
@@ -58,7 +59,8 @@ export interface StoryState {
     lorebook?: string,
     characterSheet?: string,
     masterJournal?: string,
-    language?: string
+    language?: string,
+    masterFeedback?: string
   ) => void;
   updateStory: (
     storyId: string,
@@ -67,7 +69,8 @@ export interface StoryState {
     characterName: string,
     lorebook: string,
     characterSheet?: string,
-    masterJournal?: string
+    masterJournal?: string,
+    masterFeedback?: string
   ) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;

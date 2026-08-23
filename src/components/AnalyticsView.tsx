@@ -51,8 +51,9 @@ export const AnalyticsView: React.FC = () => {
   // Raw inputs for unified prompt
   const loreText = story.dynamicState.lorebook || '';
   const charSheetText = story.dynamicState.characterSheet || '';
-  const journalText = story.dynamicState.masterJournal || '';
-  const feedbackText = masterFeedback || '';
+  const feedbackText = story.dynamicState.masterFeedback !== undefined
+    ? story.dynamicState.masterFeedback
+    : (masterFeedback || '');
 
   // Token calculations
   const totalMessagesCount = story.messages.length;

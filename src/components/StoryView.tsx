@@ -542,9 +542,9 @@ export const StoryView: React.FC = () => {
                 <div className="bg-zinc-950 border border-zinc-850/60 p-4 rounded-xl space-y-3">
                   <label className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider block">
                     Instruction / Tone
-                  </label>\
+                  </label>
                   <textarea
-                    value={masterFeedback}
+                    value={story?.dynamicState?.masterFeedback !== undefined ? story.dynamicState.masterFeedback : masterFeedback}
                     onChange={(e) => updateMasterFeedback(e.target.value)}
                     rows={4}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-3 text-xs text-zinc-300 focus:outline-none focus:border-zinc-700 placeholder-zinc-400 resize-none"
