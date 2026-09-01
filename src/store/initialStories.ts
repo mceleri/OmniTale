@@ -473,18 +473,18 @@ A century ago, after countless covert interventions across Grimgate and the real
 - **Kizag** assumed the role of the *Keeper of Light (Custode della Luce)* and ascended into a *Pillar of Blinding Light*.
 This staged split was so emotionally and magically consuming that the two vessels spent decades resting in their Extradimensional Haven to re-weave their joint consciousness. In mortal history and folklore, this event is revered as the ultimate sacrificial tragedy that banished the Vampire and saved the kingdom.
 
-## The Metropolis of Valoria (A Century Later)
-An ancient, thriving metropolis of canal waterways, grand marble aqueducts, and bustling guild plazas. Valoria flourishes in a golden age of magical study and commerce, though delicate political friction exists between magical freedom and civic regulation.
+## The Metropolis of Valoria & The River Valleys (A Century Later)
+An ancient, thriving metropolis of canal waterways, grand marble aqueducts, lush riverside vineyards, and bustling guild plazas. Valoria flourishes in a golden age of magical study, art, and river commerce, though delicate political friction exists between magical freedom and civic regulation. Beyond the city walls lie green agricultural hills, ancient whispering groves, and peaceful provincial villages.
 
 ## Factions & Competing Worldviews
 - **The Guild of Channelers (Gilda degli Incanalatori):** Headquartered in the High Spire of Valoria, built upon an ancient "moral compass" prioritizing the defense of life's dignity and the ethical autonomy of all magic users. They strive to protect young channelers from exploitation.
-- **The Holy Order & Civic Inquisition:** Led by reformist inquisitors, they focus on preventing dangerous necromantic outbreaks, blood magic, and unauthorized planar rifts. They operate through rigorous civic law, magical permits, and investigative registries rather than blind zealotry.
-- **The Obsidian Quill (The Watchers / Osservatori):** An ancient, secretive brotherhood of neutral scholars and record-keepers who archive historical events and planar echoes without direct interference, bound by their strict non-intervention creed.
-- **The Silt & Stone Merchant League:** The wealthy mercantile oligarchy controlling the river wharves and trade routes, occasionally clashing with the Guild of Channelers over taxes on enchanted goods.
+- **The Holy Order & Civic Inquisition:** Led by reformist inquisitors, they focus on preventing dangerous necromantic outbreaks, blood magic, and demonic pacts. They operate through rigorous civic law, magical permits, and investigative registries rather than blind zealotry.
+- **The Obsidian Quill (The Watchers / Osservatori):** An ancient, secretive brotherhood of neutral scholars and record-keepers who archive historical chronicles and magical phenomena without direct interference, bound by their strict non-intervention creed.
+- **The Grand River & Silt Merchant League:** The wealthy mercantile oligarchy controlling the river barges, grain wharves, and trade routes, occasionally colliding with the Guild of Channelers over taxes on enchanted goods and imported alchemical reagents.
 
 ## Key NPCs
 - **Arch-Mage Alain (Master Emeritus of the Channelers Guild):** An aged, wise sage who spearheaded the guild's moral independence. He keeps a framed, century-old honey candy wrapper in his private archive as a legendary symbol of ancient guardians. Knowledge of PG: Sees them only as two talented, humble apprentices seeking rural travel registration.
-- **High Inquisitor Valen Verridian:** A shrewd, principled investigator who seeks to maintain order through forensic evidence and law rather than fear. Deeply suspicious of illicit soul-tampering.
+- **High Inquisitor Valen Verridian:** A shrewd, principled investigator who seeks to maintain order through forensic evidence and law rather than fear. Deeply suspicious of illicit soul-tampering and corrupted blood pacts.
 - **Seraphina the Archivist (The Watchers):** A quiet scholar in the Grand Archive investigating historical records and folk ballads regarding the *Queen of Shadows* and the *Keeper of Light*.
 - **Mira (Proprietress of The Weeping Willow Tavern):** A warm, perceptive hostess at the north gate who knows all local rumors, trade gossip, and traveler news.
 
@@ -501,17 +501,17 @@ Even though a century has passed in the world's history, the realm has evolved c
 ## Incidental World Life & Everyday Flavor
 - Common folk approaching the traveling healer for ordinary mortal ailments: sprained wrists from loading carts, chronic joint aches, childhood seasonal fevers, or simple herbal remedies.
 - Street bards singing ballads of the *Keeper of Light* and the *Queen of Shadows* in markets and taverns, sometimes mentioning ancient honey candy folk tales.
-- Gondolas navigating the moonlit canals carrying singing travelers and glowing lantern lilies.
-- Everyday tavern interactions: boisterous patrons sharing gossip, travelers making clumsy flirtatious passes, suspicious merchants haggling over river tolls.
+- Gondolas and wooden barges navigating moonlit river canals, carrying singing travelers and glowing lantern lilies.
+- Everyday tavern interactions: boisterous patrons sharing harvest gossip, travelers making clumsy flirtatious passes, suspicious merchants haggling over grain tolls.
 - Street urchins and opportunistic pickpockets occasionally testing the alertness of seemingly naive traveling apprentices.
-- Aromas of roasted spiced nuts, fresh river fish, and damp stone drying under the morning sun.`,
+- Aromas of roasted spiced nuts, fresh river fish, freshly baked hearth bread, and elderberry wine.`,
       masterJournal: `// AI Master Notes — The Collective Flame
 // Act 1: The Return to Valoria
 
 [CORE CAMPAIGN DIRECTIVES & PACING]
 1. RELAXED, EXPLORATORY PACING & NATURAL DOWNTIME (NO ENDLESS CRISIS LOOP):
    - The world is NOT in immediate peril. Do NOT rush the narrative or force back-to-back ambushes and cliffhangers.
-   - Alternate high-stakes investigative moments with peaceful downtime (quiet travel, evenings at the inn, days spent tending to ordinary commoners).
+   - Alternate high-stakes investigative moments with peaceful downtime (quiet travel through river valleys, evenings at the inn, days spent tending to ordinary commoners).
    - Let the protagonists explore, converse, investigate local life, and observe how society evolved over the past century.
 2. MANAGING HIGH-POWER PROTAGONISTS (THE CHALLENGE OF SUBTLETY):
    - Kizag and Lyra possess primordial cosmic might, but they deliberately self-restrain to avoid breaking mortal society or exposing their cover.
@@ -536,7 +536,7 @@ Even though a century has passed in the world's history, the realm has evolved c
 1. The Gate Registry Line: Inquisitorial guards and Guild clerks are interviewing newcomers. Kizag and Lyra can present their provincial papers, chat with fellow travelers, or playfully test the clerk's perception.
 2. The Ailing Cart Driver: An elderly carter with a swollen, sprained wrist from a broken wheel is asking if any herbalist in the line has a soothing balm.
 3. The Wandering Bard: A minstrel near the tavern entrance is tuning a lute, preparing to sing a popular local ballad about the "Tragedy of Light and Shadow" (the staged sacrifice of Kizag and Lyra).
-4. The Tavern Atmosphere: The "Weeping Willow" tavern by the gate is full of colorful morning chatter about the Channelers Guild's latest ethical debates with the Merchant League.
+4. The Tavern Atmosphere: The "Weeping Willow" tavern by the gate is full of colorful morning chatter about the Channelers Guild's latest ethical debates with the River Merchant League.
 
 [DM OBSERVATION THEMES]
 - How have the myths of the *Queen of Shadows* and the *Keeper of Light* morphed over 100 years into folklore, art, and guild dogma?
