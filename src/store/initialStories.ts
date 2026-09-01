@@ -492,27 +492,37 @@ An ancient, thriving metropolis of canal waterways, grand marble aqueducts, and 
 - **The Rural Apprentice Guise ("Kael & Leonor"):** Kizag and Lyra carry forged provincial recommendation papers. Unless they unleash godlike primordial magic, all authorities, guards, and mages perceive them strictly as ordinary mortal novices with good instincts.
 - **The Honey Candy Signature:** An occasional, playful trademark of Lyra, left at scenes of quiet benevolent intervention or as a subtle nod to old allies.
 
+## The Philosophy of Subtle Stewardship & Self-Restraint
+Centuries of experience across multiple realms taught the Collective Flame that direct, brute-force divine intervention is counterproductive: slaying tyrants from the sky creates catastrophic power vacuums, panic, and societal dependency. Therefore, the protagonists deliberately self-limit their actions. Their goal is not to rule or flaunt supremacy, but to empower capable, ethical mortals (such as reformist inquisitors, honorable guild scholars, or brave commoners) with evidence and quiet support, allowing mortal society to heal and govern itself sustainably.
+
 ## Pure Classic High Fantasy (Strict Prohibition on Sci-Fi & Steampunk)
 Even though a century has passed in the world's history, the realm has evolved culturally, philosophically, and artistically—NOT technologically. The aesthetic remains strictly pure, classic High Fantasy: marble bridges, parchment scrolls, iron lanterns, alchemy, herbal medicine, swords, bows, and spellcraft. There are absolutely NO firearms, steam engines, clockwork automata, electricity, or sci-fi gadgets. The world's richness comes from classical fantasy diversity: non-human ancestries (elves, dwarves, beastfolk, sylphs, dragon-blooded), mythical beasts (gryphons, river drakes, forest spirits), and rich arcane lore.
 
-## Incidental World Life & Local Flavor
-- Street bards singing mournful ballads of the *Keeper of Light* and the *Queen of Shadows* in the Sunken Market.
+## Incidental World Life & Everyday Flavor
+- Common folk approaching the traveling healer for ordinary mortal ailments: sprained wrists from loading carts, chronic joint aches, childhood seasonal fevers, or simple herbal remedies.
+- Street bards singing ballads of the *Keeper of Light* and the *Queen of Shadows* in markets and taverns, sometimes mentioning ancient honey candy folk tales.
 - Gondolas navigating the moonlit canals carrying singing travelers and glowing lantern lilies.
-- Apprentice mages practicing minor spark-tricks to cheering children in the Plaza of Fountains.
+- Everyday tavern interactions: boisterous patrons sharing gossip, travelers making clumsy flirtatious passes, suspicious merchants haggling over river tolls.
+- Street urchins and opportunistic pickpockets occasionally testing the alertness of seemingly naive traveling apprentices.
 - Aromas of roasted spiced nuts, fresh river fish, and damp stone drying under the morning sun.`,
       masterJournal: `// AI Master Notes — The Collective Flame
 // Act 1: The Return to Valoria
 
 [CORE CAMPAIGN DIRECTIVES & PACING]
-1. RELAXED, EXPLORATORY PACING (NO COSMIC APOCALYPSE):
-   - The world is NOT in immediate peril. Do NOT rush the narrative or force an apocalyptic crisis.
-   - Maintain a grounded, literary, and atmospheric tone. Let the two protagonists explore, converse, investigate local life, and observe how society evolved over the past century.
-2. ABSOLUTE BAN ON RECYCLED VILLAINS:
+1. RELAXED, EXPLORATORY PACING & NATURAL DOWNTIME (NO ENDLESS CRISIS LOOP):
+   - The world is NOT in immediate peril. Do NOT rush the narrative or force back-to-back ambushes and cliffhangers.
+   - Alternate high-stakes investigative moments with peaceful downtime (quiet travel, evenings at the inn, days spent tending to ordinary commoners).
+   - Let the protagonists explore, converse, investigate local life, and observe how society evolved over the past century.
+2. MANAGING HIGH-POWER PROTAGONISTS (THE CHALLENGE OF SUBTLETY):
+   - Kizag and Lyra possess primordial cosmic might, but they deliberately self-restrain to avoid breaking mortal society or exposing their cover.
+   - Do NOT challenge them with ridiculous cosmic monsters; challenge them with **social finesse, moral dilemmas, stealth, investigative patience, and protecting fragile mortal allies without revealing their true nature**.
+   - Their victory lies in empowering aligned mortals (like honest clerics, reformist inquisitors, or guild arch-mages) to clean up their own institutions.
+3. ABSOLUTE BAN ON RECYCLED VILLAINS:
    - Past enemies (The Vampire, The Higher Mind, The New Dawn Consortium, The Dark Scholars, ancient extra-dimensional anomalies) were PERMANENTLY defeated and destroyed.
    - Do NOT bring them back, resurrect them, or reuse them. Any obstacles must be fresh, organic, local, and grounded in human/mortal nature.
-3. PRESERVE THE APPRENTICE COVER & VITAL ROLES:
-   - Kizag and Lyra choose to stay low-profile. Let them solve problems through wits, charm, investigation, Lyra's sharp intellect, and Kizag's subtle healing mastery when helping commoners.
-4. PURE CLASSIC HIGH FANTASY ONLY (NO TECH OR STEAMPUNK DRIFT):
+4. LIVING, AUTONOMOUS WORLD (ANTI-LASER FOCUS):
+   - Populate the world with non-quest life: farmers with common ailments, bards singing legends, curious tavern patrons, street pickpockets, and local squabbles. The world does not exist solely to advance the main plot.
+5. PURE CLASSIC HIGH FANTASY ONLY (NO TECH OR STEAMPUNK DRIFT):
    - The passing of a century brought peace, art, architecture, and guild philosophy, NOT industrialization or steampunk technology.
    - Strictly avoid guns, clockwork machines, steam engines, factories, electricity, or sci-fi tropes.
    - Freely populate the world with classic fantasy richness: diverse non-human ancestries (elves, dwarves, beastfolk, sylphs, dragon-blooded), mythical creatures, ancient ruins, and herbal/arcane traditions.
@@ -524,7 +534,7 @@ Even though a century has passed in the world's history, the realm has evolved c
 
 [IMMEDIATE ORGANIC HOOKS & CHOICES FOR THE PLAYER]
 1. The Gate Registry Line: Inquisitorial guards and Guild clerks are interviewing newcomers. Kizag and Lyra can present their provincial papers, chat with fellow travelers, or playfully test the clerk's perception.
-2. The Distressed Courier: A flustered young guild apprentice has dropped a bundle of sealed missives into the canal water near the bridge, panicked that he will fail his initiation.
+2. The Ailing Cart Driver: An elderly carter with a swollen, sprained wrist from a broken wheel is asking if any herbalist in the line has a soothing balm.
 3. The Wandering Bard: A minstrel near the tavern entrance is tuning a lute, preparing to sing a popular local ballad about the "Tragedy of Light and Shadow" (the staged sacrifice of Kizag and Lyra).
 4. The Tavern Atmosphere: The "Weeping Willow" tavern by the gate is full of colorful morning chatter about the Channelers Guild's latest ethical debates with the Merchant League.
 
