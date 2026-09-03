@@ -536,7 +536,15 @@ const generateMasterResponse = async (
   const isStart = updatedMessages.length === 0;
   let journal = activeStory.dynamicState.masterJournal;
 
-  if (isStart) {
+  // Only generate a new initial journal if the story does NOT already have an authored master journal
+  const isJournalPreAuthored = journal && (
+    journal.includes('[STARTING SCENARIO]') ||
+    journal.includes('[CORE CAMPAIGN DIRECTIVES') ||
+    journal.includes('[CORE CONFLICT HOOKS') ||
+    journal.length > 250
+  );
+
+  if (isStart && !isJournalPreAuthored) {
     set({ isUpdatingJournal: true });
     try {
       const journalPrompt = getInitialJournalGenerationPrompt(
@@ -547,7 +555,7 @@ const generateMasterResponse = async (
         activeStory.language
       );
       
-      console.log("[generateMasterResponse] Generating initial secret Master Journal...");
+      console.log("[generateMasterResponse] Generating initial secret Master Journal for custom story...");
       const generatedJournal = await fetchNarrative(
         provider,
         url,

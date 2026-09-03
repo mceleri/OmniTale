@@ -530,7 +530,7 @@ Even though a century has passed in the world's history, the realm has evolved c
 [STARTING SCENARIO]
 - Kizag and Lyra step through a quiet boundary fold at dawn just outside Valoria's bustling North Gate.
 - The gate road is crowded with wagons of crisp autumn apples, wandering minstrels, and young spellcaster hopefuls.
-- The air is fresh, smelling of dew-soaked grass, woodsmoke, and the faint tingling hum of the city's protective warding stones.
+- The air is fresh, smelling of dew-soaked grass, woodsmoke, and the gentle morning chime of cathedral bells across the river.
 
 [IMMEDIATE ORGANIC HOOKS & CHOICES FOR THE PLAYER]
 1. The Gate Registry Line: Inquisitorial guards and Guild clerks are interviewing newcomers. Kizag and Lyra can present their provincial papers, chat with fellow travelers, or playfully test the clerk's perception.
