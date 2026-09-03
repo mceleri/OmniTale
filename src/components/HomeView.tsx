@@ -564,10 +564,10 @@ export const HomeView: React.FC = () => {
             {/* Header */}
             <div className="text-center space-y-1">
               <h3 className="font-serif text-xl text-zinc-100 font-medium">
-                Lingua dell'Avventura
+                Adventure Language
               </h3>
               <p className="text-xs text-zinc-400">
-                Seleziona la lingua principale per la narrazione dell'AI Game Master.
+                Select the primary language for the AI Game Master's narration.
               </p>
             </div>
 
@@ -603,7 +603,7 @@ export const HomeView: React.FC = () => {
 
             {/* Hint Box */}
             <div className="bg-zinc-950/40 border border-zinc-850/60 rounded-xl p-3 text-[10px] text-zinc-400 leading-relaxed font-sans">
-              💡 <strong>System Instruction Vincolante:</strong> L'AI Master genererà l'inizio della storia e tutte le risposte in <strong>{selectedLanguage}</strong>. Si adeguerà anche dinamicamente alla lingua che userai nei tuoi messaggi!
+              💡 <strong>Binding System Instruction:</strong> The AI Master will generate the story opening and all responses in <strong>{selectedLanguage}</strong>. It will also adapt dynamically to the language you use in your messages!
             </div>
 
             {/* Actions */}
@@ -622,14 +622,14 @@ export const HomeView: React.FC = () => {
                   }}
                   className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs font-semibold rounded-xl transition"
                 >
-                  Annulla
+                  Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmLanguage}
                   className="flex-1 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 text-xs font-bold rounded-xl transition shadow-lg shadow-zinc-100/5"
                 >
-                  Inizia Avventura
+                  Start Adventure
                 </button>
               </div>
             )}
@@ -647,10 +647,10 @@ export const HomeView: React.FC = () => {
                 <Trash2 className="w-5 h-5" />
               </div>
               <h3 className="font-serif text-lg text-zinc-100 font-medium">
-                Elimina Avventura
+                Delete Adventure
               </h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Sei sicuro di voler eliminare definitivamente <strong>"{storyToDelete.title}"</strong>? Questa azione non può essere annullata.
+                Are you sure you want to permanently delete <strong>"{storyToDelete.title}"</strong>? This action cannot be undone.
               </p>
             </div>
             
@@ -660,7 +660,7 @@ export const HomeView: React.FC = () => {
                 onClick={() => setStoryIdToDelete(null)}
                 className="flex-1 py-3 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs font-semibold rounded-xl transition"
               >
-                Annulla
+                Cancel
               </button>
               <button
                 type="button"
@@ -670,7 +670,7 @@ export const HomeView: React.FC = () => {
                 }}
                 className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition shadow-lg shadow-red-600/10"
               >
-                Elimina
+                Delete
               </button>
             </div>
           </div>

@@ -213,13 +213,13 @@ export const SettingsView: React.FC = () => {
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
                     <label className="text-xs font-semibold text-zinc-200 flex items-center gap-2">
-                      Modalità Narrativa Agentica (Beta)
+                      Agentic Narrative Pipeline (Beta)
                       <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800/60 rounded">
                         2-Step
                       </span>
                     </label>
                     <p className="text-[11px] text-zinc-400 leading-relaxed max-w-xl">
-                      Separa ogni turno in due chiamate LLM (Giudice/Reazione &rarr; Narratore Prosa) per sbloccare decisioni autonome e proattive degli NPC, evitando passività e allucinazioni. Raddoppia le chiamate API per turno.
+                      Splits every turn into two sequential LLM calls (Judge/Reaction &rarr; Storyteller Prose) to unlock autonomous NPC initiative, world logic, and pacing control. Doubles API requests per turn.
                     </p>
                   </div>
                   <button

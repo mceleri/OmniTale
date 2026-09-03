@@ -576,7 +576,7 @@ export const StoryView: React.FC = () => {
         <button
           onClick={scrollToBottom}
           className="absolute bottom-[135px] right-5 z-30 p-2 bg-zinc-900/80 backdrop-blur-md border border-zinc-800/80 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 rounded-full shadow-lg transition-all duration-300 animate-fade-in hover:scale-105 active:scale-95 flex items-center justify-center opacity-85 hover:opacity-100 cursor-pointer"
-          title="Scroll in fondo"
+          title="Scroll to bottom"
           id="scroll-to-bottom-btn"
         >
           <ArrowDown className="w-5 h-5 animate-bounce text-zinc-300" />

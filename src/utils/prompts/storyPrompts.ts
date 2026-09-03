@@ -8,7 +8,7 @@ export const formatUnifiedPrompt = (
   language?: string
 ): string => {
   const languageInstruction = language
-    ? `CRITICAL LANGUAGE RULE: Genera l'intera narrazione, le descrizioni e i dialoghi in questa lingua: ${language}. Adeguati alla lingua che usa l'utente nei suoi messaggi, ma mantieni la lingua principale di gioco rigorosamente impostata su ${language}.`
+    ? `CRITICAL LANGUAGE RULE: Generate the entire narrative, descriptions, and dialogues strictly in this language: ${language}. Adapt dynamically to the language used by the player in their messages, but keep the core game language strictly set to ${language}.`
     : `Always write your response in the same language used by the player in their last message. If starting a new game, write in the language of the Title and Synopsis.`;
 
   const feedbackSection = feedback && feedback.trim().length > 0
@@ -121,7 +121,7 @@ export const getNarratorFromResolutionPrompt = (
   language?: string
 ): string => {
   const languageInstruction = language
-    ? `CRITICAL LANGUAGE RULE: Genera l'intera narrazione, le descrizioni e i dialoghi in questa lingua: ${language}. Adeguati alla lingua che usa l'utente nei suoi messaggi, ma mantieni la lingua principale di gioco rigorosamente impostata su ${language}.`
+    ? `CRITICAL LANGUAGE RULE: Generate the entire narrative, descriptions, and dialogues strictly in this language: ${language}. Adapt dynamically to the language used by the player in their messages, but keep the core game language strictly set to ${language}.`
     : `Always write your response in the same language used by the player in their last message.`;
 
   const feedbackSection = feedback && feedback.trim().length > 0
@@ -142,7 +142,7 @@ ${charSheet}
 ${journal}
 ${feedbackSection}
 
-[RISOLUZIONE DEL TURNO — DA NARRARE, NON REINTERPRETARE]
+[TURN RESOLUTION — TO BE NARRATED, DO NOT RE-INVENT OR ALTER]
 ${JSON.stringify(resolution, null, 2)}
 
 NARRATIVE DIRECTIVES:
@@ -240,8 +240,8 @@ export const getJournalSystemPrompt = (language?: string): string => {
 
 RULES:
 1. RESOLVED & PERMANENT STATES (ANTI-AMNESIA): Explicitly maintain and update a dedicated section '[RESOLVED IRREVERSIBLE EVENTS]' recording completed plot points, deceased antagonists, destroyed locations, or permanently closed threats. Never treat past resolved events as active countdowns or ongoing threats.
-2. AGENDE NPG & FAZIONI ATTIVE: Maintain a structured section '[AGENDE NPG & FAZIONI ATTIVE]' detailing for key NPCs:
-   - Nome NPC -> Obiettivo attuale -> Prossima mossa prevista -> Eventuale Clock di avanzamento (0-6)
+2. ACTIVE NPC AGENDAS & FACTIONS: Maintain a structured section '[ACTIVE NPC AGENDAS & FACTIONS]' detailing for key NPCs:
+   - NPC Name -> Current Goal -> Planned Next Move -> Progress Clock (0-6)
 3. SECRETS & EVOLVING THREATS: Update hidden conspiracies, looming complications, and background developments.
 4. PACING & DOWNTIME GUIDANCE: Note opportunities for natural breathing room, quiet days, interpersonal bonding, and mundane living-world encounters.
 5. If no updates are needed, reply strictly with 'NO_CHANGES'.${languageInstruction}`;
