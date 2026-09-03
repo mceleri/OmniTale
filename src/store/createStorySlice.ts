@@ -508,16 +508,16 @@ export const createStorySlice: StateCreator<
   }),
 });
 
-async function generateMasterResponse(
-  state: StoryState,
+const generateMasterResponse = async (
   set: any,
-  activeStory: Story,
+  get: any,
   updatedMessages: Message[]
-) {
+) => {
   set({ isGeneratingStory: true });
 
-  const activeStoryId = state.activeStoryId;
-  if (!activeStory || !activeStoryId) {
+  const state = get() as StoryState;
+  const activeStory = state.stories.find((s: Story) => s.id === state.activeStoryId);
+  if (!activeStory || !state.activeStoryId) {
     set({ isGeneratingStory: false });
     return;
   }
