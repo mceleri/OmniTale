@@ -18,6 +18,7 @@ export const useStoryStore = create<StoryState>()(
         llmUrl: state.llmUrl,
         llmKey: state.llmKey,
         modelName: state.modelName,
+        useAgenticPipeline: state.useAgenticPipeline,
         currentView: state.currentView,
         activeStoryId: state.activeStoryId,
         masterFeedback: state.masterFeedback,
@@ -53,6 +54,7 @@ export const useStoryStore = create<StoryState>()(
           ...currentState,
           ...persistedState,
           llmProvider: inferredProvider,
+          useAgenticPipeline: persistedState.useAgenticPipeline ?? false,
           stories: cleanStories,
         };
       },

@@ -2,12 +2,26 @@ import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../ut
 
 export type Role = 'master' | 'player' | 'system_feedback';
 
+export interface TurnResolution {
+  actionOutcome: 'success' | 'partial' | 'failure' | 'neutral';
+  difficultyNote?: string;
+  npcReactions: Array<{
+    npcName: string;
+    action: string;
+    isProactive: boolean;
+  }>;
+  factionEcho?: string;
+  pacingSuggestion: 'escalate' | 'downtime' | 'maintain';
+  newHookOrTwist?: string;
+}
+
 export interface Message {
   id: string;
   role: Role;
   content: string;
   tokens?: number;
   promptTokens?: number;
+  debugResolution?: TurnResolution;
 }
 
 export type LoreItem = LoreBlock;
@@ -41,6 +55,7 @@ export interface StoryState {
   llmUrl: string;
   llmKey: string;
   modelName: string;
+  useAgenticPipeline: boolean;
 
   // Loading States
   isGeneratingStory: boolean;
@@ -82,6 +97,7 @@ export interface StoryState {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
-  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string) => void;
+  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string, useAgenticPipeline?: boolean) => void;
+  setUseAgenticPipeline: (enabled: boolean) => void;
   importStore: (data: any) => void;
 }

@@ -3,11 +3,12 @@ import { useStoryStore } from '../store/useStoryStore';
 import { ArrowLeft, Save, Check, Download, Upload } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const { llmProvider, llmUrl, llmKey, modelName, updateLlmSettings, setView, importStore } = useStoryStore();
+  const { llmProvider, llmUrl, llmKey, modelName, useAgenticPipeline, updateLlmSettings, setView, importStore } = useStoryStore();
   const [provider, setProvider] = useState<'openrouter' | 'gemini' | 'openai'>(llmProvider || 'openrouter');
   const [url, setUrl] = useState(llmUrl);
   const [key, setKey] = useState(llmKey);
   const [model, setModel] = useState(modelName);
+  const [pipeline, setPipeline] = useState<boolean>(useAgenticPipeline || false);
   const [saved, setSaved] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +29,7 @@ export const SettingsView: React.FC = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateLlmSettings(provider, url.trim(), key.trim(), model.trim());
+    updateLlmSettings(provider, url.trim(), key.trim(), model.trim(), pipeline);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -205,6 +206,39 @@ export const SettingsView: React.FC = () => {
                   placeholder="e.g. google/gemma-2-9b-it:free"
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
                 />
+              </div>
+
+              {/* Agentic Pipeline Toggle */}
+              <div className="lg:col-span-2 border-t border-zinc-800/80 pt-4 mt-2">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-zinc-200 flex items-center gap-2">
+                      Modalità Narrativa Agentica (Beta)
+                      <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800/60 rounded">
+                        2-Step
+                      </span>
+                    </label>
+                    <p className="text-[11px] text-zinc-400 leading-relaxed max-w-xl">
+                      Separa ogni turno in due chiamate LLM (Giudice/Reazione &rarr; Narratore Prosa) per sbloccare decisioni autonome e proattive degli NPC, evitando passività e allucinazioni. Raddoppia le chiamate API per turno.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={pipeline}
+                    onClick={() => setPipeline(!pipeline)}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                      pipeline ? 'bg-indigo-600' : 'bg-zinc-800'
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                        pipeline ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
             </div>
 

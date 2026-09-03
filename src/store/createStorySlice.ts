@@ -1,10 +1,15 @@
 import { StateCreator } from 'zustand';
-import { Story, StoryState, Role, Message } from '../types/story';
+import { Story, StoryState, Role, Message, TurnResolution } from '../types/story';
 import { initialStories } from './initialStories';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
-import { fetchNarrative } from '../services/llmService';
+import { fetchNarrative, cleanAndParseJson } from '../services/llmService';
 import { executeBackgroundUpdates } from '../services/backgroundService';
-import { formatUnifiedPrompt, getInitialJournalGenerationPrompt } from '../utils/prompts/storyPrompts';
+import {
+  formatUnifiedPrompt,
+  getInitialJournalGenerationPrompt,
+  getJudgePrompt,
+  getNarratorFromResolutionPrompt
+} from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
 
 export interface StorySlice {
@@ -18,6 +23,7 @@ export interface StorySlice {
   llmUrl: string;
   llmKey: string;
   modelName: string;
+  useAgenticPipeline: boolean;
 
   // Loading States
   isGeneratingStory: boolean;
@@ -59,7 +65,8 @@ export interface StorySlice {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
-  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string) => void;
+  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string, useAgenticPipeline?: boolean) => void;
+  setUseAgenticPipeline: (enabled: boolean) => void;
   importStore: (data: any) => void;
 }
 
@@ -80,10 +87,13 @@ export const createStorySlice: StateCreator<
   llmUrl: import.meta.env.VITE_LLM_URL || 'https://openrouter.ai/api/v1/chat/completions',
   llmKey: import.meta.env.VITE_LLM_KEY || '',
   modelName: import.meta.env.VITE_MODEL_NAME || 'google/gemma-2-9b-it:free',
+  useAgenticPipeline: false,
 
   isGeneratingStory: false,
   isUpdatingLorebook: false,
   isUpdatingJournal: false,
+
+  setUseAgenticPipeline: (enabled: boolean) => set({ useAgenticPipeline: enabled }),
 
   setView: (view: 'home' | 'story' | 'settings' | 'analytics') => set({ currentView: view }),
 
@@ -457,8 +467,14 @@ export const createStorySlice: StateCreator<
     };
   }),
 
-  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string) => set(() => {
-    return { llmProvider: provider, llmUrl: url, llmKey: key, modelName: modelName };
+  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string, useAgenticPipeline?: boolean) => set((state: StoryState) => {
+    return {
+      llmProvider: provider,
+      llmUrl: url,
+      llmKey: key,
+      modelName: modelName,
+      useAgenticPipeline: useAgenticPipeline !== undefined ? useAgenticPipeline : state.useAgenticPipeline,
+    };
   }),
 
   importStore: (data: any) => set((state: StoryState) => {
@@ -468,34 +484,40 @@ export const createStorySlice: StateCreator<
         typeof story.id === 'string' &&
         typeof story.title === 'string' &&
         typeof story.synopsis === 'string' &&
+        typeof story.genre === 'string' &&
         story.dynamicState &&
-        typeof story.dynamicState.lorebook === 'string'
+        typeof story.dynamicState.characterSheet === 'string' &&
+        typeof story.dynamicState.lorebook === 'string' &&
+        typeof story.dynamicState.masterJournal === 'string' &&
+        Array.isArray(story.messages)
       );
     }) : [];
 
+    if (importedStories.length === 0) {
+      alert('Import failed: The file did not contain any valid OmniTale stories.');
+      return {};
+    }
+
+    const firstStoryId = importedStories[0].id;
     return {
-      currentView: (data.currentView === 'home' || data.currentView === 'story' || data.currentView === 'settings') ? data.currentView : 'home',
-      stories: importedStories.length > 0 ? importedStories : state.stories,
-      activeStoryId: typeof data.activeStoryId === 'string' ? data.activeStoryId : null,
-      masterFeedback: typeof data.masterFeedback === 'string' ? data.masterFeedback : state.masterFeedback,
-      llmProvider: state.llmProvider,
-      llmUrl: state.llmUrl,
-      llmKey: state.llmKey,
-      modelName: state.modelName,
+      stories: importedStories,
+      activeStoryId: firstStoryId,
+      currentView: 'story',
+      masterFeedback: typeof data.masterFeedback === 'string' ? data.masterFeedback : '',
     };
   }),
 });
 
-const generateMasterResponse = async (
+async function generateMasterResponse(
+  state: StoryState,
   set: any,
-  get: any,
+  activeStory: Story,
   updatedMessages: Message[]
-) => {
+) {
   set({ isGeneratingStory: true });
-  
-  const state = get() as StoryState;
-  const activeStory = state.stories.find((s) => s.id === state.activeStoryId);
-  if (!activeStory) {
+
+  const activeStoryId = state.activeStoryId;
+  if (!activeStory || !activeStoryId) {
     set({ isGeneratingStory: false });
     return;
   }
@@ -504,6 +526,7 @@ const generateMasterResponse = async (
   const url = state.llmUrl;
   const key = state.llmKey;
   const model = state.modelName;
+  const useAgenticPipeline = Boolean(state.useAgenticPipeline);
   const lore = activeStory.dynamicState.lorebook;
   const charSheet = activeStory.dynamicState.characterSheet;
   const feedback = activeStory.dynamicState.masterFeedback !== undefined
@@ -562,26 +585,117 @@ const generateMasterResponse = async (
     }
   }
 
-  const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
-
   try {
     const last10Messages = updatedMessages.slice(-10);
-    
+    let masterResponseText = '';
     let apiPromptTokens = 0;
     let apiCompletionTokens = 0;
+    let debugResolution: TurnResolution | undefined = undefined;
 
-    const masterResponseText = await fetchNarrative(
-      provider,
-      url,
-      key,
-      model,
-      UNIFIED_PROMPT,
-      last10Messages,
-      (usage) => {
-        apiPromptTokens = usage.prompt_tokens;
-        apiCompletionTokens = usage.completion_tokens;
+    if (useAgenticPipeline && !isStart) {
+      console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Judge -> Narrator)...");
+      try {
+        // Step A: Judge / Reaction Prompt
+        const judgePrompt = getJudgePrompt(lore, charSheet, journal, feedback, activeStory.language);
+        let judgePromptTokens = 0;
+        let judgeCompletionTokens = 0;
+
+        const rawJudgeResponse = await fetchNarrative(
+          provider,
+          url,
+          key,
+          model,
+          judgePrompt,
+          last10Messages,
+          (usage) => {
+            judgePromptTokens = usage.prompt_tokens;
+            judgeCompletionTokens = usage.completion_tokens;
+          }
+        );
+
+        console.log("[generateMasterResponse] Step A Judge Raw Output:", rawJudgeResponse);
+        const parsedResolution = cleanAndParseJson<TurnResolution>(rawJudgeResponse);
+
+        if (parsedResolution && parsedResolution.actionOutcome && Array.isArray(parsedResolution.npcReactions)) {
+          console.log("[generateMasterResponse] Step A Judge Resolution Parsed:", parsedResolution);
+          debugResolution = parsedResolution;
+
+          // Step B: Narrator Prompt based on pre-determined Turn Resolution
+          const narratorPrompt = getNarratorFromResolutionPrompt(
+            lore,
+            charSheet,
+            journal,
+            feedback,
+            parsedResolution,
+            activeStory.language
+          );
+
+          let narratorPromptTokens = 0;
+          let narratorCompletionTokens = 0;
+
+          masterResponseText = await fetchNarrative(
+            provider,
+            url,
+            key,
+            model,
+            narratorPrompt,
+            last10Messages,
+            (usage) => {
+              narratorPromptTokens = usage.prompt_tokens;
+              narratorCompletionTokens = usage.completion_tokens;
+            }
+          );
+
+          apiPromptTokens = judgePromptTokens + narratorPromptTokens;
+          apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
+        } else {
+          console.warn("[generateMasterResponse] Step A parsing failed or invalid format. Gracefully falling back to unified prompt...");
+          const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
+          masterResponseText = await fetchNarrative(
+            provider,
+            url,
+            key,
+            model,
+            UNIFIED_PROMPT,
+            last10Messages,
+            (usage) => {
+              apiPromptTokens = usage.prompt_tokens;
+              apiCompletionTokens = usage.completion_tokens;
+            }
+          );
+        }
+      } catch (pipelineErr) {
+        console.error("[generateMasterResponse] Error in agentic pipeline, falling back to unified prompt:", pipelineErr);
+        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
+        masterResponseText = await fetchNarrative(
+          provider,
+          url,
+          key,
+          model,
+          UNIFIED_PROMPT,
+          last10Messages,
+          (usage) => {
+            apiPromptTokens = usage.prompt_tokens;
+            apiCompletionTokens = usage.completion_tokens;
+          }
+        );
       }
-    );
+    } else {
+      // Classic single-call mode (or isStart)
+      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
+      masterResponseText = await fetchNarrative(
+        provider,
+        url,
+        key,
+        model,
+        UNIFIED_PROMPT,
+        last10Messages,
+        (usage) => {
+          apiPromptTokens = usage.prompt_tokens;
+          apiCompletionTokens = usage.completion_tokens;
+        }
+      );
+    }
 
     const masterMessage: Message = {
       id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
@@ -589,6 +703,7 @@ const generateMasterResponse = async (
       content: masterResponseText,
       tokens: apiCompletionTokens || estimateTokens(masterResponseText),
       promptTokens: apiPromptTokens || undefined,
+      debugResolution,
     };
 
     const finalMessages = [...updatedMessages, masterMessage];

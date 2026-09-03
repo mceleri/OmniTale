@@ -294,3 +294,34 @@ export const fetchNarrative = async (
 
   return plugin.parseResponse(data);
 };
+
+export function cleanAndParseJson<T = any>(rawText: string): T | null {
+  if (!rawText || typeof rawText !== 'string') return null;
+
+  let cleaned = rawText.trim();
+
+  // Strip markdown code fences like ```json ... ``` or ``` ... ```
+  if (cleaned.startsWith('```')) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  }
+
+  // Attempt direct parse first
+  try {
+    return JSON.parse(cleaned) as T;
+  } catch {
+    // If direct parse fails, try extracting the outermost JSON object { ... }
+    const firstBrace = cleaned.indexOf('{');
+    const lastBrace = cleaned.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+      const extracted = cleaned.substring(firstBrace, lastBrace + 1);
+      try {
+        return JSON.parse(extracted) as T;
+      } catch (innerErr) {
+        console.warn('[cleanAndParseJson] Failed to parse extracted JSON block:', innerErr);
+      }
+    }
+  }
+
+  return null;
+}
+
