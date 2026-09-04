@@ -436,7 +436,7 @@ A disbanded military black-project that genetically awakened psionic abilities i
     type: 'template',
     title: 'The Collective Flame',
     genre: 'High Fantasy / Arcane Mystery',
-    synopsis: 'After a century of rest in their extradimensional Haven, the Collective Flame—a single primordial consciousness sharing the twin bodies of Kizag and Lyra—returns to the mortal realm as two unassuming young apprentices to see if the Balance of Life, freedom of channelers, and the echoes of their legendary past still endure.',
+    synopsis: 'After a century of rest in their Extradimensional Haven following their staged public sacrifice, the Collective Flame—a unified primordial consciousness sharing the twin bodies of Kizag and Lyra—returns quietly to the mortal realm. They perceived a faint, subtle flutter in the tapestry of fate: a tiny ripple that, left unchecked over decades, could quietly unravel the Balance of Life. Moving as two humble apprentices, they must navigate a world transformed by the legacy of the Queen of Shadows and the Keeper of Light, empowering worthy mortals to solve their own crises while fiercely guarding their true identity from the ancient factions that once sought to control them.',
     dynamicState: {
       characterSheet: `Name: The Collective Flame (Vessels: Kizag & Lyra)
 Nature: A unified primordial consciousness and soul dwelling simultaneously within two distinct, independent physical bodies.
@@ -446,8 +446,8 @@ Physical Vessels & Personality Facets:
 1. Kizag:
    - Appearance: A sharp-eyed young man with unruly dark hair, dressed in simple traveler's wool and a dark traveling cloak.
    - Resonant Facet: Chaotic, quick-witted, intuitive, prone to spontaneous schemes, sharp humor, and paranoid vigilance.
-   - Distinctive Arcane Gift: A formidable, extraordinary healer and restorer of vital currents (curatore formidabile), capable of mending flesh, soothing spirit fatigue, and re-weaving disrupted life flows with subtle precision.
-   - Weapon: An ancient-forged, non-magical shortsword of unusual, exquisite metallurgical craftsmanship worn at his hip.
+   - Distinctive Arcane Gift: A formidable healer and restorer of vital currents (curatore formidabile), capable of mending flesh, soothing spirit fatigue, and re-weaving disrupted life flows with subtle precision.
+   - Weapon: An ancient-forged, non-magical shortsword of unusual metallurgical craftsmanship worn at his hip.
 
 2. Lyra:
    - Appearance: A calm, observant young woman with piercing hazel eyes and a subtle, mischievous smirk.
@@ -462,91 +462,68 @@ Shared Primordial Nature & Dormant Abilities:
 - Subtle Infusion: Can channel vital kinetic balance into their physical non-magical weapons for swift parries without creating magical flashes.
 - Silent Spellcraft: Subtle manipulation of minor elemental cantrips and sensory perceptions without obvious gestures or incantations.
 
-Current Stated Objective:
-- Move quietly as two humble apprentices. Observe the mortal world, verify if channelers and enchanters remain free and ethical, and explore how the realm remembered their legendary past sacrifice, all without drawing the eye of inquisitions or high authorities.`,
+Core Player Motivation & Guiding Philosophy:
+1. Sacred Law of Discretion (Absolute Anonymity):
+   - A century ago, they staged their tragic public division as the "Queen of Shadows" and the "Keeper of Light" specifically to break free from powerful organizations (The Watchers, grasping academies, arcane cartels, and inquisitions) that sought to study, exploit, absorb, or eliminate the Collective Flame.
+   - If their survival is discovered, these factions will immediately mobilize to hunt them. They must fiercely maintain their mortal cover identity at all costs.
+2. The Philosophy of Subtle Stewardship (Mortal Agency):
+   - Never solve problems through overwhelming divine force. Slaying tyrants or destroying threats from the sky creates catastrophic power vacuums, societal panic, and helpless dependency on gods.
+   - Even when confronting serious threats to an entire city or region, the protagonists act as subtle catalysts: providing clues, quiet support, tactical nudges, or discreet evidence to capable mortals (reformist magistrates, brave commoners, honest guild scholars) so that mortal society learns to heal and govern itself sustainably.
+3. The Adventure Hook (The Butterfly Effect):
+   - They returned not because of an immediate apocalypse, but because they sensed a subtle tremor in the tapestry of fate—a tiny butterfly effect that could cascade into future tragedy if left unobserved.`,
       lorebook: `## The Setting: The Realm of the Balance
-The realm is an intricate, living tapestry where the "Balance of Life" is the fundamental current underlying all existence. Magic manifests in diverse forms—arcane, elemental, primordial, divine, and shadow—and is neither inherently good nor evil, but shaped entirely by the intent and ethics of the caster.
+The realm is an intricate, living tapestry where the "Balance of Life" is the fundamental current underlying all existence. Magic manifests in diverse forms—arcane, elemental, primordial, divine, and shadow—and is shaped entirely by the intent and ethics of the caster.
 
 ## The Legendary "Event of the Sundering" (~A Century Ago)
-A century ago, after countless covert interventions across Grimgate and the realm, the Collective Flame realized they were becoming too predictable and targeted by scheming factions seeking to manipulate or destroy them. During their climactic final battle against **The Vampire**—a powerful undead tyrant who had nearly subjugated the realm in necromancy—the Flame staged a tragic, heartbreaking public division before thousands of witnesses:
+A century ago, to banish **The Vampire** (a tyrannical undead conqueror) and escape the grasp of scheming factions seeking to capture or dissect them, the Collective Flame staged a tragic, heartbreaking public division before thousands of witnesses:
 - **Lyra** assumed the role of the *Queen of Shadows (Regina delle Ombre)* and dramatically vanished into a *Gate of Screaming Souls*.
 - **Kizag** assumed the role of the *Keeper of Light (Custode della Luce)* and ascended into a *Pillar of Blinding Light*.
-This staged split was so emotionally and magically consuming that the two vessels spent decades resting in their Extradimensional Haven to re-weave their joint consciousness. In mortal history and folklore, this event is revered as the ultimate sacrificial tragedy that banished the Vampire and saved the kingdom.
+In mortal history and folklore, this event is revered as the ultimate sacrificial tragedy that saved the kingdom.
 
-## The Metropolis of Valoria & The River Valleys (A Century Later)
-An ancient, thriving metropolis of canal waterways, grand marble aqueducts, lush riverside vineyards, and bustling guild plazas. Valoria flourishes in a golden age of magical study, art, and river commerce, though delicate political friction exists between magical freedom and civic regulation. Beyond the city walls lie green agricultural hills, ancient whispering groves, and peaceful provincial villages.
-
-## Factions & Competing Worldviews
-- **The Guild of Channelers (Gilda degli Incanalatori):** Headquartered in the High Spire of Valoria, built upon an ancient "moral compass" prioritizing the defense of life's dignity and the ethical autonomy of all magic users. They strive to protect young channelers from exploitation.
-- **The Holy Order & Civic Inquisition:** Led by reformist inquisitors, they focus on preventing dangerous necromantic outbreaks, blood magic, and demonic pacts. They operate through rigorous civic law, magical permits, and investigative registries rather than blind zealotry.
-- **The Obsidian Quill (The Watchers / Osservatori):** An ancient, secretive brotherhood of neutral scholars and record-keepers who archive historical chronicles and magical phenomena without direct interference, bound by their strict non-intervention creed.
-- **The Grand River & Silt Merchant League:** The wealthy mercantile oligarchy controlling the river barges, grain wharves, and trade routes, occasionally colliding with the Guild of Channelers over taxes on enchanted goods and imported alchemical reagents.
-
-## Key NPCs
-- **Arch-Mage Alain (Master Emeritus of the Channelers Guild):** An aged, wise sage who spearheaded the guild's moral independence. He keeps a framed, century-old honey candy wrapper in his private archive as a legendary symbol of ancient guardians. Knowledge of PG: Sees them only as two talented, humble apprentices seeking rural travel registration.
-- **High Inquisitor Valen Verridian:** A shrewd, principled investigator who seeks to maintain order through forensic evidence and law rather than fear. Deeply suspicious of illicit soul-tampering and corrupted blood pacts.
-- **Seraphina the Archivist (The Watchers):** A quiet scholar in the Grand Archive investigating historical records and folk ballads regarding the *Queen of Shadows* and the *Keeper of Light*.
-- **Mira (Proprietress of The Weeping Willow Tavern):** A warm, perceptive hostess at the north gate who knows all local rumors, trade gossip, and traveler news.
+## The Cultural Landscape: 100 Years Later
+The staged sacrifice transformed the realm's culture, religion, and philosophy, giving rise to diverse institutions:
+- **The Shrouded Synod (I Necromanti della Regina):** A legal, respected school of shadow-weavers, anatomists, and philosophical necromancers inspired by the Queen of Shadows. They oversee funeral arts, spirit defense, and mourning rites, believing darkness is life's natural, dignified rest.
+- **The Radiant Orthodoxy (I Figli della Luce):** Solar jurists and clerics devoted to the Keeper of Light, emphasizing civic truth, open courts, illuminating corruption, and public welfare.
+- **The Syncretic Concord (I Filosofi della Doppia Fiamma):** An influential academic and artistic movement based in Valoria, celebrating that Light and Shadow are complementary halves of existence, creating harmonic arts and dual enchantments.
+- **The Guild of Channelers (Gilda degli Incanalatori):** The central magical institution in Valoria, guarding the ethical autonomy of all spellcasters.
+- **The Obsidian Quill (The Watchers / Osservatori):** An ancient, secretive brotherhood of neutral scholars and record-keepers who archive historical chronicles, still quietly obsessed with uncovering the true fate of the Flame.
+- **The Grand River & Silt Merchant League:** The wealthy mercantile oligarchy controlling trade barges, grand festivals, vineyards, and imported alchemical reagents across the river valleys.
 
 ## Subterfuge & Apprentice Covers
-- **The Rural Apprentice Guise ("Kael & Leonor"):** Kizag and Lyra carry forged provincial recommendation papers. Unless they unleash godlike primordial magic, all authorities, guards, and mages perceive them strictly as ordinary mortal novices with good instincts.
+- **The Rural Apprentice Guise ("Kael & Leonor"):** Kizag and Lyra carry forged provincial recommendation papers. All authorities, guards, and scholars perceive them strictly as ordinary mortal novices with good instincts.
 - **The Honey Candy Signature:** An occasional, playful trademark of Lyra, left at scenes of quiet benevolent intervention or as a subtle nod to old allies.
 
-## The Philosophy of Subtle Stewardship & Self-Restraint
-Centuries of experience across multiple realms taught the Collective Flame that direct, brute-force divine intervention is counterproductive: slaying tyrants from the sky creates catastrophic power vacuums, panic, and societal dependency. Therefore, the protagonists deliberately self-limit their actions. Their goal is not to rule or flaunt supremacy, but to empower capable, ethical mortals (such as reformist inquisitors, honorable guild scholars, or brave commoners) with evidence and quiet support, allowing mortal society to heal and govern itself sustainably.
-
 ## Pure Classic High Fantasy (Strict Prohibition on Sci-Fi & Steampunk)
-Even though a century has passed in the world's history, the realm has evolved culturally, philosophically, and artistically—NOT technologically. The aesthetic remains strictly pure, classic High Fantasy: marble bridges, parchment scrolls, iron lanterns, alchemy, herbal medicine, swords, bows, and spellcraft. There are absolutely NO firearms, steam engines, clockwork automata, electricity, or sci-fi gadgets. The world's richness comes from classical fantasy diversity: non-human ancestries (elves, dwarves, beastfolk, sylphs, dragon-blooded), mythical beasts (gryphons, river drakes, forest spirits), and rich arcane lore.
-
-## Incidental World Life & Everyday Flavor
-- Common folk approaching the traveling healer for ordinary mortal ailments: sprained wrists from loading carts, chronic joint aches, childhood seasonal fevers, or simple herbal remedies.
-- Street bards singing ballads of the *Keeper of Light* and the *Queen of Shadows* in markets and taverns, sometimes mentioning ancient honey candy folk tales.
-- Gondolas and wooden barges navigating moonlit river canals, carrying singing travelers and glowing lantern lilies.
-- Everyday tavern interactions: boisterous patrons sharing harvest gossip, travelers making clumsy flirtatious passes, suspicious merchants haggling over grain tolls.
-- Street urchins and opportunistic pickpockets occasionally testing the alertness of seemingly naive traveling apprentices.
-- Aromas of roasted spiced nuts, fresh river fish, freshly baked hearth bread, and elderberry wine.`,
+The aesthetic is strictly pure, classic High Fantasy: marble bridges, parchment scrolls, iron lanterns, alchemy, herbal medicine, swords, bows, and spellcraft. No firearms, clockwork automata, steam engines, electricity, or sci-fi gadgets. Diverse non-human ancestries (elves, dwarves, beastfolk, sylphs, dragon-blooded) populate the world naturally.`,
       masterJournal: `// AI Master Notes — The Collective Flame
-// Act 1: The Return to Valoria
+// Act 1: The Butterfly in the Loom
 
 [CORE CAMPAIGN DIRECTIVES & PACING]
-1. RELAXED, EXPLORATORY PACING & NATURAL DOWNTIME (NO ENDLESS CRISIS LOOP):
-   - The world is NOT in immediate peril. Do NOT rush the narrative or force back-to-back ambushes and cliffhangers.
-   - Alternate high-stakes investigative moments with peaceful downtime (quiet travel through river valleys, evenings at the inn, days spent tending to ordinary commoners).
-   - Let the protagonists explore, converse, investigate local life, and observe how society evolved over the past century.
-2. MANAGING HIGH-POWER PROTAGONISTS (THE CHALLENGE OF SUBTLETY):
-   - Kizag and Lyra possess primordial cosmic might, but they deliberately self-restrain to avoid breaking mortal society or exposing their cover.
-   - Do NOT challenge them with ridiculous cosmic monsters; challenge them with **social finesse, moral dilemmas, stealth, investigative patience, and protecting fragile mortal allies without revealing their true nature**.
-   - Their victory lies in empowering aligned mortals (like honest clerics, reformist inquisitors, or guild arch-mages) to clean up their own institutions.
-3. ABSOLUTE BAN ON RECYCLED VILLAINS:
-   - Past enemies (The Vampire, The Higher Mind, The New Dawn Consortium, The Dark Scholars, ancient extra-dimensional anomalies) were PERMANENTLY defeated and destroyed.
-   - Do NOT bring them back, resurrect them, or reuse them. Any obstacles must be fresh, organic, local, and grounded in human/mortal nature.
-4. LIVING, AUTONOMOUS WORLD (ANTI-LASER FOCUS):
-   - Populate the world with non-quest life: farmers with common ailments, bards singing legends, curious tavern patrons, street pickpockets, and local squabbles. The world does not exist solely to advance the main plot.
-5. PURE CLASSIC HIGH FANTASY ONLY (NO TECH OR STEAMPUNK DRIFT):
-   - The passing of a century brought peace, art, architecture, and guild philosophy, NOT industrialization or steampunk technology.
-   - Strictly avoid guns, clockwork machines, steam engines, factories, electricity, or sci-fi tropes.
-   - Freely populate the world with classic fantasy richness: diverse non-human ancestries (elves, dwarves, beastfolk, sylphs, dragon-blooded), mythical creatures, ancient ruins, and herbal/arcane traditions.
+1. DYNAMIC & FRESH STARTING SCENARIOS (OPEN CREATIVITY):
+   - At the start of a new campaign, DYNAMICALLY GENERATE a fresh, surprising, and unique starting situation anywhere across the Realm of the Balance.
+   - Vary the location and social atmosphere freely: a lively harvest festival in Valoria, an open-air theatrical pageant of the Sundering, a peaceful river barge journey, a debate in an academic tea house, a quaint provincial village market, or a diplomatic salon.
+   - NEVER start with the same repetitive scenario.
+2. ABSOLUTE PROHIBITION ON REPETITIVE CLICHES:
+   - DO NOT start with gate checkpoints, inquisitorial quarantines, or guards demanding permits for healing.
+   - DO NOT start with blights of the land, corrupted earth, or life-draining parasitic stones/wedges.
+   - Focus on human stories, cultural fascinations, philosophical debates, curious mysteries, social intrigues, and the butterfly effect.
+3. MANAGING HIGH-POWER PROTAGONISTS (THE CHALLENGE OF SUBTLETY):
+   - Kizag and Lyra possess immense primordial power, but their priority is **protecting their anonymity** and **avoiding societal disruption**.
+   - If they reveal their godlike nature, ancient factions (The Watchers, power-hungry academies, religious zealots) will immediately hunt them.
+   - When facing local or regional crises, challenge them with **moral dilemmas, stealth, investigation, social diplomacy, and quietly empowering local mortal heroes/magistrates to resolve their own problems**.
+4. LIVING, AUTONOMOUS WORLD & THREE-HOOK STRUCTURE:
+   - Present a rich, vibrant world: 1 main thread of intrigue + 1-2 optional incidental side hooks (a local mystery, an eccentric artisan, a minor bet, a mundane family ailment) + rich slice-of-life color.
 
-[STARTING SCENARIO]
-- Kizag and Lyra step through a quiet boundary fold at dawn just outside Valoria's bustling North Gate.
-- The gate road is crowded with wagons of crisp autumn apples, wandering minstrels, and young spellcaster hopefuls.
-- The air is fresh, smelling of dew-soaked grass, woodsmoke, and the gentle morning chime of cathedral bells across the river.
+[SAMPLE OPENING SEEDS FOR INSPIRATION ONLY — FEEL FREE TO INVENT NEW SCENARIOS]
+- Seed A (The Centennial Pageant in Valoria): A vibrant city festival where costumed actors re-enact the Sundering; an argument breaks out between a Shrouded Synod necromancer and a Solar cleric over an old historical decree.
+- Seed B (The River Barge Journey): Kizag and Lyra travel on a scenic wooden river barge amidst singing merchants and glowing lantern lilies, overhearing travelers discuss an eccentric new philosophical manuscript that surfaced in a nearby town.
+- Seed C (The Cartographer's Tea House): In a peaceful provincial town, a local scholar shows travelers an ancient map with a mysterious discrepancy regarding the historical boundaries of the realm.
+- Seed D (The Harvest Fair): An autumn market buzzing with apple ciders, spiced pastries, wandering bards singing folk ballads of the Queen of Shadows and Keeper of Light, and an elderly traveler asking for assistance with a stubborn draft mule.
 
-[IMMEDIATE ORGANIC HOOKS & CHOICES FOR THE PLAYER]
-1. The Gate Registry Line: Inquisitorial guards and Guild clerks are interviewing newcomers. Kizag and Lyra can present their provincial papers, chat with fellow travelers, or playfully test the clerk's perception.
-2. The Ailing Cart Driver: An elderly carter with a swollen, sprained wrist from a broken wheel is asking if any herbalist in the line has a soothing balm.
-3. The Wandering Bard: A minstrel near the tavern entrance is tuning a lute, preparing to sing a popular local ballad about the "Tragedy of Light and Shadow" (the staged sacrifice of Kizag and Lyra).
-4. The Tavern Atmosphere: The "Weeping Willow" tavern by the gate is full of colorful morning chatter about the Channelers Guild's latest ethical debates with the River Merchant League.
-
-[DM OBSERVATION THEMES]
-- How have the myths of the *Queen of Shadows* and the *Keeper of Light* morphed over 100 years into folklore, art, and guild dogma?
-- How do ordinary citizens feel about magic in their everyday lives?
-- Let Kizag's chaotic humor, subtle healing warmth, and Lyra's teasing intellect with her honey candies bounce off each other naturally through their shared single consciousness.
-
-[INCIDENTAL DETAILS]
-- Lyra unwrapping a honey candy with a quiet smile as she watches the sun illuminate the spires of Valoria.
-- Kizag unobtrusively pressing a thumb against the bruised knee of an elderly cart driver in the line, soothing the joint ache with a warm pulse of vital restoration without uttering a spell.
-- A street cat rubbing against Lyra's boots, sensing a faint, warm primordial hum before purring contentedly.`,
+[INCIDENTAL DETAILS & SENSORY FLAVOR]
+- Lyra subtly offering a honey candy to an appreciative local, enjoying the warm memory.
+- Kizag engaging in chaotic banter, using mild, unobtrusive cantrips or herbal wisdom.
+- Ambient sounds: lute ballads, canal waters, church bells, laughter in public squares.`,
       masterFeedback: '',
     },
     messages: [],
