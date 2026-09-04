@@ -35,7 +35,7 @@ export const AnalyticsView: React.FC = () => {
   // If no story is loaded or selected, render an error state
   if (!story) {
     return (
-      <div className="max-w-md lg:max-w-5xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-center items-center">
+      <div className="max-w-md lg:max-w-none lg:w-full mx-auto min-h-screen px-6 py-8 flex flex-col justify-center items-center">
         <p className="text-zinc-400 text-sm mb-4">No active story selected for analysis.</p>
         <button
           onClick={() => setView('home')}
@@ -215,7 +215,7 @@ export const AnalyticsView: React.FC = () => {
   }, [filteredChartMessages, chartViewMode, maxVal, xStep]);
 
   return (
-    <div className="max-w-md lg:max-w-5xl mx-auto min-h-screen px-4 py-6 flex flex-col justify-between">
+    <div className="max-w-md lg:max-w-none lg:w-full mx-auto min-h-screen px-4 lg:px-4 py-6 flex flex-col justify-between">
       <div>
         {/* Navigation & Header */}
         <div className="flex items-center gap-3 mb-6">

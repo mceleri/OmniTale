@@ -135,7 +135,7 @@ export const StoryView: React.FC = () => {
   };
 
   return (
-    <div className="relative max-w-md lg:max-w-4xl mx-auto h-screen bg-zinc-950 flex flex-col overflow-hidden select-none">
+    <div className="relative max-w-md lg:max-w-5xl mx-auto h-screen bg-zinc-950 flex flex-col overflow-hidden select-none">
       
       {/* 1. TOP BAR */}
       <header className="sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900/60 h-14 flex items-center justify-between px-4 z-20">
@@ -396,7 +396,7 @@ export const StoryView: React.FC = () => {
 
       {/* Slide-up Bottom Sheet */}
       <div
-        className={`fixed bottom-0 left-0 right-0 max-w-md lg:max-w-4xl mx-auto bg-zinc-900 border-t border-zinc-800/80 rounded-t-2xl z-40 overflow-hidden shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
+        className={`fixed bottom-0 left-0 right-0 max-w-md lg:max-w-5xl mx-auto bg-zinc-900 border-t border-zinc-800/80 rounded-t-2xl z-40 overflow-hidden shadow-2xl transition-transform duration-300 ease-out flex flex-col ${
           activeSheet !== null ? 'translate-y-0 h-[65vh]' : 'translate-y-full h-[65vh]'
         }`}
       >

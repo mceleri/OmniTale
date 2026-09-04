@@ -249,7 +249,7 @@ export const HomeView: React.FC = () => {
   });
 
   return (
-    <div className="max-w-md lg:max-w-5xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
+    <div className="max-w-md lg:max-w-none lg:w-full mx-auto min-h-screen px-6 lg:px-4 py-8 flex flex-col justify-between">
       <div>
         {/* Header - No solo rpg tagline */}
         <div className="flex items-center justify-between mb-8">
@@ -293,7 +293,7 @@ export const HomeView: React.FC = () => {
                 <h2 className="text-sm font-medium text-zinc-200">
                   {recentStory.type === 'template' ? 'Edit Template' : 'Continue Journey'}
                 </h2>
-                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[240px] lg:max-w-[340px]">
+                <p className="text-xs text-zinc-100 font-serif mt-1 font-semibold truncate max-w-[240px] lg:max-w-[420px]">
                   {recentStory.title}
                 </p>
                 <p className="text-[10px] text-zinc-400 mt-0.5">
@@ -361,16 +361,16 @@ export const HomeView: React.FC = () => {
               <p className="text-xs text-zinc-400">No matching stories found.</p>
             </div>
           ) : (
-            <div className="space-y-4 lg:space-y-0 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-6 lg:pb-6 lg:snap-x lg:snap-proximity">
+            <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-6">
               {filteredStories.map((story: Story) => (
                 <div
                   key={story.id}
-                  className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between lg:min-w-[340px] lg:max-w-[380px] lg:h-[280px] lg:shrink-0 lg:snap-start"
+                  className="group relative bg-zinc-900/50 hover:bg-zinc-900/80 border border-zinc-800/80 rounded-xl p-5 transition-all hover:border-zinc-700/80 cursor-pointer flex flex-col justify-between lg:min-h-[260px]"
                   onClick={() => handleSelectStoryOrTemplate(story)}
                 >
                   <div className="flex justify-between items-start gap-4">
                      <div className="flex-1 min-w-0">
-                      <h4 className="font-serif text-lg lg:text-xl text-zinc-200 group-hover:text-zinc-100 truncate max-w-[240px] lg:max-w-[280px] mb-1">
+                      <h4 className="font-serif text-lg lg:text-xl text-zinc-200 group-hover:text-zinc-100 truncate mb-1">
                         {story.title}
                       </h4>
                       <div className="flex flex-row gap-2 items-center mb-2 flex-wrap">

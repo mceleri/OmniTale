@@ -95,7 +95,7 @@ export const SettingsView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md lg:max-w-3xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
+    <div className="max-w-md lg:max-w-4xl mx-auto min-h-screen px-6 py-8 flex flex-col justify-between">
       <div>
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
