@@ -43,6 +43,7 @@ export const HomeView: React.FC = () => {
     compiledLorebookMarkdown: string;
     characterSheetContent: string;
     sections: StorySections;
+    masterJournal?: string;
   } | null>(null);
   const [title, setTitle] = useState('');
   const [editingStoryId, setEditingStoryId] = useState<string | null>(null);
@@ -74,6 +75,10 @@ export const HomeView: React.FC = () => {
       canvasHistory ? `## Historical Facts\n${canvasHistory}` : '',
     ].filter(Boolean).join('\n\n');
 
+    const sourceTemplateJournal = editingStoryId
+      ? stories.find((s) => s.id === editingStoryId)?.dynamicState.masterJournal
+      : undefined;
+
     setPendingJourneyData({
       title: title.trim(),
       synopsis,
@@ -86,7 +91,8 @@ export const HomeView: React.FC = () => {
         factions: canvasFactions,
         conflicts: canvasConflicts,
         historicalFacts: canvasHistory,
-      }
+      },
+      masterJournal: sourceTemplateJournal,
     });
     setSelectedPropensity(canvasPropensity);
     setIsLanguageModalOpen(true);
@@ -104,7 +110,10 @@ export const HomeView: React.FC = () => {
     let finalSynopsis = pendingJourneyData.synopsis;
     let finalLorebook = pendingJourneyData.compiledLorebookMarkdown;
     let finalCharSheet = pendingJourneyData.characterSheetContent;
-    let finalJournal = `// AI Master Notes — ${finalTitle}\n// Act 1: The First Step\n- Character: ${pendingJourneyData.characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`;
+    let finalJournal = pendingJourneyData.masterJournal && pendingJourneyData.masterJournal.trim().length > 50
+      ? pendingJourneyData.masterJournal.trim()
+      : `// AI Master Notes — ${finalTitle}\n// Act 1: The First Step\n- Character: ${pendingJourneyData.characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`;
+    let finalSections = pendingJourneyData.sections;
 
     if (key) {
       setIsTranslating(true);
@@ -133,13 +142,31 @@ export const HomeView: React.FC = () => {
         const charSheetPrompt = `You are an expert RPG system translator. Translate the following character sheet into ${selectedLanguage}. Preserve the original text structure, layout, newlines, and labels exactly. Return ONLY the translated character sheet.`;
         const lorebookPrompt = `You are an expert fantasy worldbuilding translator. Translate the following lorebook markdown content into ${selectedLanguage}. Preserve all markdown syntax exactly. Return ONLY the translated markdown.`;
         const journalPrompt = `You are a Game Master assistant. Translate the following GM notes/journal into ${selectedLanguage}. Preserve the format, bullet points, and comment markers exactly. Return ONLY the translated notes.`;
+        const sectionSettingPrompt = `You are an expert RPG translator. Translate the following world setting description into ${selectedLanguage}. Preserve the tone, imagery, and paragraphs. Return ONLY the translated text.`;
+        const sectionFactionsPrompt = `You are an expert RPG translator. Translate the following factions and groups into ${selectedLanguage}. Preserve the bullet points and structure exactly. Return ONLY the translated text.`;
+        const sectionConflictsPrompt = `You are an expert RPG translator. Translate the following structural conflicts and frictions into ${selectedLanguage}. Preserve the bullet points and structure exactly. Return ONLY the translated text.`;
+        const sectionHistoryPrompt = `You are an expert RPG translator. Translate the following historical facts and established lore into ${selectedLanguage}. Preserve the bullet points and structure exactly. Return ONLY the translated text.`;
 
-        const [translatedTitle, translatedSynopsis, translatedCharSheet, translatedLorebook, translatedJournal] = await Promise.all([
+        const [
+          translatedTitle,
+          translatedSynopsis,
+          translatedCharSheet,
+          translatedLorebook,
+          translatedJournal,
+          translatedSetting,
+          translatedFactions,
+          translatedConflicts,
+          translatedHistory,
+        ] = await Promise.all([
           translateField(finalTitle, titlePrompt),
           translateField(finalSynopsis, synopsisPrompt),
           translateField(finalCharSheet, charSheetPrompt),
           translateField(finalLorebook, lorebookPrompt),
           translateField(finalJournal, journalPrompt),
+          translateField(pendingJourneyData.sections?.setting || '', sectionSettingPrompt),
+          translateField(pendingJourneyData.sections?.factions || '', sectionFactionsPrompt),
+          translateField(pendingJourneyData.sections?.conflicts || '', sectionConflictsPrompt),
+          translateField(pendingJourneyData.sections?.historicalFacts || '', sectionHistoryPrompt),
         ]);
 
         finalTitle = translatedTitle;
@@ -147,6 +174,13 @@ export const HomeView: React.FC = () => {
         finalCharSheet = translatedCharSheet;
         finalLorebook = translatedLorebook;
         finalJournal = translatedJournal;
+        finalSections = {
+          setting: translatedSetting,
+          characterSheet: translatedCharSheet,
+          factions: translatedFactions,
+          conflicts: translatedConflicts,
+          historicalFacts: translatedHistory,
+        };
 
       } catch (error) {
         console.error('Translation process error:', error);
@@ -171,7 +205,7 @@ export const HomeView: React.FC = () => {
       selectedLanguage,
       undefined,
       selectedPropensity,
-      pendingJourneyData.sections
+      finalSections
     );
 
     // Reset fields
