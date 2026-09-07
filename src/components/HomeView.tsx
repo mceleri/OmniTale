@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
-import { Story } from '../types/story';
-import { parseMarkdownToBlocks, compileBlocksToMarkdown } from '../utils/markdownParser';
+import { Story, NarrativePropensity, StorySections } from '../types/story';
 import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight, BarChart2, Loader } from 'lucide-react';
 import { fetchNarrative } from '../services/llmService';
 
@@ -36,61 +35,60 @@ export const HomeView: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedPropensity, setSelectedPropensity] = useState<NarrativePropensity>('balanced');
   const [pendingJourneyData, setPendingJourneyData] = useState<{
     title: string;
     synopsis: string;
     characterName: string;
     compiledLorebookMarkdown: string;
     characterSheetContent: string;
+    sections: StorySections;
   } | null>(null);
   const [title, setTitle] = useState('');
   const [editingStoryId, setEditingStoryId] = useState<string | null>(null);
   const [isTranslating, setIsTranslating] = useState(false);
   const [translationStatus, setTranslationStatus] = useState('');
   
-  // Local state for dynamic worldbuilding blocks
-  const [blocks, setBlocks] = useState<{ id: string; title: string; content: string }[]>([
-    { id: '1', title: 'Setting', content: '' }
-  ]);
+  // Local state for 5-section Worldbuilding Canvas & Propensity
+  const [activeCanvasTab, setActiveCanvasTab] = useState<'setting' | 'character' | 'factions' | 'conflicts' | 'history'>('setting');
+  const [canvasSetting, setCanvasSetting] = useState('');
+  const [canvasCharSheet, setCanvasCharSheet] = useState('');
+  const [canvasFactions, setCanvasFactions] = useState('');
+  const [canvasConflicts, setCanvasConflicts] = useState('');
+  const [canvasHistory, setCanvasHistory] = useState('');
+  const [canvasPropensity, setCanvasPropensity] = useState<NarrativePropensity>('balanced');
 
   // Local state for segmented filtering
   const [filter, setFilter] = useState<'all' | 'tales' | 'templates'>('all');
-
-  const processCanvasBlocks = () => {
-    const charBlock = blocks.find(b => b.title.toLowerCase().includes('character'));
-    const characterName = charBlock 
-      ? charBlock.content.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer' 
-      : 'Adventurer';
-    
-    const characterSheetContent = charBlock ? charBlock.content : `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`;
-
-    const otherBlocks = blocks.filter(b => !b.title.toLowerCase().includes('character'));
-    const compiledLorebookMarkdown = compileBlocksToMarkdown(otherBlocks);
-
-    const synopsis = otherBlocks[0]?.content.trim() || 'A mysterious journey across unknown frontiers.';
-
-    return {
-      characterName,
-      characterSheetContent,
-      compiledLorebookMarkdown,
-      synopsis
-    };
-  };
 
   const handleStartJourney = (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!title.trim()) return;
 
-    const { characterName, characterSheetContent, compiledLorebookMarkdown, synopsis } = processCanvasBlocks();
+    const characterName = canvasCharSheet.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer';
+    const synopsis = canvasSetting.slice(0, 200).trim() || 'A mysterious journey across unknown frontiers.';
+    const compiledLorebookMarkdown = [
+      canvasSetting ? `## Setting\n${canvasSetting}` : '',
+      canvasFactions ? `## Factions\n${canvasFactions}` : '',
+      canvasConflicts ? `## Conflicts\n${canvasConflicts}` : '',
+      canvasHistory ? `## Historical Facts\n${canvasHistory}` : '',
+    ].filter(Boolean).join('\n\n');
 
-    // Set pending data and trigger language modal
     setPendingJourneyData({
       title: title.trim(),
       synopsis,
       characterName,
       compiledLorebookMarkdown,
-      characterSheetContent
+      characterSheetContent: canvasCharSheet || `Name: ${characterName}`,
+      sections: {
+        setting: canvasSetting,
+        characterSheet: canvasCharSheet,
+        factions: canvasFactions,
+        conflicts: canvasConflicts,
+        historicalFacts: canvasHistory,
+      }
     });
+    setSelectedPropensity(canvasPropensity);
     setIsLanguageModalOpen(true);
   };
 
@@ -110,12 +108,13 @@ export const HomeView: React.FC = () => {
 
     if (key) {
       setIsTranslating(true);
-      setTranslationStatus('Traduzione in corso...');
+      setTranslationStatus('Translating adventure...');
       try {
         const translateField = async (text: string, systemPrompt: string): Promise<string> => {
           if (!text.trim()) return text;
           try {
             const result = await fetchNarrative(
+              state.llmProvider || 'openrouter',
               url,
               key,
               model,
@@ -131,9 +130,9 @@ export const HomeView: React.FC = () => {
 
         const titlePrompt = `You are a professional translator. Translate the following adventure title into ${selectedLanguage}. Make it sound natural, evocative, and epic in ${selectedLanguage}. Return ONLY the translated title text, with no explanations, no quotes, and no extra commentary.`;
         const synopsisPrompt = `You are an expert fantasy/RPG translator. Translate the following adventure synopsis into ${selectedLanguage}. Keep it engaging, dramatic, and atmospheric. Return ONLY the translated synopsis text, with no explanations or metadata.`;
-        const charSheetPrompt = `You are an expert RPG system translator. Translate the following character sheet into ${selectedLanguage}. Translate labels (like 'Name', 'Attributes', 'Might', 'Agility', 'Intellect', 'Grit', 'Inventory', 'Rations') and description/item names (like 'Leather Satchel') so they sound natural and standard in ${selectedLanguage}. Preserve the original text structure, layout, newlines, and colon style exactly. Return ONLY the translated character sheet.`;
-        const lorebookPrompt = `You are an expert fantasy worldbuilding translator. Translate the following lorebook markdown content into ${selectedLanguage}. Translate all prose, titles, and headers naturally, but preserve all markdown syntax (headers, bullet points, bold/italic, etc.) exactly. Return ONLY the translated markdown.`;
-        const journalPrompt = `You are a Game Master assistant. Translate the following GM notes/journal into ${selectedLanguage}. Translate all descriptions, goals, and act titles, but preserve the format, bullet points, and comment markers (like '//') exactly. Return ONLY the translated notes.`;
+        const charSheetPrompt = `You are an expert RPG system translator. Translate the following character sheet into ${selectedLanguage}. Preserve the original text structure, layout, newlines, and labels exactly. Return ONLY the translated character sheet.`;
+        const lorebookPrompt = `You are an expert fantasy worldbuilding translator. Translate the following lorebook markdown content into ${selectedLanguage}. Preserve all markdown syntax exactly. Return ONLY the translated markdown.`;
+        const journalPrompt = `You are a Game Master assistant. Translate the following GM notes/journal into ${selectedLanguage}. Preserve the format, bullet points, and comment markers exactly. Return ONLY the translated notes.`;
 
         const [translatedTitle, translatedSynopsis, translatedCharSheet, translatedLorebook, translatedJournal] = await Promise.all([
           translateField(finalTitle, titlePrompt),
@@ -169,12 +168,20 @@ export const HomeView: React.FC = () => {
       finalLorebook,
       finalCharSheet,
       finalJournal, // Pass the translated journal
-      selectedLanguage
+      selectedLanguage,
+      undefined,
+      selectedPropensity,
+      pendingJourneyData.sections
     );
 
     // Reset fields
     setTitle('');
-    setBlocks([{ id: String(Date.now()), title: 'Setting', content: '' }]);
+    setCanvasSetting('');
+    setCanvasCharSheet('');
+    setCanvasFactions('');
+    setCanvasConflicts('');
+    setCanvasHistory('');
+    setCanvasPropensity('balanced');
     setEditingStoryId(null);
     setIsModalOpen(false);
     setIsLanguageModalOpen(false);
@@ -185,7 +192,23 @@ export const HomeView: React.FC = () => {
     if (e) e.preventDefault();
     if (!title.trim()) return;
 
-    const { characterName, characterSheetContent, compiledLorebookMarkdown, synopsis } = processCanvasBlocks();
+    const sections: StorySections = {
+      setting: canvasSetting,
+      characterSheet: canvasCharSheet,
+      factions: canvasFactions,
+      conflicts: canvasConflicts,
+      historicalFacts: canvasHistory,
+    };
+
+    const compiledLorebookMarkdown = [
+      canvasSetting ? `## Setting\n${canvasSetting}` : '',
+      canvasFactions ? `## Factions\n${canvasFactions}` : '',
+      canvasConflicts ? `## Conflicts\n${canvasConflicts}` : '',
+      canvasHistory ? `## Historical Facts\n${canvasHistory}` : '',
+    ].filter(Boolean).join('\n\n');
+
+    const characterName = canvasCharSheet.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer';
+    const synopsis = canvasSetting.slice(0, 200).trim() || 'A mysterious journey across unknown frontiers.';
 
     if (editingStoryId) {
       updateStory(
@@ -194,7 +217,11 @@ export const HomeView: React.FC = () => {
         synopsis,
         characterName,
         compiledLorebookMarkdown,
-        characterSheetContent
+        canvasCharSheet,
+        undefined,
+        undefined,
+        canvasPropensity,
+        sections
       );
     } else {
       createStory(
@@ -204,31 +231,40 @@ export const HomeView: React.FC = () => {
         'Custom', // Genre is inferred / Custom
         'template', // Template draft
         compiledLorebookMarkdown,
-        characterSheetContent
+        canvasCharSheet,
+        undefined,
+        undefined,
+        undefined,
+        canvasPropensity,
+        sections
       );
     }
 
     // Reset fields
     setTitle('');
-    setBlocks([{ id: String(Date.now()), title: 'Setting', content: '' }]);
+    setCanvasSetting('');
+    setCanvasCharSheet('');
+    setCanvasFactions('');
+    setCanvasConflicts('');
+    setCanvasHistory('');
+    setCanvasPropensity('balanced');
     setEditingStoryId(null);
     setIsModalOpen(false);
   };
 
   const handleSelectStoryOrTemplate = (story: Story) => {
     if (story.type === 'template') {
-      const parsedBlocks = parseMarkdownToBlocks(story.dynamicState.lorebook);
-      const hasCharBlock = parsedBlocks.some(b => b.title.toLowerCase().includes('character'));
-      if (!hasCharBlock && story.dynamicState.characterSheet) {
-        parsedBlocks.push({
-          id: 'char_temp_' + Date.now(),
-          title: 'Character',
-          content: story.dynamicState.characterSheet
-        });
-      }
       setTitle(story.title);
-      setBlocks(parsedBlocks);
+      setCanvasSetting(story.dynamicState.setting || story.dynamicState.lorebook || '');
+      setCanvasCharSheet(story.dynamicState.characterSheet || '');
+      setCanvasFactions(story.dynamicState.factions || '');
+      setCanvasConflicts(story.dynamicState.conflicts || '');
+      setCanvasHistory(story.dynamicState.historicalFacts || '');
+      const prop = story.narrativePropensity || 'balanced';
+      setCanvasPropensity(prop);
+      setSelectedPropensity(prop);
       setEditingStoryId(story.id);
+      setActiveCanvasTab('setting');
       setIsModalOpen(true);
     } else {
       selectStory(story.id);
@@ -308,9 +344,16 @@ export const HomeView: React.FC = () => {
         {/* Create Button */}
         <button
           onClick={() => {
-            setBlocks([{ id: '1', title: 'Setting', content: '' }]);
             setTitle('');
+            setCanvasSetting('');
+            setCanvasCharSheet('');
+            setCanvasFactions('');
+            setCanvasConflicts('');
+            setCanvasHistory('');
+            setCanvasPropensity('balanced');
+            setSelectedPropensity('balanced');
             setEditingStoryId(null);
+            setActiveCanvasTab('setting');
             setIsModalOpen(true);
           }}
           className="w-full lg:max-w-xs lg:mx-auto flex items-center justify-center gap-2 py-3.5 px-4 bg-zinc-100 text-zinc-950 font-medium text-sm rounded-xl transition hover:bg-zinc-200 active:scale-[0.98]"
@@ -456,13 +499,38 @@ export const HomeView: React.FC = () => {
               </button>
             </div>
 
+            {/* Modal Tab Navigation */}
+            <div className="flex border-b border-zinc-800 bg-zinc-950/60 px-6 gap-1 overflow-x-auto no-scrollbar shrink-0">
+              {[
+                { id: 'setting', label: 'Setting', icon: '🌍' },
+                { id: 'character', label: 'Character', icon: '👤' },
+                { id: 'factions', label: 'Factions', icon: '⚔️' },
+                { id: 'conflicts', label: 'Conflicts', icon: '⚡' },
+                { id: 'history', label: 'Historical Facts', icon: '📜' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveCanvasTab(tab.id as any)}
+                  className={`py-3 px-3.5 border-b-2 text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${
+                    activeCanvasTab === tab.id
+                      ? 'border-zinc-100 text-zinc-100 bg-zinc-900/60'
+                      : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/30'
+                  }`}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
             {/* Modal Scrollable Content Area */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
               {/* Adventure Title */}
               <div>
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
                   Adventure Title
-                </label>\
+                </label>
                 <input
                   type="text"
                   required
@@ -473,63 +541,144 @@ export const HomeView: React.FC = () => {
                 />
               </div>
 
-              {/* Dynamic Worldbuilding Blocks */}
-              <div className="space-y-4">
-                <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
-                  Worldbuilding Aspects
-                </label>
-                
-                <div className="space-y-3">
-                  {blocks.map((block) => (
-                    <div key={block.id} className="relative bg-zinc-950 border border-zinc-850/60 rounded-xl p-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <input
-                          type="text"
-                          value={block.title}
-                          onChange={(e) => {
-                            setBlocks(blocks.map(b => b.id === block.id ? { ...b, title: e.target.value } : b));
-                          }}
-                          placeholder="e.g. Setting, Magic System, Character..."
-                          className="bg-transparent text-sm font-semibold text-zinc-200 focus:outline-none border-b border-transparent focus:border-zinc-700 pb-0.5"
-                        />
-                        {blocks.length > 1 && (
+              {/* Tab 1: Setting */}
+              {activeCanvasTab === 'setting' && (
+                <div className="space-y-4 animate-fade-in">
+                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                    🌍 <strong>World Setting & Tone:</strong> Defines atmosphere, geography, mood, and reality rules. The AI Master strictly uses this as tone and consistency guidelines without forcing active plot mandates.
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
+                      Setting Atmosphere & Lore
+                    </label>
+                    <textarea
+                      value={canvasSetting}
+                      onChange={(e) => setCanvasSetting(e.target.value)}
+                      placeholder="Describe the environment, aesthetics, architecture, weather, and world rules..."
+                      rows={7}
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                    />
+                  </div>
+
+                  {/* Default Narrative Propensity in Setting Tab */}
+                  <div className="pt-2 border-t border-zinc-800/60">
+                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
+                      Default Narrative Propensity
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      {[
+                        {
+                          id: 'character_driven',
+                          label: 'Character-Driven',
+                          icon: '🎭',
+                          desc: 'Dialogue, tridimensional psychology, personal dilemmas, companion banter & atmospheric downtime.',
+                        },
+                        {
+                          id: 'balanced',
+                          label: 'Balanced',
+                          icon: '⚖️',
+                          desc: 'Harmonious alternation between tactical action, social roleplay, and environmental exploration.',
+                        },
+                        {
+                          id: 'plot_driven',
+                          label: 'Plot-Driven',
+                          icon: '⚡',
+                          desc: 'Forward momentum, escalating stakes, ticking clocks, active complications & emergent threats.',
+                        },
+                      ].map((option) => {
+                        const isSelected = canvasPropensity === option.id;
+                        return (
                           <button
+                            key={option.id}
                             type="button"
                             onClick={() => {
-                              setBlocks(blocks.filter(b => b.id !== block.id));
+                              setCanvasPropensity(option.id as any);
+                              setSelectedPropensity(option.id as any);
                             }}
-                            className="text-zinc-500 hover:text-red-400 p-1 rounded transition shrink-0"
-                            title="Remove Aspect"
+                            className={`p-3 rounded-xl border text-left transition flex flex-col justify-between ${
+                              isSelected
+                                ? 'bg-zinc-800/80 border-zinc-600 text-zinc-100 shadow-md'
+                                : 'bg-zinc-950/40 border-zinc-850 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                            }`}
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <div className="flex items-center gap-1.5 text-xs font-semibold">
+                              <span>{option.icon}</span>
+                              <span>{option.label}</span>
+                            </div>
+                            <p className="text-[10px] text-zinc-400 mt-1.5 leading-snug">
+                              {option.desc}
+                            </p>
                           </button>
-                        )}
-                      </div>
-                      <textarea
-                        value={block.content}
-                        onChange={(e) => {
-                          setBlocks(blocks.map(b => b.id === block.id ? { ...b, content: e.target.value } : b));
-                        }}
-                        placeholder="Describe this aspect of your world..."
-                        rows={3}
-                        className="w-full bg-transparent text-xs text-zinc-300 leading-relaxed focus:outline-none placeholder-zinc-500 resize-none"
-                      />
+                        );
+                      })}
                     </div>
-                  ))}
+                  </div>
                 </div>
+              )}
 
-                {/* Add Aspect Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setBlocks([...blocks, { id: 'block_' + Date.now(), title: '', content: '' }]);
-                  }}
-                  className="w-full py-3 flex items-center justify-center gap-1.5 border border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl text-xs text-zinc-400 hover:text-zinc-200 transition active:scale-[0.99]"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  + Add Aspect
-                </button>
-              </div>
+              {/* Tab 2: Character Sheet */}
+              {activeCanvasTab === 'character' && (
+                <div className="space-y-3 animate-fade-in">
+                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                    👤 <strong>Character Sheet Guidelines:</strong> Protagonist name, qualitative traits, demeanor, capabilities, cover identities, and equipment. Qualitative guidelines only — no numerical stats or HP trackers.
+                  </div>
+                  <textarea
+                    value={canvasCharSheet}
+                    onChange={(e) => setCanvasCharSheet(e.target.value)}
+                    placeholder={`Name: Adventurer\nRole: Wandering Scholar & Scout\n\nQualitative Demeanor & Traits:\n- Observant, cautious, respectful of ancient ruins.\n\nCapabilities & Skills:\n- Herbalism, cartography, light swordsmanship.\n\nEquipment:\n- Traveling cloak, brass compass, leather satchel, iron rations.`}
+                    rows={12}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-mono"
+                  />
+                </div>
+              )}
+
+              {/* Tab 3: Factions */}
+              {activeCanvasTab === 'factions' && (
+                <div className="space-y-3 animate-fade-in">
+                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                    ⚔️ <strong>Factions & Competing Agendas:</strong> Active organizations, guilds, or powers. Each faction must possess its own internal logic and goals, rather than simply existing to oppose the player.
+                  </div>
+                  <textarea
+                    value={canvasFactions}
+                    onChange={(e) => setCanvasFactions(e.target.value)}
+                    placeholder={`- The Sylvan Wardens: Elven druids sworn to protect the forest from outside exploitation.\n- The High Arcane Conclave: Scholars seeking lost magical engines to sustain city infrastructure.\n- The Merchant League: Trade oligarchy seeking open riverways and low tariffs.`}
+                    rows={12}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                  />
+                </div>
+              )}
+
+              {/* Tab 4: Conflicts */}
+              {activeCanvasTab === 'conflicts' && (
+                <div className="space-y-3 animate-fade-in">
+                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                    ⚡ <strong>Structural Conflicts:</strong> Relational friction, jurisdictional disputes, and competing interests between factions. Generative material for the master to draw from when organically relevant.
+                  </div>
+                  <textarea
+                    value={canvasConflicts}
+                    onChange={(e) => setCanvasConflicts(e.target.value)}
+                    placeholder={`- Territorial standoff between woodland wardens and university expeditions.\n- Economic competition over river trade rights between merchant cartels and provincial towns.\n- Inquisitorial scrutiny over untaxed alchemical imports.`}
+                    rows={12}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                  />
+                </div>
+              )}
+
+              {/* Tab 5: Historical Facts */}
+              {activeCanvasTab === 'history' && (
+                <div className="space-y-3 animate-fade-in">
+                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                    📜 <strong>Historical Facts & Established Lore:</strong> Past covenants, founding legends, and historical facts. Used by the AI Master purely as atmospheric color and consistency context — never as active quest mandates.
+                  </div>
+                  <textarea
+                    value={canvasHistory}
+                    onChange={(e) => setCanvasHistory(e.target.value)}
+                    placeholder={`- Three centuries ago, the Cataclysm of the Pale Moon opened planar fissures across the mountains.\n- The realm's civil charter was established following the historic Peace of Valoria.\n- The ancient sanctuary was carved by elven architects directly from living bedrock.`}
+                    rows={12}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Modal Footer (Sticky / Fixed at bottom) */}
@@ -556,54 +705,114 @@ export const HomeView: React.FC = () => {
         </div>
       )}
 
-      {/* Language Selection Modal */}
+      {/* Language & Narrative Propensity Selection Modal */}
       {isLanguageModalOpen && (
         <div className="fixed inset-0 bg-zinc-950/85 backdrop-blur-md flex items-center justify-center p-4 z-[60] animate-fade-in" id="language-selection-modal">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md p-6 flex flex-col space-y-6 shadow-2xl animate-scale-up">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-lg p-6 flex flex-col space-y-5 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto no-scrollbar">
             
             {/* Header */}
             <div className="text-center space-y-1">
               <h3 className="font-serif text-xl text-zinc-100 font-medium">
-                Adventure Language
+                Configure Your Journey
               </h3>
               <p className="text-xs text-zinc-400">
-                Select the primary language for the AI Game Master's narration.
+                Choose the narrative propensity and language for the AI Game Master.
               </p>
             </div>
 
+            {/* Narrative Propensity Selector */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
+                  <span>Narrative Propensity</span>
+                </label>
+                <span className="text-[10px] text-zinc-500 font-sans">Can be changed mid-game</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  {
+                    id: 'character_driven',
+                    label: 'Character',
+                    icon: '🎭',
+                    desc: 'Psychology, dialogue & quiet downtime',
+                  },
+                  {
+                    id: 'balanced',
+                    label: 'Balanced',
+                    icon: '⚖️',
+                    desc: 'Equal action, roleplay & exploration',
+                  },
+                  {
+                    id: 'plot_driven',
+                    label: 'Plot',
+                    icon: '⚡',
+                    desc: 'Urgent stakes, momentum & complications',
+                  },
+                ].map((p) => {
+                  const isSelected = selectedPropensity === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      disabled={isTranslating}
+                      onClick={() => setSelectedPropensity(p.id as any)}
+                      className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition ${
+                        isSelected
+                          ? 'bg-zinc-100 border-zinc-100 text-zinc-950 font-semibold shadow-md'
+                          : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:border-zinc-700'
+                      } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <div className="flex items-center gap-1.5 text-xs">
+                        <span>{p.icon}</span>
+                        <span className="truncate">{p.label}</span>
+                      </div>
+                      <p className={`text-[9px] mt-1.5 leading-snug ${isSelected ? 'text-zinc-700' : 'text-zinc-500'}`}>
+                        {p.desc}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Languages Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              {LANGUAGES.map((lang) => {
-                const isSelected = selectedLanguage === lang.name;
-                return (
-                  <button
-                    key={lang.name}
-                    type="button"
-                    disabled={isTranslating}
-                    onClick={() => setSelectedLanguage(lang.name)}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all duration-200 active:scale-[0.98] ${
-                      isSelected
-                        ? 'bg-zinc-100 border-zinc-100 text-zinc-950 font-semibold shadow-md shadow-zinc-100/5'
-                        : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:text-zinc-100 hover:border-zinc-700/80'
-                    } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    <span className="text-2xl" role="img" aria-label={lang.name}>
-                      {lang.flag}
-                    </span>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-sans truncate">{lang.native}</span>
-                      <span className={`text-[9px] ${isSelected ? 'text-zinc-600' : 'text-zinc-500'} font-sans truncate`}>
-                        {lang.name}
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-zinc-200 block">
+                Narration Language
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {LANGUAGES.map((lang) => {
+                  const isSelected = selectedLanguage === lang.name;
+                  return (
+                    <button
+                      key={lang.name}
+                      type="button"
+                      disabled={isTranslating}
+                      onClick={() => setSelectedLanguage(lang.name)}
+                      className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition ${
+                        isSelected
+                          ? 'bg-zinc-100 border-zinc-100 text-zinc-950 font-semibold shadow-sm'
+                          : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:border-zinc-700'
+                      } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <span className="text-lg" role="img" aria-label={lang.name}>
+                        {lang.flag}
                       </span>
-                    </div>
-                  </button>
-                );
-              })}
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-sans truncate">{lang.native}</span>
+                        <span className={`text-[9px] ${isSelected ? 'text-zinc-600' : 'text-zinc-500'} font-sans truncate`}>
+                          {lang.name}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Hint Box */}
             <div className="bg-zinc-950/40 border border-zinc-850/60 rounded-xl p-3 text-[10px] text-zinc-400 leading-relaxed font-sans">
-              💡 <strong>Binding System Instruction:</strong> The AI Master will generate the story opening and all responses in <strong>{selectedLanguage}</strong>. It will also adapt dynamically to the language you use in your messages!
+              💡 <strong>AI Master Note:</strong> The Game Master will speak in <strong>{selectedLanguage}</strong> and adapt dynamically to your narrative inputs. Scene plausibility always takes precedence over propensity.
             </div>
 
             {/* Actions */}

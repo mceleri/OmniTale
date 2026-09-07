@@ -88,7 +88,7 @@ const GeminiPlugin: LLMProviderPlugin = {
       let text = msg.content;
       if (msg.role === 'master') {
         role = 'model';
-      } else if (msg.role === 'system') {
+      } else if (msg.role === 'system_feedback' || (msg.role as string) === 'system') {
         role = 'user';
         text = `[System Message]: ${msg.content}`;
       }

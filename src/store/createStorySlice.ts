@@ -1,14 +1,15 @@
 import { StateCreator } from 'zustand';
-import { Story, StoryState, Role, Message, TurnResolution } from '../types/story';
+import { Story, StoryState, Role, Message, NarrativePropensity, StorySections } from '../types/story';
 import { initialStories } from './initialStories';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
-import { fetchNarrative, cleanAndParseJson } from '../services/llmService';
+import { fetchNarrative } from '../services/llmService';
 import { executeBackgroundUpdates } from '../services/backgroundService';
 import {
   formatUnifiedPrompt,
   getInitialJournalGenerationPrompt,
   getJudgePrompt,
-  getNarratorFromResolutionPrompt
+  getNarratorPrompt,
+  PromptSections,
 } from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
 
@@ -43,7 +44,9 @@ export interface StorySlice {
     characterSheet?: string,
     masterJournal?: string,
     language?: string,
-    masterFeedback?: string
+    masterFeedback?: string,
+    narrativePropensity?: NarrativePropensity,
+    sections?: StorySections
   ) => void;
   updateStory: (
     storyId: string,
@@ -53,8 +56,11 @@ export interface StorySlice {
     lorebook: string,
     characterSheet?: string,
     masterJournal?: string,
-    masterFeedback?: string
+    masterFeedback?: string,
+    narrativePropensity?: NarrativePropensity,
+    sections?: StorySections
   ) => void;
+  setNarrativePropensity: (storyId: string, propensity: NarrativePropensity) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   sendMessage: (content: string) => Promise<void>;
@@ -125,10 +131,19 @@ export const createStorySlice: StateCreator<
     characterSheet?: string,
     masterJournal?: string,
     language?: string,
-    masterFeedback?: string
+    masterFeedback?: string,
+    narrativePropensity?: NarrativePropensity,
+    sections?: StorySections
   ) => set((state: StoryState) => {
     const newId = 'story_' + Date.now();
     const storyFeedback = masterFeedback !== undefined ? masterFeedback : '';
+    const initialSetting = sections?.setting !== undefined ? sections.setting : (lorebook !== undefined ? lorebook : `## The Journey Begins\n\nThis is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`);
+    const initialCharSheet = sections?.characterSheet !== undefined ? sections.characterSheet : (characterSheet !== undefined ? characterSheet : `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`);
+    const initialFactions = sections?.factions !== undefined ? sections.factions : '';
+    const initialConflicts = sections?.conflicts !== undefined ? sections.conflicts : '';
+    const initialHistoricalFacts = sections?.historicalFacts !== undefined ? sections.historicalFacts : '';
+    const compiledLorebook = lorebook !== undefined ? lorebook : initialSetting;
+
     const newStory: Story = {
       id: newId,
       type,
@@ -136,11 +151,17 @@ export const createStorySlice: StateCreator<
       genre,
       synopsis,
       language,
+      narrativePropensity: narrativePropensity || 'balanced',
       dynamicState: {
-        characterSheet: characterSheet !== undefined ? characterSheet : `Name: ${characterName}\nAttributes:\n- Might: 10\n- Agility: 10\n- Intellect: 10\n- Grit: 10\n\nInventory:\n- Leather Satchel\n- Rations (3)`,
-        lorebook: lorebook !== undefined ? lorebook : `## The Journey Begins\n\nThis is the lorebook for your journey in "${title}". Record locations, characters, and rules here.`,
+        characterSheet: initialCharSheet,
+        lorebook: compiledLorebook,
         masterJournal: masterJournal !== undefined ? masterJournal : `// AI Master Notes — ${title}\n// Act 1: The First Step\n- Character: ${characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`,
         masterFeedback: storyFeedback,
+        setting: initialSetting,
+        factions: initialFactions,
+        conflicts: initialConflicts,
+        historicalFacts: initialHistoricalFacts,
+        judgeScratchpad: [],
       },
       messages: [],
       createdAt: Date.now(),
@@ -173,7 +194,9 @@ export const createStorySlice: StateCreator<
     lorebook: string,
     characterSheet?: string,
     masterJournal?: string,
-    masterFeedback?: string
+    masterFeedback?: string,
+    narrativePropensity?: NarrativePropensity,
+    sections?: StorySections
   ) => set((state: StoryState) => {
     const updatedStories = state.stories.map((s: Story) => {
       if (s.id === storyId) {
@@ -181,12 +204,17 @@ export const createStorySlice: StateCreator<
           ...s,
           title,
           synopsis,
+          ...(narrativePropensity !== undefined ? { narrativePropensity } : {}),
           dynamicState: {
             ...s.dynamicState,
             lorebook,
             characterSheet: characterSheet !== undefined ? characterSheet : s.dynamicState.characterSheet,
             masterJournal: masterJournal !== undefined ? masterJournal : s.dynamicState.masterJournal,
             masterFeedback: masterFeedback !== undefined ? masterFeedback : s.dynamicState.masterFeedback,
+            setting: sections?.setting !== undefined ? sections.setting : s.dynamicState.setting,
+            factions: sections?.factions !== undefined ? sections.factions : s.dynamicState.factions,
+            conflicts: sections?.conflicts !== undefined ? sections.conflicts : s.dynamicState.conflicts,
+            historicalFacts: sections?.historicalFacts !== undefined ? sections.historicalFacts : s.dynamicState.historicalFacts,
           },
           updatedAt: Date.now(),
         };
@@ -198,6 +226,20 @@ export const createStorySlice: StateCreator<
       stories: updatedStories,
       ...(state.activeStoryId === storyId && masterFeedback !== undefined ? { masterFeedback } : {}),
     };
+  }),
+
+  setNarrativePropensity: (storyId: string, propensity: NarrativePropensity) => set((state: StoryState) => {
+    const updatedStories = state.stories.map((s: Story) => {
+      if (s.id === storyId) {
+        return {
+          ...s,
+          narrativePropensity: propensity,
+          updatedAt: Date.now(),
+        };
+      }
+      return s;
+    });
+    return { stories: updatedStories };
   }),
 
   deleteStory: (storyId: string) => set((state: StoryState) => {
@@ -477,7 +519,7 @@ export const createStorySlice: StateCreator<
     };
   }),
 
-  importStore: (data: any) => set((state: StoryState) => {
+  importStore: (data: any) => set(() => {
     // Validate shape of loaded backup data before importing
     const importedStories = Array.isArray(data.stories) ? data.stories.filter((story: any) => {
       return (
@@ -598,13 +640,24 @@ const generateMasterResponse = async (
     let masterResponseText = '';
     let apiPromptTokens = 0;
     let apiCompletionTokens = 0;
-    let debugResolution: TurnResolution | undefined = undefined;
+
+    const sections: PromptSections = {
+      setting: activeStory.dynamicState.setting || activeStory.dynamicState.lorebook || '',
+      characterSheet: activeStory.dynamicState.characterSheet || '',
+      factions: activeStory.dynamicState.factions || '',
+      conflicts: activeStory.dynamicState.conflicts || '',
+      historicalFacts: activeStory.dynamicState.historicalFacts || '',
+    };
+    const propensity = activeStory.narrativePropensity || 'balanced';
+    const currentScratchpad = activeStory.dynamicState.judgeScratchpad || [];
+    let judgeNote: string | undefined = undefined;
+    let unEvictedScratchpad = [...currentScratchpad];
 
     if (useAgenticPipeline && !isStart) {
-      console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Judge -> Narrator)...");
+      console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Minimal Judge -> Narrator)...");
       try {
-        // Step A: Judge / Reaction Prompt
-        const judgePrompt = getJudgePrompt(lore, charSheet, journal, feedback, activeStory.language);
+        // Step A: Minimal Judge Mechanical Ruling
+        const judgePrompt = getJudgePrompt(charSheet, currentScratchpad, activeStory.language, feedback);
         let judgePromptTokens = 0;
         let judgeCompletionTokens = 0;
 
@@ -621,60 +674,41 @@ const generateMasterResponse = async (
           }
         );
 
-        console.log("[generateMasterResponse] Step A Judge Raw Output:", rawJudgeResponse);
-        const parsedResolution = cleanAndParseJson<TurnResolution>(rawJudgeResponse);
+        judgeNote = rawJudgeResponse.trim() || 'Nothing to note.';
+        console.log("[generateMasterResponse] Step A Minimal Judge Note:", judgeNote);
+        unEvictedScratchpad = [...currentScratchpad, judgeNote];
 
-        if (parsedResolution && parsedResolution.actionOutcome && Array.isArray(parsedResolution.npcReactions)) {
-          console.log("[generateMasterResponse] Step A Judge Resolution Parsed:", parsedResolution);
-          debugResolution = parsedResolution;
+        // Step B: Narrator Prompt based on current turn's Judge Note and 5 explicit sections
+        const narratorPrompt = getNarratorPrompt(
+          sections,
+          journal,
+          feedback,
+          judgeNote,
+          propensity,
+          activeStory.language
+        );
 
-          // Step B: Narrator Prompt based on pre-determined Turn Resolution
-          const narratorPrompt = getNarratorFromResolutionPrompt(
-            lore,
-            charSheet,
-            journal,
-            feedback,
-            parsedResolution,
-            activeStory.language
-          );
+        let narratorPromptTokens = 0;
+        let narratorCompletionTokens = 0;
 
-          let narratorPromptTokens = 0;
-          let narratorCompletionTokens = 0;
+        masterResponseText = await fetchNarrative(
+          provider,
+          url,
+          key,
+          model,
+          narratorPrompt,
+          last10Messages,
+          (usage) => {
+            narratorPromptTokens = usage.prompt_tokens;
+            narratorCompletionTokens = usage.completion_tokens;
+          }
+        );
 
-          masterResponseText = await fetchNarrative(
-            provider,
-            url,
-            key,
-            model,
-            narratorPrompt,
-            last10Messages,
-            (usage) => {
-              narratorPromptTokens = usage.prompt_tokens;
-              narratorCompletionTokens = usage.completion_tokens;
-            }
-          );
-
-          apiPromptTokens = judgePromptTokens + narratorPromptTokens;
-          apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
-        } else {
-          console.warn("[generateMasterResponse] Step A parsing failed or invalid format. Gracefully falling back to unified prompt...");
-          const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
-          masterResponseText = await fetchNarrative(
-            provider,
-            url,
-            key,
-            model,
-            UNIFIED_PROMPT,
-            last10Messages,
-            (usage) => {
-              apiPromptTokens = usage.prompt_tokens;
-              apiCompletionTokens = usage.completion_tokens;
-            }
-          );
-        }
+        apiPromptTokens = judgePromptTokens + narratorPromptTokens;
+        apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
       } catch (pipelineErr) {
         console.error("[generateMasterResponse] Error in agentic pipeline, falling back to unified prompt:", pipelineErr);
-        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
+        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections);
         masterResponseText = await fetchNarrative(
           provider,
           url,
@@ -690,7 +724,7 @@ const generateMasterResponse = async (
       }
     } else {
       // Classic single-call mode (or isStart)
-      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language);
+      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections);
       masterResponseText = await fetchNarrative(
         provider,
         url,
@@ -711,10 +745,11 @@ const generateMasterResponse = async (
       content: masterResponseText,
       tokens: apiCompletionTokens || estimateTokens(masterResponseText),
       promptTokens: apiPromptTokens || undefined,
-      debugResolution,
+      judgeNote,
     };
 
     const finalMessages = [...updatedMessages, masterMessage];
+    const evictedScratchpad = unEvictedScratchpad.slice(-5);
 
     set((s: StoryState) => {
       const updatedStories = s.stories.map((story: Story) => {
@@ -722,6 +757,10 @@ const generateMasterResponse = async (
           return {
             ...story,
             messages: finalMessages,
+            dynamicState: {
+              ...story.dynamicState,
+              judgeScratchpad: evictedScratchpad,
+            },
             updatedAt: Date.now(),
           };
         }
@@ -779,7 +818,8 @@ const generateMasterResponse = async (
           });
           return { stories: updatedStories };
         }),
-        () => set({ isUpdatingJournal: false })
+        () => set({ isUpdatingJournal: false }),
+        unEvictedScratchpad
       );
     }
   } catch (error: any) {

@@ -26,7 +26,8 @@ export const executeBackgroundUpdates = async (
   onLorebookComplete: () => void,
   onJournalStart: () => void,
   onJournalSuccess: (updatedJournal: string) => void,
-  onJournalComplete: () => void
+  onJournalComplete: () => void,
+  scratchpadNotes?: string[]
 ): Promise<void> => {
   const recentMessagesText = recentMessages
     .map((msg) => `${msg.role === 'player' ? 'Player' : 'Master'}: ${msg.content}`)
@@ -59,7 +60,7 @@ export const executeBackgroundUpdates = async (
     onJournalStart();
     try {
       const journalPrompt = getJournalSystemPrompt(language);
-      const userContent = formatJournalPrompt(currentJournal, recentMessagesText);
+      const userContent = formatJournalPrompt(currentJournal, recentMessagesText, scratchpadNotes);
 
       const response = await fetchNarrative(provider, url, key, modelName, journalPrompt, [
         { id: 'temp_journal', role: 'player', content: userContent }

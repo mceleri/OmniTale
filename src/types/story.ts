@@ -1,6 +1,8 @@
-import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
+import { LoreBlock } from '../utils/markdownParser';
 
 export type Role = 'master' | 'player' | 'system_feedback';
+
+export type NarrativePropensity = 'character_driven' | 'balanced' | 'plot_driven';
 
 export interface TurnResolution {
   actionOutcome: 'success' | 'partial' | 'failure' | 'neutral';
@@ -21,10 +23,19 @@ export interface Message {
   content: string;
   tokens?: number;
   promptTokens?: number;
+  judgeNote?: string;
   debugResolution?: TurnResolution;
 }
 
 export type LoreItem = LoreBlock;
+
+export interface StorySections {
+  setting?: string;
+  characterSheet?: string;
+  factions?: string;
+  conflicts?: string;
+  historicalFacts?: string;
+}
 
 export interface Story {
   id: string;
@@ -33,11 +44,17 @@ export interface Story {
   genre: string;
   synopsis: string;
   language?: string;
+  narrativePropensity?: NarrativePropensity;
   dynamicState: {
     characterSheet: string;
     lorebook: string;
     masterJournal: string;
     masterFeedback?: string;
+    setting?: string;
+    factions?: string;
+    conflicts?: string;
+    historicalFacts?: string;
+    judgeScratchpad?: string[];
   };
   messages: Message[];
   updatedAt: number;
@@ -75,7 +92,9 @@ export interface StoryState {
     characterSheet?: string,
     masterJournal?: string,
     language?: string,
-    masterFeedback?: string
+    masterFeedback?: string,
+    narrativePropensity?: NarrativePropensity,
+    sections?: StorySections
   ) => void;
   updateStory: (
     storyId: string,
@@ -85,8 +104,11 @@ export interface StoryState {
     lorebook: string,
     characterSheet?: string,
     masterJournal?: string,
-    masterFeedback?: string
+    masterFeedback?: string,
+    narrativePropensity?: NarrativePropensity,
+    sections?: StorySections
   ) => void;
+  setNarrativePropensity: (storyId: string, propensity: NarrativePropensity) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   sendMessage: (content: string) => Promise<void>;

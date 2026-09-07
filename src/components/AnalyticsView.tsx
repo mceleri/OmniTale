@@ -1,15 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
-import { Message } from '../types/story';
 import { parseMarkdownToBlocks } from '../utils/markdownParser';
 import { formatUnifiedPrompt } from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
 import { 
   ArrowLeft, 
   Layers, 
-  Cpu, 
   BookOpen, 
-  Clock, 
   CheckCircle, 
   TrendingUp, 
   MessageSquare, 
@@ -63,7 +60,6 @@ export const AnalyticsView: React.FC = () => {
   const loreTokens = estimateTokens(loreText);
   const charSheetTokens = estimateTokens(charSheetText);
   const journalTokens = estimateTokens(journalText);
-  const feedbackTokens = estimateTokens(feedbackText);
   const coreInstructionTokens = 350; // Approximating base prompt text tokens in formatUnifiedPrompt
 
   // Unified system prompt size
@@ -109,6 +105,7 @@ export const AnalyticsView: React.FC = () => {
         isActive: totalMessagesCount - idx <= 10, // Last 10 messages are sent to the LLM
         isApiMetric,
         promptTokens: m.promptTokens,
+        judgeNote: m.judgeNote,
       };
     });
   }, [story.messages, totalMessagesCount, totalSystemTokens]);
@@ -794,6 +791,12 @@ export const AnalyticsView: React.FC = () => {
                   <p className="text-zinc-300 leading-relaxed font-serif break-words line-clamp-3">
                     "{m.content}"
                   </p>
+
+                  {m.judgeNote && (
+                    <div className="mt-2 p-2 bg-zinc-950 border border-amber-900/40 rounded-lg text-[9px] font-mono text-amber-300/90 leading-relaxed">
+                      <span className="font-bold text-amber-400">⚖️ Judge Ruling:</span> {m.judgeNote}
+                    </div>
+                  )}
                   
                   {/* Detailed metadata link */}
                   <div className="mt-1.5 pt-1.5 border-t border-zinc-900/30 text-[8px] font-mono text-zinc-500 flex flex-col gap-1">

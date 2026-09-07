@@ -43,7 +43,17 @@ export const useStoryStore = create<StoryState>()(
         });
 
         // Filter out the outdated Italian template ID if it is left in the user's DB
-        const cleanStories = mergedStories.filter((s: any) => s.id !== 'echi-del-vuoto');
+        // and ensure narrativePropensity and judgeScratchpad are gracefully defaulted
+        const cleanStories = mergedStories
+          .filter((s: any) => s.id !== 'echi-del-vuoto')
+          .map((s: any) => ({
+            ...s,
+            narrativePropensity: s.narrativePropensity || 'balanced',
+            dynamicState: {
+              ...s.dynamicState,
+              judgeScratchpad: Array.isArray(s.dynamicState?.judgeScratchpad) ? s.dynamicState.judgeScratchpad : [],
+            },
+          }));
 
         // Graceful fallback for legacy storage state missing llmProvider
         const inferredProvider = persistedState.llmProvider || (
