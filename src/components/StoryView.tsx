@@ -43,13 +43,11 @@ export const StoryView: React.FC = () => {
   const [newLoreTitle, setNewLoreTitle] = useState('');
   const [newLoreContent, setNewLoreContent] = useState('');
 
-  // Refs for auto-scrolling and header visibility
+  // Refs for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showScrollArrow, setShowScrollArrow] = useState(false);
-  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const lastScrollTopRef = useRef(0);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -61,23 +59,6 @@ export const StoryView: React.FC = () => {
     // Show arrow if we are more than 150px away from the bottom of the scrollable container
     const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
     setShowScrollArrow(!isNearBottom);
-
-    // Header visibility based on scroll direction
-    const prevScrollTop = lastScrollTopRef.current;
-    const delta = scrollTop - prevScrollTop;
-
-    if (scrollTop <= 10) {
-      // Always show at the very top
-      setIsHeaderVisible(true);
-    } else if (delta < -5) {
-      // User is scrolling UP: reveal header immediately
-      setIsHeaderVisible(true);
-    } else if (delta > 5) {
-      // User is scrolling DOWN: hide header to maximize reading area
-      setIsHeaderVisible(false);
-    }
-
-    lastScrollTopRef.current = Math.max(0, scrollTop);
   };
 
   // Whenever messages change, scroll to bottom and reset arrow visibility
@@ -159,13 +140,7 @@ export const StoryView: React.FC = () => {
     <div className="relative max-w-md lg:max-w-5xl mx-auto h-screen bg-zinc-950 flex flex-col overflow-hidden select-none">
       
       {/* 1. TOP BAR */}
-      <header
-        className={`sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900/60 h-14 flex items-center justify-between px-4 z-20 transition-all duration-300 ease-in-out ${
-          isHeaderVisible
-            ? 'translate-y-0 opacity-100'
-            : '-translate-y-full opacity-0 pointer-events-none'
-        }`}
-      >
+      <header className="sticky top-0 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900/60 h-14 flex items-center justify-between px-4 z-20 shrink-0">
         <button
           onClick={() => setView('home')}
           className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-900/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-lg text-zinc-300 hover:text-zinc-100 transition text-xs font-medium shrink-0"
