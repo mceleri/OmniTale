@@ -642,11 +642,12 @@ const generateMasterResponse = async (
     let apiCompletionTokens = 0;
 
     const sections: PromptSections = {
-      setting: activeStory.dynamicState.setting || activeStory.dynamicState.lorebook || '',
+      setting: activeStory.dynamicState.setting || '',
       characterSheet: activeStory.dynamicState.characterSheet || '',
       factions: activeStory.dynamicState.factions || '',
       conflicts: activeStory.dynamicState.conflicts || '',
       historicalFacts: activeStory.dynamicState.historicalFacts || '',
+      lorebook: activeStory.dynamicState.lorebook || '',
     };
     const propensity = activeStory.narrativePropensity || 'balanced';
     const currentScratchpad = activeStory.dynamicState.judgeScratchpad || [];
@@ -657,7 +658,7 @@ const generateMasterResponse = async (
       console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Minimal Judge -> Narrator)...");
       try {
         // Step A: Minimal Judge Mechanical Ruling
-        const judgePrompt = getJudgePrompt(charSheet, currentScratchpad, activeStory.language, feedback);
+        const judgePrompt = getJudgePrompt(charSheet, currentScratchpad, activeStory.language, feedback, lore);
         let judgePromptTokens = 0;
         let judgeCompletionTokens = 0;
 

@@ -50,7 +50,12 @@ export const StoryView: React.FC = () => {
   const [showScrollArrow, setShowScrollArrow] = useState(false);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: scrollContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   };
 
   const handleScroll = () => {
@@ -152,9 +157,6 @@ export const StoryView: React.FC = () => {
           <h2 className="font-serif text-sm font-medium text-zinc-200 truncate">
             {story.title}
           </h2>
-          <p className="text-[10px] text-zinc-300 font-sans tracking-wider uppercase mt-0.5">
-            Playing as {characterName}
-          </p>
         </div>
 
         <div className="relative flex items-center gap-2">
