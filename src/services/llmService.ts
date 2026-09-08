@@ -33,10 +33,12 @@ const OpenRouterPlugin: LLMProviderPlugin = {
       ? baseUrl
       : `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/chat/completions`;
 
-    const mappedMessages = messages.map((msg) => ({
-      role: msg.role === 'player' ? 'user' : (msg.role === 'master' ? 'assistant' : 'system'),
-      content: msg.content,
-    }));
+    const mappedMessages = messages
+      .filter((msg) => msg.role === 'player' || msg.role === 'master')
+      .map((msg) => ({
+        role: msg.role === 'player' ? 'user' : 'assistant',
+        content: msg.content,
+      }));
 
     return {
       url: targetUrl,
@@ -82,21 +84,13 @@ const GeminiPlugin: LLMProviderPlugin = {
     const cleanModelName = modelName.includes('/') ? modelName.split('/').pop() || modelName : modelName;
     const targetUrl = `${cleanBaseUrl}/models/${cleanModelName}:generateContent?key=${key}`;
 
-    // Map messages to native Gemini API "contents" structure
-    const initialContents = messages.map((msg) => {
-      let role = 'user';
-      let text = msg.content;
-      if (msg.role === 'master') {
-        role = 'model';
-      } else if (msg.role === 'system_feedback' || (msg.role as string) === 'system') {
-        role = 'user';
-        text = `[System Message]: ${msg.content}`;
-      }
-      return {
-        role,
-        parts: [{ text }]
-      };
-    });
+    // Map messages to native Gemini API "contents" structure (player & master only)
+    const initialContents = messages
+      .filter((msg) => msg.role === 'player' || msg.role === 'master')
+      .map((msg) => ({
+        role: msg.role === 'master' ? 'model' : 'user',
+        parts: [{ text: msg.content }]
+      }));
 
     // Alternate roles: Gemini requires alternating roles starting with 'user'
     const cleanContents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
@@ -188,10 +182,12 @@ const OpenAIPlugin: LLMProviderPlugin = {
       ? baseUrl
       : `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/chat/completions`;
 
-    const mappedMessages = messages.map((msg) => ({
-      role: msg.role === 'player' ? 'user' : (msg.role === 'master' ? 'assistant' : 'system'),
-      content: msg.content,
-    }));
+    const mappedMessages = messages
+      .filter((msg) => msg.role === 'player' || msg.role === 'master')
+      .map((msg) => ({
+        role: msg.role === 'player' ? 'user' : 'assistant',
+        content: msg.content,
+      }));
 
     return {
       url: targetUrl,

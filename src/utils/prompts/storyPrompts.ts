@@ -33,7 +33,14 @@ export const formatNarrativePropensityGuideline = (propensity?: NarrativePropens
 };
 
 export const formatWorldSections = (sections: PromptSections): string => {
-  if (sections.setting || sections.factions || sections.conflicts || sections.historicalFacts || sections.lorebook) {
+  const hasCanvas = Boolean(
+    sections.setting?.trim() ||
+    sections.factions?.trim() ||
+    sections.conflicts?.trim() ||
+    sections.historicalFacts?.trim()
+  );
+
+  if (hasCanvas) {
     const settingText = sections.setting?.trim() || 'A richly detailed world.';
     const charSheetText = sections.characterSheet?.trim() || 'A capable traveler.';
     const factsText = sections.historicalFacts?.trim() || 'Ancient legends and past epochs.';
@@ -72,10 +79,10 @@ ${lorebookText}
 
   // Fallback for legacy stories with only lorebook
   return `[WORLD & LORE]
-${sections.lorebook || ''}
+${sections.lorebook?.trim() || ''}
 
 [CHARACTER SHEET]
-${sections.characterSheet || ''}`;
+${sections.characterSheet?.trim() || ''}`;
 };
 
 export const formatUnifiedPrompt = (

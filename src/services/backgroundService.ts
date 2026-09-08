@@ -30,6 +30,7 @@ export const executeBackgroundUpdates = async (
   scratchpadNotes?: string[]
 ): Promise<void> => {
   const recentMessagesText = recentMessages
+    .filter((msg) => msg.role === 'player' || msg.role === 'master')
     .map((msg) => `${msg.role === 'player' ? 'Player' : 'Master'}: ${msg.content}`)
     .join('\n\n');
 

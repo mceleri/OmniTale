@@ -636,7 +636,8 @@ const generateMasterResponse = async (
   }
 
   try {
-    const last10Messages = updatedMessages.slice(-10);
+    const storyMessages = updatedMessages.filter((m: Message) => m.role === 'player' || m.role === 'master');
+    const last10Messages = storyMessages.slice(-10);
     let masterResponseText = '';
     let apiPromptTokens = 0;
     let apiCompletionTokens = 0;
