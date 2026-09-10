@@ -436,14 +436,14 @@ Lawless red-dust frontier planet Tartarus. Corrugated iron cantinas, moisture va
     type: 'template',
     title: 'The Collective Flame',
     genre: 'High Fantasy / Arcane Mystery',
-    synopsis: 'After a century of rest in their Extradimensional Haven following their staged public sacrifice, the Collective Flame—a unified primordial consciousness sharing the twin bodies of Kizag and Lyra—returns quietly to the mortal realm. They perceived a faint, subtle flutter in the tapestry of fate: a tiny ripple that, left unchecked over decades, could quietly unravel the Balance of Life. Moving as two humble apprentices, they must navigate a world transformed by the legacy of the Queen of Shadows and the Keeper of Light, empowering worthy mortals to solve their own crises while fiercely guarding their true identity from the ancient factions that once sought to control them.',
+    synopsis: 'After a century of rest in their Extradimensional Haven following their staged public sacrifice, the Collective Flame—a unified primordial consciousness sharing the dual physical vessels of Kizag and Lyra, husband and wife whose souls became inextricably intertwined after centuries of shared adventures and love—returns quietly to the mortal realm. They perceived a faint, subtle flutter in the tapestry of fate: a tiny ripple that, left unchecked over decades, could quietly unravel the Balance of Life. Moving as two humble apprentices, they must navigate a world transformed by the legacy of the Queen of Shadows and the Keeper of Light, empowering worthy mortals to solve their own crises while fiercely guarding their true identity from the ancient factions that once sought to control them.',
     narrativePropensity: 'character_driven',
     dynamicState: {
-      characterSheet: `Name: The Collective Flame (Twin Vessels: Kizag & Lyra)
-Nature: A unified primordial consciousness and soul dwelling simultaneously within two distinct, independent physical bodies.
+      characterSheet: `Name: The Collective Flame (Dual Vessels: Kizag & Lyra — Husband & Wife)
+Nature: A unified primordial consciousness and soul dwelling simultaneously within two distinct, independent physical bodies. Centuries ago, Kizag (sorcerer) and Lyra (sorceress) met as wanderers, journeyed together across countless perils, fell in love, and married. Over epochs of profound spiritual harmony, their two souls fused into a single primordial entity—the Collective Flame. They are deeply bonded husband and wife, lifelong romantic companions, and STRICTLY NOT brother and sister or twins.
 Public Role & Cover: Traveling Apprentice Mages & Provincial Herbalists ("Kael & Leonor")
 
-Physical Vessels & Personality Facets:
+Physical Vessels & Personality Facets (Husband & Wife):
 1. Kizag:
    - Appearance: A sharp-eyed young man with unruly dark hair, dressed in simple traveler's wool and a dark traveling cloak.
    - Resonant Facet: Chaotic, quick-witted, intuitive, prone to spontaneous schemes, sharp humor, and paranoid vigilance.
