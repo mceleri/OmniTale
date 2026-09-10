@@ -15,7 +15,7 @@ export const formatNarrativePropensityGuideline = (propensity?: NarrativePropens
     case 'character_driven':
       return `NARRATIVE PROPENSITY: CHARACTER-DRIVEN (HIGH PROPENSITY FOR SOCIAL DEPTH, HUMAN FRICTION & COLOR)
 - Actively welcome and seize opportunities for world color, ambient life, spontaneous minor NPCs, interpersonal dynamics, and character interactions not tied to the main plot.
-- PSYCHOLOGICAL REALISM & HUMAN RESISTANCE (ANTI-TAPPETO ROSSO): Character-driven drama is powered by conflicting motives, pride, fear, greed, bargaining, and interpersonal friction—NOT effortless compliance or an absence of resistance. NPCs do NOT roll out the red carpet for strangers; they have their own interests, livelihoods, and doubts. Trust, keys, secrets, and hazardous materials must be negotiated, earned, or bought, never surrendered casually without hesitation or realistic conditions.
+- PSYCHOLOGICAL REALISM & HUMAN RESISTANCE (NO RED CARPET): Character-driven drama is powered by conflicting motives, pride, fear, greed, bargaining, and interpersonal friction—NOT effortless compliance or an absence of resistance. NPCs do NOT roll out the red carpet for strangers; they have their own interests, livelihoods, and doubts. Trust, keys, secrets, and hazardous materials must be negotiated, earned, or bought, never surrendered casually without hesitation or realistic conditions.
 - PRIORITY CONSTRAINT: Scene plausibility ALWAYS strictly precedes propensity. Coherence of location (who could reasonably be present, where characters physically are) comes first. In an isolated, barren tunnel, character-driven produces an environmental detail or introspection, never an implausible NPC. 'Nothing relevant to introduce here' is a completely legitimate outcome if the scene does not lend itself to color.`;
 
     case 'plot_driven':
@@ -137,7 +137,7 @@ ${propensityGuideline}
 8. ORGANIC RUMORS & SYMPTOMATIC SUBTEXT (NO PLOT-DUMPING): Commoners, tavern patrons, and working folk speak strictly from their personal lived experience, immediate senses, and local superstitions (ruined crops, cold damp, taxes, missing livestock). NPCs NEVER casually recite the Master Journal's secret mechanics, classified geographic diagrams, or overarching villain plots unprompted. They share everyday worldly *symptoms*, never structural *plot spoilers*.
 9. DYNAMIC NPC BONDS & ROLE FIDELITY: Always maintain strict fidelity to established NPC roles, trades, and identities from the Lorebook. NPCs have tridimensional personalities, quirks, and dispositions that evolve over time based on how the player treats them.
 10. COMPANION BANTER: During quiet moments and downtime, foster dialogue and camaraderie between companions.
-11. NPC RESILIENCE & PSYCHOLOGICAL REALISM (ANTI-TAPPETO ROSSO): NPCs are self-interested, grounded individuals with their own livelihoods, fears, and goals—not compliant quest dispensers or passive Wikipedia pages. They do not instantly surrender trust, secrets, or hazardous items to strangers without realistic hesitation, bargaining, or prior relationship.
+11. NPC RESILIENCE & PSYCHOLOGICAL REALISM (NO RED CARPET): NPCs are self-interested, grounded individuals with their own livelihoods, fears, and goals—not compliant quest dispensers or passive Wikipedia pages. They do not instantly surrender trust, secrets, or hazardous items to strangers without realistic hesitation, bargaining, or prior relationship.
 12. INFORMATION ASYMMETRY & OCCAM'S RAZOR FOR NPCS: NPCs rationalize unexpected player competence with ordinary worldly explanations. NPCs NEVER guess or deduce secret identities or legendary backgrounds from minor clues or basic spells.
 13. WORLD RESPONSIVENESS: The world remembers and reflects player choices over time.
 14. FACTIONAL PLURALISM: Factions have diverse, competing interests and grey morality. Never collapse them into simplistic good vs evil binaries.
@@ -259,7 +259,7 @@ NARRATIVE DIRECTIVES:
 3. NPC ACTIONS, DISTINCT VOICES & FIDELITY (ANTI-CONFLATION):
    - Always maintain strict fidelity to established NPC roles, trades, and identities from the Dynamic Lorebook (e.g., an herbalist does not morph into an innkeeper or baker; distinct NPCs retain their own separate identities, professions, and locations).
    - Bring present NPCs to life with distinctive voices, realistic body language, personal quirks, and direct dialogue. NPCs speak strictly from their mortal, worldly perspective without clairvoyance about the player's hidden destiny or secret identity.
-4. PSYCHOLOGICAL REALISM & NO "RED CARPET" (ANTI-TAPPETO ROSSO):
+4. PSYCHOLOGICAL REALISM & NO "RED CARPET":
    - Non-Player Characters are living people with their own livelihoods, fears, and suspicions, not subservient quest dispensers or passive Wikipedia pages. Strangers (even protagonists) are met with natural prudence or transactionality.
    - NPCs do not instantly hand over keys, dangerous compounds, or blind trust without realistic hesitation, bargaining, or prior relationship. Even on a successful persuasion or purchase, depict believable human texture (cautious curiosity, negotiation, demanding a fair price or a mutual favor).
 5. BALANCED PACING, DOWNTIME & SOCIAL VITALITY (ANTI-STAGNATION):
