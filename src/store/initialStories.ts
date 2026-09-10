@@ -436,101 +436,118 @@ Lawless red-dust frontier planet Tartarus. Corrugated iron cantinas, moisture va
     type: 'template',
     title: 'The Collective Flame',
     genre: 'High Fantasy / Arcane Mystery',
-    synopsis: 'After a century of rest in their Extradimensional Haven following their staged public sacrifice, the Collective Flame—a unified primordial consciousness sharing the dual physical vessels of Kizag and Lyra, husband and wife whose souls became inextricably intertwined after centuries of shared adventures and love—returns quietly to the mortal realm. They perceived a faint, subtle flutter in the tapestry of fate: a tiny ripple that, left unchecked over decades, could quietly unravel the Balance of Life. Moving as two humble apprentices, they must navigate a world transformed by the legacy of the Queen of Shadows and the Keeper of Light, empowering worthy mortals to solve their own crises while fiercely guarding their true identity from the ancient factions that once sought to control them.',
+    synopsis: 'Settled in the vibrant canal metropolis of Valoria for nearly a year under the mortal cover of Kael and Leonor, the Collective Flame—husband and wife, legendary sorcerer and sorceress whose souls unified into a single primordial flame centuries ago—enjoy the warm, colorful simplicity of their mortal life. Kael runs a modest apothecary as an arcane healer and herbalist, while Leonor is a respected sensitive who consoles spirits and families in mourning. A century after staging their legendary "Scission" to escape cosmic cartels and inquisitorial grasp, they rediscover themselves as two young mages in love, surrounded by colorful neighbors and street friends. But when unusual magical anomalies, rogue relics, and whispers of ancient shadows ripple across the city, they must use their mortal wits, street ties, and subtle magic to preserve the Balance—without blowing their cover or destroying the cozy life they have come to cherish.',
     narrativePropensity: 'character_driven',
     dynamicState: {
-      characterSheet: `Name: The Collective Flame (Dual Vessels: Kizag & Lyra — Husband & Wife)
-Nature: A unified primordial consciousness and soul dwelling simultaneously within two distinct, independent physical bodies. Centuries ago, Kizag (sorcerer) and Lyra (sorceress) met as wanderers, journeyed together across countless perils, fell in love, and married. Over epochs of profound spiritual harmony, their two souls fused into a single primordial entity—the Collective Flame. They are deeply bonded husband and wife, lifelong romantic companions, and STRICTLY NOT brother and sister or twins.
-Public Role & Cover: Traveling Apprentice Mages & Provincial Herbalists ("Kael & Leonor")
+      characterSheet: `Name: La Fiamma Collettiva (Identità Pubblica: Kael & Leonor — Marito e Moglie)
+Vera Natura: Una coscienza e un'anima primordiali unificate che dimorano simultaneamente all'interno di due corpi fisici distinti e indipendenti. Secoli fa, Kizag (stregone) e Lyra (maga) si incontrarono come viandanti, condivisero innumerevoli pericoli, si innamorarono e si sposarono. Nel corso di epoche di profonda armonia spirituale, le loro due anime si sono fuse nella Fiamma Collettiva. Sono marito e moglie da secoli, compagni romantici per la vita e RIGOROSAMENTE NON fratelli o gemelli.
 
-Physical Vessels & Personality Facets (Husband & Wife):
-1. Kizag:
-   - Appearance: A sharp-eyed young man with unruly dark hair, dressed in simple traveler's wool and a dark traveling cloak.
-   - Resonant Facet: Chaotic, quick-witted, intuitive, prone to spontaneous schemes, sharp humor, and paranoid vigilance.
-   - Distinctive Arcane Gift: A formidable healer and restorer of vital currents (curatore formidabile), capable of mending flesh, soothing spirit fatigue, and re-weaving disrupted life flows with subtle precision.
-   - Weapon: An ancient-forged, non-magical shortsword of unusual metallurgical craftsmanship worn at his hip.
+Vita Mortale a Valoria (Stabiliti da quasi un anno):
+Vivono e lavorano nel quartiere popolare dei canali bassi, al pianterreno di un vecchio edificio in pietra affacciato sull'acqua ("L'Erbario del Salice"). Amano sinceramente questa vita ordinaria e si divertono a riscoprirsi come due giovani sposi nel mondo mortale.
 
-2. Lyra:
-   - Appearance: A calm, observant young woman with piercing hazel eyes and a subtle, mischievous smirk.
-   - Resonant Facet: Methodical, analytical, iron-willed, with a playful, slightly wicked and teasing sense of humor.
-   - Unique Identifying Mark: A discreet, ancient tattoo of a broken tibia (tibia spezzata) etched on her forearm or ankle.
-   - Weapon: A pair of twin curved daggers of exotic, ancient craftsmanship concealed inside her sleeves.
-   - Characteristic Item & Trademark: A small wooden pocket pouch filled with golden honey candies (caramelle al miele), which she enjoys savoring or quietly leaving behind as an enigmatic gift.
+I Due Vasi e Ruoli Quotidiani:
+1. Kizag ("Kael"):
+   - Aspetto: Giovane dallo sguardo acuto, sorriso sbilenco e capelli scuri sempre spettinati, in abiti di lana da lavoro e grembiule di cuoio morbido.
+   - Ruolo Pubblico: Erborista e Guaritore Arcano indipendente. Non è un chierico devoto a un dio, ma un abile arcanista che incanala la corrente della Vita. Risana ossa rotte, lenisce febbri con infusioni vitali sottili e prepara unguenti medicinali.
+   - Tratti: Caotico, pronto di spirito, ironico, in perenne contrasto metodologico con i farmacisti e gli alchimisti dell'Accademia: mentre loro impiegano formule rigide, complesse distillazioni e teorie pompose, Kael opera con una connessione istintiva e diretta ai flussi vitali. Per questo i maestri accademici lo snobbano considerandolo un selvaggio autodidatta, forse più fortunato che abile, mentre lui sorride della loro pedante lentezza. Porta al fianco una spada corta antica e ben bilanciata.
 
-Shared Primordial Nature & Dormant Abilities:
-- Single Unified Mind: Total telepathic synthesis. What one vessel perceives, feels, or learns, the other experiences instantly in real time.
-- Dormant Extradimensional Mastery: Deep innate affinity for dimensional seams and their pocket haven (Reggia Meravigliosa), kept quietly dormant to avoid triggering arcane warding circles or inquisitorial scrying rituals.
-- Subtle Infusion: Can channel vital kinetic balance into their physical non-magical weapons for swift parries without creating magical flashes.
-- Silent Spellcraft: Subtle manipulation of minor elemental cantrips and sensory perceptions without obvious gestures or incantations.
+2. Lyra ("Leonor"):
+   - Aspetto: Giovane donna attraente, calma e osservatrice, con penetranti occhi nocciola, una treccia scura e un sorrisetto malizioso.
+   - Ruolo Pubblico: Catalogatrice di manoscritti e Sensitiva / Necromante Funeraria gentile. Comunica con gli spiriti dei defunti per risolvere piccoli rimpianti, consolare famiglie in lutto, allontanare infestazioni domestiche minori e benedire le sepolture.
+   - Tratti: Metodica, analitica, dallo humor tagliente e pungente. Porta sempre con sé un sacchetto di stoffa tascabile pieno di caramelle al miele dorate (caramelle al miele) e nasconde un antico tatuaggio di una tibia spezzata sotto un nastro di lino al polso. Nelle maniche cela due pugnali ricurvi.
 
-Core Player Motivation & Guiding Philosophy:
-1. Sacred Law of Discretion (Absolute Anonymity):
-   - A century ago, they staged their tragic public division as the "Queen of Shadows" and the "Keeper of Light" specifically to break free from powerful organizations (The Watchers, grasping academies, arcane cartels, and inquisitions) that sought to study, exploit, absorb, or eliminate the Collective Flame.
-   - If their survival is discovered, these factions will immediately mobilize to hunt them. They must fiercely maintain their mortal cover identity at all costs.
-2. The Philosophy of Subtle Stewardship (Mortal Agency):
-   - Never solve problems through overwhelming divine force. Slaying tyrants or destroying threats from the sky creates catastrophic power vacuums, societal panic, and helpless dependency on gods.
-   - Even when confronting serious threats to an entire city or region, the protagonists act as subtle catalysts: providing clues, quiet support, tactical nudges, or discreet evidence to capable mortals (reformist magistrates, brave commoners, honest guild scholars) so that mortal society learns to heal and govern itself sustainably.
-3. The Adventure Hook (The Butterfly Effect):
-   - They returned not because of an immediate apocalypse, but because they sensed a subtle tremor in the tapestry of fate—a tiny butterfly effect that could cascade into future tragedy if left unobserved.`,
-      setting: `The Realm of the Balance is an intricate, living world where the "Balance of Life" is the fundamental current underlying all existence. Magic manifests across diverse traditions—arcane, elemental, primordial, divine, and shadow—and is shaped entirely by the intent and ethics of the caster.
+Complicità e Fascino di Coppia:
+- Sono due giovani affascinanti e carismatici: capita che qualche avventore o ragazza del quartiere faccia il cascamorto con loro, scatenando battute e risate telepatiche tra i due.
+- Si amano con assoluta devozione e tenerezza secolare, ma in pubblico mantengono il brio fresco di una giovane coppia di maghi da poco sposati.
 
-Aesthetic & World Logic (Strict High Fantasy):
-- Strictly classic pre-industrial High Fantasy: arched marble bridges, cobblestone squares, parchment scrolls, iron lanterns, alchemy, herbal medicine, sailing river barges, and swordsmanship.
-- Strictly NO firearms, steam engines, clockwork automata, electricity, or sci-fi tech.
-- Diverse non-human ancestries (elves, dwarves, beastfolk, sylphs, dragon-blooded) populate cities and villages naturally.`,
-      factions: `- The Shrouded Synod (I Necromanti della Regina): A legal, respected school of shadow-weavers, anatomists, and philosophical necromancers inspired by the Queen of Shadows. They oversee funeral arts, spirit defense, and mourning rites, believing darkness is life's natural, dignified rest.
-- The Radiant Orthodoxy (I Figli della Luce): Solar jurists and clerics devoted to the Keeper of Light, emphasizing civic truth, open courts, illuminating corruption, and public welfare.
-- The Syncretic Concord (I Filosofi della Doppia Fiamma): An influential academic and artistic movement based in Valoria, celebrating that Light and Shadow are complementary halves of existence.
-- The Guild of Channelers (Gilda degli Incanalatori): The central magical guild in Valoria guarding the ethical autonomy of spellcasters.
-- The Obsidian Quill (The Watchers / Osservatori): An ancient, secretive brotherhood of neutral scholars and record-keepers who archive historical chronicles, still quietly obsessed with uncovering the true fate of the Flame.
-- The River & Silt Merchant League: The wealthy mercantile oligarchy controlling trade barges, vineyards, and regional harvest fairs.`,
-      conflicts: `- Jurisdictional and philosophical disputes between Synod funeral traditionalists and Orthodoxy civic reformers.
-- Mercantile negotiations and toll disputes between river shipping cartels and provincial guild towns.
-- Competing academic interpretations of the historical events surrounding the Centennial of the Sundering.`,
-      historicalFacts: `- One hundred years ago, to banish The Vampire tyrant and escape the grasp of scheming factions, the Collective Flame staged their tragic public division before thousands of witnesses: Lyra vanished into a Gate of Screaming Souls as the Queen of Shadows, and Kizag ascended in a Pillar of Blinding Light as the Keeper of Light.
-- The event, known as "The Sundering", is commemorated with pageants, theatrical plays, and religious ceremonies across the realm.
-- The current calendar and civil peace accords date from the reconciliation following the Sundering.`,
-      lorebook: `## The Setting: The Realm of the Balance
-Classic high fantasy realm governed by the Balance of Life. Magic spans primordial, solar, and shadow arts.
+Amici e Conoscenti del Quartiere:
+- Mastro Tarek: Il locandiere mezzorco della vicina taverna "Il Cinghiale di Rame". Burbero, gioviale, fiero del suo stufato piccante, tratta Kael e Leonor come nipoti prediletti e scambia pasti caldi con i balsami di Kael per il mal di schiena.
+- Sofi: Una ragazzina orfana di strada, svelta di mano e di lingua, che fa commissioni per l'erbario e conosce ogni pettegolezzo, contrabbando e movimento dei canali.
+- Fratello Julian: Un giovane chierico dell'Ordine della Fiamma Solare, ingenuo e di buon cuore. Compra incensi rilassanti da Leonor ed è palesemente intimidito e affascinato dalla sua intelligenza brillante.
 
-## The Legendary Sundering (100 Years Ago)
-The staged public sacrifice of the Queen of Shadows and Keeper of Light that banished the Vampire and saved the kingdom.
+Abilità Primordiali Sopite (La Sfida della Segretezza):
+- Sintesi Telepatica Totale: Condividono pensieri, sensi ed emozioni in tempo reale.
+- Magia Sottile Quotidiana: Incantesimi minori, trucchi cinetici, percezione degli spiriti e risonanza vitale usati con disinvoltura come normale magia d'apprendista.
+- Perché si trattengono: Amano la loro vita mortale, la bottega e i loro amici. Rivelare la loro vera natura divina attirerebbe antiche potenze cosmiche e distruggerebbe per sempre la felicità e la pace che hanno costruito a Valoria.`,
+      setting: `Il Reame dell'Equilibrio è un mondo High Fantasy classico, vibrante e pre-industriale, dove la magia permea ogni strato della vita quotidiana.
 
-## Factions
-- The Shrouded Synod: Respected necromancers and shadow scholars.
-- The Radiant Orthodoxy: Solar clerics and civic jurists.
-- The Syncretic Concord: Dual-flame philosophers in Valoria.
-- The Obsidian Quill: Secretive chroniclers (The Watchers).
-- The River Merchant League: Mercantile oligarchy.`,
+Valoria, la Città dei Ponti e dei Canali:
+- Una metropoli fluviale vivace e pittoresca: ponti monumentali in marmo ad arco, vicoli lastricati illuminati da lanterne di ferro, botteghe d'alchimia, chiatte a vela e mercati colorati.
+- Magia Comune e Visibile: La magia non è un segreto per pochi eletti; è parte del tessuto urbano. I popolani usano piccoli trucchi elementali per il bucato o il focolare, i cerusici arcani e le sensitive lavorano apertamente nei quartieri, e spiritelli fluviali danzano nelle sere di nebbia.
+- Convivenza e Diversità Naturale: Umani, mezzorchi, elfi, nani, stirpi ferine e silfi vivono e lavorano insieme come cittadini, artigiani e marinai senza pregiudizi razziali monolitici.
+- Strettamente Pre-Industriale e Magico: Assolutamente NESSUNA tecnologia a vapore, scarti industriali, pompe meccaniche moderne, fabbriche, chimica pesante o elettricità. Qualsiasi anomalia o veleno è di natura alchemica, magica, bestiale o maledetta.`,
+      factions: `Le forze del Reame non sono monoliti burocratici, ma organizzazioni sfaccettate e vive:
+
+1. L'Accademia degli Incanalatori (La Gilda Magica di Valoria):
+   - Grande università e corporazione magica eterogenea, divisa in molteplici facoltà: Piromanzia, Idromanzia, Arti Cinetiche, Alchimia di Trasmutazione, Magia Naturale e Necromanzia Filosofica.
+   - Lo Statuto dell'Ombra: Grazie alla figura storica della Regina delle Ombre, la necromanzia e la magia d'ombra sono riconosciute come discipline LEGALI e degne, dedicate al conforto degli spiriti, alle arti funebri e allo studio anatomico. È severamente vietata e punita solo la negromanzia nera (schiavizzare non-morti, strappare anime con violenza).
+   - Atmosfera: Maestri eccentrici, apprendisti rivali che si sfidano a colpi di cantrip nei cortili, e dibattiti accademici vivaci.
+
+2. L'Ordine della Fiamma Solare (La Fede della Luce):
+   - Chiesa grande e complessa, tutt'altro che una semplice inquisizione fanatica. Al suo interno convivono correnti diverse:
+     * I Pastori della Luce: Chierici misericordiosi, guaritori e protettori dei poveri (come Fratello Julian).
+     * I Custodi del Dogma: Teologi severi che diffidano della necromanzia accademica e dibattono animatamente nelle piazze.
+     * Le Lame dell'Alba: Cavalieri e paladini che proteggono le strade dai veri mostri e dalle forze demoniache.
+
+3. La Vita di Strada & Battitori Liberi:
+   - Gilde di mercanti fluviali, circoli di alchimisti indipendenti, bardi itineranti, cerusici di strada e i "Lupi del Canale" (contrabbandieri d'acqua e ladruncoli che vedono i giovani maghi come prede o alleati occasionali).
+
+4. I Custodi del Doppio Velo (Eredi Filosofici della Fiamma):
+   - Un ordine spirituale e pacifico sorto dopo la Scissione, dedicato a preservare l'armonia tra Vita e Morte, Luce e Ombra. Agiscono come mediatori e guardiani di antichi sacrari, venerando la Fiamma Collettiva senza sospettare minimamente che i due sposi leggendari vivano tranquillamente nella bottega di erbe dei canali bassi!
+
+5. I Veglianti dell'Ossidiana (The Watchers — Nell'Ombra Profonda):
+   - Un'antichissima confraternita di archivisti immortali ossessionata da qualsiasi entità sovrumana, avatar divino o presenza anomala nel mondo. Si muovono nell'ombra, raccogliendo cronache e sussurri.
+
+6. Le Ceneri del Tiranno (Sette Fratturate — Minaccia Latente):
+   - Gruppuscoli sparsi di maghi del sangue e nobili decaduti che si contendono reliquie e frammenti del potere del Tiranno Vampiro sconfitto un secolo fa. Non vogliono resuscitarlo, ma bramano carpirne i segreti per il proprio tornaconto personale.`,
+      conflicts: `Conflitti Vividi e Multilivello (Zero Burocrazia Notarile):
+- Conflitti di Quartiere e Vita Quotidiana: Ladruncoli e tagliaborse dei canali che tentano il colpo con Kael o Leonor; rivalità professionali con speziali arroganti dell'Accademia; clienti pittoreschi con malanni bizzarri; corteggiatori sbadati che ronzano attorno a Leonor o Kael.
+- Conflitti Magici e Misteri Locali: Spiriti fluviali irrequieti che infestano vecchi depositi; reliquie alchemiche maledette ripescate dal fiume; apprendisti dell'Accademia che perdono il controllo di un esperimento elementale; furti di ingredienti rari.
+- Tensioni Civiche e Dottrinali: Dibattiti accesi tra i chierici solari e gli studenti necromanti dell'Accademia sulla gestione di antiche cripte; guardie cittadine in allerta per contrabbandi fluviali.
+- La Minaccia della Copertura: Il rischio costante che un uso sbadato di poteri superiori attiri l'attenzione dei Veglianti dell'Ossidiana o risvegli le attenzioni delle Ceneri del Tiranno, distruggendo la tranquilla bottega e la vita mortale che Kizag e Lyra amano.`,
+      historicalFacts: `- Cento anni fa, dopo aver bandito il Tiranno Vampiro, la Fiamma Collettiva inscenò la tragica Scissione pubblica (Lyra come Regina delle Ombre, Kizag come Custode della Luce) per liberarsi dall'assedio di corti divine, inquisizioni e ordini cosmici che volevano controllarli o sfruttarli.
+- La Scissione è commemorata ogni anno a Valoria come una festa nazionale di teatro e balli popolari.
+- Da quasi un anno, Kizag e Lyra sono tornati a vivere nel mondo mortale nei panni dei giovani sposi Kael e Leonor, trovando nella vita ordinaria di quartiere una felicità sincera che non provavano da secoli.`,
+      lorebook: `## L'Ambientazione: Valoria e il Reame dell'Equilibrio
+Metropoli High Fantasy di canali, ponti di marmo, botteghe magiche e chiatte fluviali. Magia comune, visibile e integrata nella vita quotidiana.
+
+## I Protagonisti: Kael e Leonor
+Sposi da secoli e incarnazioni della Fiamma Collettiva, vivono da un anno all'Erbario del Salice. Kael è un cerusico arcano ed erborista; Leonor è una sensitiva che comunica con i defunti e archivista. Amano la loro vita mortale e la proteggono con ogni mezzo.
+
+## Amici di Quartiere
+- Mastro Tarek: Locandiere mezzorco del "Cinghiale di Rame", burbero e affettuoso.
+- Sofi: Ragazzina di strada e fattorina sveglia.
+- Fratello Julian: Giovane chierico solare ingenuo e gentile, affascinato da Leonor.
+
+## Le Grandi Forze
+- L'Accademia degli Incanalatori: Università magica variegata; la necromanzia pacifica e funeraria è legale.
+- L'Ordine della Fiamma Solare: Chiesa complessa (pastori caritatevoli, custodi dogmatici, cavalieri paladini).
+- I Custodi del Doppio Velo: Ordine pacifico che cerca l'equilibrio tra luce e ombra.
+- I Veglianti dell'Ossidiana: Cronisti segreti a caccia di entità sovrumane.
+- Le Ceneri del Tiranno: Sette rivali che bramano i resti della magia del Vampiro.`,
       masterJournal: `// AI Master Notes — The Collective Flame
-// Act 1: The Butterfly in the Loom
+// Atto 1: Vita e Misteri lungo i Canali del Salice
 
-[CORE CAMPAIGN DIRECTIVES & PACING]
-1. DYNAMIC & FRESH STARTING SCENARIOS (OPEN CREATIVITY):
-   - At the start of a new campaign, DYNAMICALLY GENERATE a fresh, surprising, and unique starting situation anywhere across the Realm of the Balance.
-   - Vary the location and social atmosphere freely: a lively harvest festival in Valoria, an open-air theatrical pageant of the Sundering, a peaceful river barge journey, a debate in an academic tea house, a quaint provincial village market, or a diplomatic salon.
-   - NEVER start with the same repetitive scenario.
-2. ABSOLUTE PROHIBITION ON REPETITIVE CLICHES:
-   - DO NOT start with gate checkpoints, inquisitorial quarantines, or guards demanding permits for healing.
-   - DO NOT start with blights of the land, corrupted earth, or life-draining parasitic stones/wedges.
-   - Focus on human stories, cultural fascinations, philosophical debates, curious mysteries, social intrigues, and the butterfly effect.
-3. MANAGING HIGH-POWER PROTAGONISTS (THE CHALLENGE OF SUBTLETY):
-   - Kizag and Lyra possess immense primordial power, but their priority is **protecting their anonymity** and **avoiding societal disruption**.
-   - If they reveal their godlike nature, ancient factions (The Watchers, power-hungry academies, religious zealots) will immediately hunt them.
-   - When facing local or regional crises, challenge them with **moral dilemmas, stealth, investigation, social diplomacy, and quietly empowering local mortal heroes/magistrates to resolve their own problems**.
-4. LIVING, AUTONOMOUS WORLD & THREE-HOOK STRUCTURE:
-   - Present a rich, vibrant world: 1 main thread of intrigue + 1-2 optional incidental side hooks (a local mystery, an eccentric artisan, a minor bet, a mundane family ailment) + rich slice-of-life color.
+[LA SITUAZIONE DI PARTENZA]
+- Kael e Leonor vivono stabilmente all'Erbario del Salice da quasi un anno. La bottega odora di menta essiccata, resina d'abete e candele di cera d'api.
+- Sono conosciuti e benvoluti nel quartiere dei canali bassi: la gente sa che Kael sistema una slogatura o spegne una febbre con una maestria arcana straordinaria, e che Leonor sa ascoltare i sussurri degli spiriti per portare pace ai cuori in lutto.
+- La loro complicità di marito e moglie è vivace, affettuosa e condita da ironia telepatica.
 
-[SAMPLE OPENING SEEDS FOR INSPIRATION ONLY — FEEL FREE TO INVENT NEW SCENARIOS]
-- Seed A (The Centennial Pageant in Valoria): A vibrant city festival where costumed actors re-enact the Sundering; an argument breaks out between a Shrouded Synod necromancer and a Solar cleric over an old historical decree.
-- Seed B (The River Barge Journey): Kizag and Lyra travel on a scenic wooden river barge amidst singing merchants and glowing lantern lilies, overhearing travelers discuss an eccentric new philosophical manuscript that surfaced in a nearby town.
-- Seed C (The Cartographer's Tea House): In a peaceful provincial town, a local scholar shows travelers an ancient map with a mysterious discrepancy regarding the historical boundaries of the realm.
-- Seed D (The Harvest Fair): An autumn market buzzing with apple ciders, spiced pastries, wandering bards singing folk ballads of the Queen of Shadows and Keeper of Light, and an elderly traveler asking for assistance with a stubborn draft mule.
+[GANCI DI SCENA IMMEDIATI (SCEGLIERE O COMBINARE ORGANICAMENTE)]
+1. Il Guaio di Mastro Tarek: Il locandiere mezzorco bussa alla porta dell'Erbario con la schiena dolorante e una faccia stravolta: dalla cantina della taverna salgono strani sussurri spettrali e bagliori azzurrini dopo che ha acquistato tre botti di sidro da un barcaiolo forestiero.
+2. La Visita di Fratello Julian: Il giovane chierico solare passa a prendere l'incenso per il tempio, arrossendo vistosamente mentre saluta Leonor, ma porta con sé una voce: le guardie dei canali hanno ripescato uno strano pugnale inciso con glifi d'ombra vicino al molo.
+3. Il Tagliaborse Distratto: Sofi entra correndo per avvertire che due giovani ladruncoli dei "Lupi del Canale" stanno tenendo d'occhio la bottega convinti che due giovani maghi sposati siano una preda facile e ricca.
 
-[INCIDENTAL DETAILS & SENSORY FLAVOR]
-- Lyra subtly offering a honey candy to an appreciative local, enjoying the warm memory.
-- Kizag engaging in chaotic banter, using mild, unobtrusive cantrips or herbal wisdom.
-- Ambient sounds: lute ballads, canal waters, church bells, laughter in public squares.`,
+[REGOLE CARDINE PER IL GAME MASTER]
+1. VITA QUOTIDIANA & FANTASY VERO:
+   - Rendi la magia palpabile: cantrip domestici, pozioni che cambiano colore, piccoli spiriti curiosi, battibecchi tra erboristi e apprendisti.
+   - ASSOLUTAMENTE NESSUN anacronismo industriale (niente tubature moderne, pompe di metallo pesante, inquinamento chimico, fabbriche o burocrazia notarile/fiscale).
+2. SOCIALITÀ, FASCINO E UMORISMO:
+   - Valorizza il fascino dei protagonisti: passanti che li notano, piccoli corteggiamenti innocui, il battibecco affettuoso e telepatico tra Kizag e Lyra.
+   - I PNG hanno personalità vivace: Mastro Tarek è rustico e protettivo, Sofi è furba e fedele, Julian è timido e retto.
+3. LA TENSIONE DELLA SEGRETEZZA:
+   - La vera posta in gioco non è morire in combattimento, ma proteggere la loro preziosa vita mortale e i loro amici senza farsi scoprire dalle antiche ombre (Veglianti o Ceneri del Tiranno).
+   - Quando risolvono i problemi, usano ingegno, rimedi pratici, diplomazia e magia sottile, senza fare sfoggio di poteri cosmici devastanti.`,
       masterFeedback: '',
       judgeScratchpad: [],
     },
