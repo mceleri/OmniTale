@@ -656,10 +656,19 @@ const generateMasterResponse = async (
     let unEvictedScratchpad = [...currentScratchpad];
 
     if (useAgenticPipeline && !isStart) {
-      console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Minimal Judge -> Narrator)...");
+      console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Dramatic Arbiter & Pacing Director -> Narrator)...");
       try {
-        // Step A: Minimal Judge Mechanical Ruling
-        const judgePrompt = getJudgePrompt(charSheet, currentScratchpad, activeStory.language, feedback, lore);
+        // Step A: Dramatic Arbiter & Pacing Director Ruling
+        const judgePrompt = getJudgePrompt(
+          charSheet,
+          currentScratchpad,
+          activeStory.language,
+          feedback,
+          lore,
+          journal,
+          sections,
+          propensity
+        );
         let judgePromptTokens = 0;
         let judgeCompletionTokens = 0;
 
