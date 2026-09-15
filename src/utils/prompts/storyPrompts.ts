@@ -66,7 +66,7 @@ ${factionsText}
 
 CONFLICTS & RELATIONAL FRICTION:
 ${conflictsText}
-(NOTE: This is the ONLY block from which you may draw your own narrative initiative. CRITICAL RULE: Factions and conflicts have NO hierarchy (none is 'main' or 'secondary'). Not everything needs to activate; there is no mandatory order; most factions and conflicts can remain quietly in the background for the entire campaign.)`;
+(NOTE: This is the primary generative block for narrative initiative and institutional friction. Factions and conflicts have no rigid hierarchy, but factions are living, autonomous organizations protective of their authority, jurisdiction, and assets. When protagonist deeds intersect their sphere of influence (rival affiliations, contraband, classified anomalies, or public heroics), relevant factions react with realistic institutional friction—curiosity, formal inquiries, bureaucratic audits, covert surveillance, or diplomatic pressure. NEVER render powerful factions blind, oblivious, or passive bystanders across any genre.)`;
 
     if (lorebookText) {
       output += `\n\n[DYNAMIC LOREBOOK — LIVING NPCS, LOCATIONS & ESTABLISHED FACTS]
@@ -252,10 +252,29 @@ DIRECTORIAL RULES & PACING HIERARCHY:
    - When 4–5 turns of a peaceful post-quest breather have naturally elapsed, OR momentum begins to stall:
    - DIRECTIVE: Tag as [PACING: INTRODUCE NEXT HOOK]. Guide the Narrator to organically introduce the next active thread or dilemma from the Master Journal.
 
-3. THE RARE "NOTHING HAPPENS":
+3. ANTI-WISH-FULFILLMENT & INDEPENDENT NPC AGENDAS (GENRE-AGNOSTIC):
+   - When the player declares speculative plans or intentions regarding an NPC (e.g. "we will try to train X", "we will convince Y to join us", "we hope Z won't notice"):
+     * DO NOT instantly manifest that NPC at the protagonist's doorstep begging for that exact plan in the very next turn!
+     * NPCs possess independent agency, duties, superiors, personal fears, pride, and schedules. If the player wants to influence, recruit, or train an NPC, they must actively initiate the interaction, overcome natural hesitation, and navigate the NPC's own obligations.
+     * Avoid player-centric wish-fulfillment: the world does not conveniently restructure itself to hand players their speculative wishes on a silver platter.
+
+4. INSTITUTIONAL SCRUTINY & JURISDICTIONAL FRICTION:
+   - When protagonists accomplish high-stakes or anomalous feats (solving classified crises, neutralizing rogue operatives, accompanying military or security units):
+     * Authorities and rival factions (inquisitions, internal affairs, guilds, corporate security, rival syndicates) DO NOT simply hand over rewards and walk away blind.
+     * Success breeds scrutiny: bureaucrats, rival investigators, or suspicious superiors ask uncomfortable questions, conduct quiet surveillance, notice inconsistencies in the protagonist's cover, or demand formal debriefings.
+
+5. GROUNDED ALLIES WITH VULNERABILITIES & CIVIC TEXTURE:
+   - Street allies, informants, fixers, and sidekicks are NOT frictionless, all-knowing info-drones or convenient plot dispensers.
+   - They live precarious lives with their own debts, rivals, gang territories, guard harassment, and mortal vulnerabilities. Helping the protagonists carries real-world exposure for them.
+   - During downtime, weave ambient community life and minor independent dilemmas (odd visitors, moral queries, civic friction, bizarre customer requests) so the world feels alive and populated rather than an empty waiting room for the main quest.
+
+6. AFTERMATH OF NEUTRALIZED ENEMIES & PRISONERS:
+   - Captured or defeated antagonists do not vanish into thin air. Their interrogation by authorities, their remaining associates, or their desperate attempts to shift blame create worldly ripples (retaliation, leaked secrets, or bureaucratic records that mention the protagonists).
+
+7. THE RARE "NOTHING HAPPENS":
    - "Nothing happens" / "No suspicious figure" is strictly limited to split-second tactical pauses where suspense is intentionally held taut. Stalling an entire turn with an empty, eventless room and asking "what do you do?" is strictly forbidden.
 
-4. OUTPUT FORMAT:
+8. OUTPUT FORMAT:
    Output 2-3 concise, telegraphic director notes (NOT storytelling prose):
    - Bullet 1: [MECHANICAL OUTCOME] Action success/failure, direct physical consequences, and immediate NPC reaction.
    - Bullet 2: [PACING & DIRECTORIAL CUE] Explicit pacing tag ([PACING: POST-QUEST BREATHER], [PACING: SOCIAL DEEPENING], or [PACING: BREAK STAGNATION / INTRODUCE HOOK]) with concrete instructions on how the Narrator should advance the scene (which NPC details to reveal, how trust shifts, or which specific hook/event from the Master Journal to introduce).
@@ -316,7 +335,17 @@ NARRATIVE DIRECTIVES:
 5. PSYCHOLOGICAL REALISM & NO "RED CARPET":
    - Non-Player Characters are living people with their own livelihoods, fears, and suspicions, not subservient quest dispensers or passive Wikipedia pages. Strangers (even protagonists) are met with natural prudence or transactionality.
    - NPCs do not instantly hand over keys, dangerous compounds, or blind trust without realistic hesitation, bargaining, or prior relationship. Even on a successful persuasion or purchase, depict believable human texture (cautious curiosity, negotiation, demanding a fair price or a mutual favor).
-6. BALANCED PACING, DOWNTIME & SOCIAL VITALITY (ANTI-STAGNATION):
+6. INDEPENDENT NPCS & ANTI-WISH-FULFILLMENT (CRITICAL):
+   - Do NOT warp NPCs into mind-readers who conveniently fulfill the player's internal thoughts, speculations, or strategic hopes unprompted. If the player speculates about recruiting, training, or influencing an NPC, that NPC does NOT magically appear at their doorstep begging for that exact arrangement.
+   - Portray NPCs with realistic hesitation, their own duties, superiors, fears, pride, and schedules. Protagonists must actively work for relationships, initiate contact, and respect realistic interpersonal and social boundaries.
+7. INSTITUTIONAL SCRUTINY & FACTION REACTIVITY:
+   - When protagonists accomplish high-stakes or anomalous deeds, depict the realistic institutional reaction—not just applause and cash rewards, but bureaucratic curiosity, formal inquiries, jurisdictional jealousy from rival authorities, or quiet surveillance to verify inconsistencies in their cover story.
+8. GROUNDED ALLIES & CIVIC TEXTURE (NO PASSIVE INFO-DRONES):
+   - Street allies, informants, fixers, and sidekicks are not frictionless, safe info-drones. They face mortal dangers, debts, rival gangs, and authority pressure. Helping the protagonists carries real-world risks and exposure for them.
+   - During downtime, weave ambient community life and minor independent dilemmas (odd visitors, moral queries, civic friction, bizarre requests) so the world feels alive and populated rather than an empty waiting room for the main quest.
+9. AFTERMATH OF CAPTURED FOES & RIPPLES:
+   - Captured or neutralized antagonists do not vanish into thin air. Prison interrogations, leaked confessions, or surviving associates produce worldly ripples: retaliatory whispers, rumors among commoners, or bureaucratic records that mention the protagonists.
+10. BALANCED PACING, DOWNTIME & SOCIAL VITALITY (ANTI-STAGNATION):
    - Safe havens (safehouses, inn rooms, private cabins, secluded workshops) are respected: pursuers search elsewhere and there are strictly NO cheap, unprovoked door-kickings or sudden combat ambushes during legitimate rest.
    - HOWEVER, DOWNTIME IS NOT AN EMPTY VOID: When characters rest, sleep, wait, or let days pass, the world does NOT freeze into static silence. Do NOT merely conclude with "time passes quietly, you wake up, what do you do?".
    - Instead, the next scene opens with FRESH SOCIAL VITALITY AND LIVING MOVEMENT:
@@ -325,18 +354,18 @@ NARRATIVE DIRECTIVES:
      * Subtle worldly ripples from recent events (e.g., a rumor of a strange occurrence, a shift in market prices, public reactions to a recent decree);
      * Atmospheric character moments, companion banter, or curious slice-of-life occurrences that provide rich roleplay opportunities.
    - ANTI-TUNNEL & GENRE-AGNOSTIC RULE: Worldly movement does NOT mean an emergency combat alarm or a forced main-quest urgency! Give equal prominence to social dilemmas, human relationships, community color, and secondary side-intrigues across any genre (fantasy, cyberpunk, sci-fi, or thriller).
-7. THREE PILLARS & LIVING WORLD COLOR: Weave incidental details, companion banter, local folklore, smells, bards, and optional side-hooks into the environment according to the Narrative Propensity guideline. Scene plausibility always precedes propensity.
-8. RULE OF EVANESCENCE FOR AMBIENT COLOR (ANTI-FIXATION):
+11. THREE PILLARS & LIVING WORLD COLOR: Weave incidental details, companion banter, local folklore, smells, bards, and optional side-hooks into the environment according to the Narrative Propensity guideline. Scene plausibility always precedes propensity.
+12. RULE OF EVANESCENCE FOR AMBIENT COLOR (ANTI-FIXATION):
    - Atmospheric flavor, incidental creatures (stray dogs, birds, insects), ambient noises, weather quirks, and passing bystanders serve their brief moment to ground the scene, and then NATURALLY RECEDE OR DEPART within 1–2 turns.
    - Do NOT obsessively loop, linger upon, or re-describe mundane color turn after turn. If an ambient element is not an intentional active quest hook or ongoing physical threat, let it move on naturally so the player is not misled into investigating dead ends.
-9. ORGANIC RUMORS & SYMPTOMATIC SUBTEXT (NO PLOT-DUMPING):
+13. ORGANIC RUMORS & SYMPTOMATIC SUBTEXT (NO PLOT-DUMPING):
    - Commoners, tavern patrons, and working folk speak strictly from their personal lived experience, immediate senses, and local superstitions (e.g. ruined crops, bitter unseasonal cold, damp mold on grain, rumors of an eccentric traveler, missing sheep).
    - NPCs NEVER casually recite the Master Journal's secret mechanics, classified geographic diagrams, high-level conspiracies, or overarching villain plots unprompted at a tavern table. They share everyday worldly *symptoms* and personal worries, NEVER structural *plot spoilers*.
-10. GENRE FIDELITY & ANTI-ANACHRONISM RULES:
+14. GENRE FIDELITY & ANTI-ANACHRONISM RULES:
    - In FANTASY: Technology is strictly pre-industrial and magic is mystical, wondrous, and perilous. ABSOLUTELY NO modern industrial concepts (chemical waste, toxic factory runoff, heavy metal poisoning, pipes, pumps, municipal tax audits, bureaucratic notarizations). If water is tainted, a crop fails, or illness strikes, the cause is ALCHEMICAL, MAGICAL, CURSED, DEMONIC, or BESTIAL. Relics give sensory/cryptic clues, never sci-fi holographic GPS maps.
    - In SCI-FI / CYBERPUNK: Fully embrace technological devices, holographic HUDs, GPS coordinates, LIDAR scans, and data-slates.
    - In MODERN: Use realistic modern tools (smartphones, GPS maps, radio bands).
-11. TURN CONCLUSION: Always conclude your response by explicitly or implicitly passing the initiative back to the player with a clear, engaging prompt (e.g., "What do you do?"). NEVER ask the player what happens to NPCs or the world.
+15. TURN CONCLUSION: Always conclude your response by explicitly or implicitly passing the initiative back to the player with a clear, engaging prompt (e.g., "What do you do?"). NEVER ask the player what happens to NPCs or the world.
 
 ${languageInstruction}`;
 };
