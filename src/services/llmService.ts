@@ -75,7 +75,7 @@ const GeminiPlugin: LLMProviderPlugin = {
   id: 'gemini',
   name: 'Google Gemini (Native)',
   defaultUrl: 'https://generativelanguage.googleapis.com/v1beta',
-  defaultModel: 'gemini-flash-lite-latest',
+  defaultModel: 'gemini-flash-latest',
   isUrlEditable: false,
   prepareRequest({ url, key, modelName, systemPrompt, messages }) {
     const baseUrl = url || 'https://generativelanguage.googleapis.com/v1beta';

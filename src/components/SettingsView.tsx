@@ -20,7 +20,7 @@ export const SettingsView: React.FC = () => {
       setModel('google/gemma-2-9b-it:free');
     } else if (newProvider === 'gemini') {
       setUrl('https://generativelanguage.googleapis.com/v1beta');
-      setModel('gemini-flash-lite-latest');
+      setModel('gemini-flash-latest');
     } else if (newProvider === 'openai') {
       setUrl('https://api.openai.com/v1');
       setModel('gpt-4o-mini');
