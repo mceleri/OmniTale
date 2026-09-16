@@ -280,9 +280,27 @@ export const StoryView: React.FC = () => {
               }`}
             >
               {/* Message Header */}
-              <span className="text-[10px] text-zinc-300 font-sans tracking-wider mb-1 px-1">
-                {isMaster ? 'STORYTELLER' : characterName.toUpperCase()}
-              </span>
+              <div className={`flex items-center gap-2 mb-1 px-1 text-[10px] text-zinc-300 font-sans tracking-wider ${isMaster ? 'justify-start' : 'justify-end'}`}>
+                <span>{isMaster ? 'STORYTELLER' : characterName.toUpperCase()}</span>
+                {isMaster && msg.fateRoll && (
+                  <span
+                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium tracking-normal border ${
+                      msg.fateRoll.tier === 'very_favorable'
+                        ? 'bg-emerald-950/60 border-emerald-800/80 text-emerald-300'
+                        : msg.fateRoll.tier === 'favorable'
+                        ? 'bg-emerald-950/40 border-emerald-850/60 text-emerald-400'
+                        : msg.fateRoll.tier === 'neutral'
+                        ? 'bg-zinc-900 border-zinc-800 text-zinc-400'
+                        : msg.fateRoll.tier === 'unfavorable'
+                        ? 'bg-amber-950/40 border-amber-850/60 text-amber-400'
+                        : 'bg-rose-950/60 border-rose-800/80 text-rose-300'
+                    }`}
+                    title={`Fate Oracle: ${msg.fateRoll.value}/100 — ${msg.fateRoll.label}\n${msg.fateRoll.narrativeDirective}`}
+                  >
+                    🎲 {msg.fateRoll.value} • {msg.fateRoll.label.split(' / ')[0]}
+                  </span>
+                )}
+              </div>
 
               {/* Message Body */}
               <div

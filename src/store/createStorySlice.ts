@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { Story, StoryState, Role, Message, NarrativePropensity, StorySections } from '../types/story';
+import { Story, StoryState, Role, Message, NarrativePropensity, StorySections, FateOracleRoll } from '../types/story';
 import { initialStories } from './initialStories';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
 import { fetchNarrative } from '../services/llmService';
@@ -12,6 +12,7 @@ import {
   PromptSections,
 } from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
+import { rollFateOracle, rollCampaignStochasticMatrix } from '../utils/diceUtils';
 
 export interface StorySlice {
   currentView: 'home' | 'story' | 'settings' | 'analytics';
@@ -589,12 +590,15 @@ const generateMasterResponse = async (
   if (isStart && !isJournalPreAuthored) {
     set({ isUpdatingJournal: true });
     try {
+      const stochasticMatrix = rollCampaignStochasticMatrix();
+      console.log("[generateMasterResponse] Generated initial Campaign Stochastic Matrix:", stochasticMatrix);
       const journalPrompt = getInitialJournalGenerationPrompt(
         activeStory.title,
         activeStory.synopsis,
         activeStory.genre,
         charSheet,
-        activeStory.language
+        activeStory.language,
+        stochasticMatrix
       );
       
       console.log("[generateMasterResponse] Generating initial secret Master Journal for custom story...");
@@ -654,6 +658,12 @@ const generateMasterResponse = async (
     const currentScratchpad = activeStory.dynamicState.judgeScratchpad || [];
     let judgeNote: string | undefined = undefined;
     let unEvictedScratchpad = [...currentScratchpad];
+    let fateRoll: FateOracleRoll | undefined = undefined;
+
+    if (!isStart) {
+      fateRoll = rollFateOracle();
+      console.log(`[generateMasterResponse] Rolled Fate Oracle for this turn: ${fateRoll.value}/100 (${fateRoll.label})`);
+    }
 
     if (useAgenticPipeline && !isStart) {
       console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Dramatic Arbiter & Pacing Director -> Narrator)...");
@@ -667,7 +677,8 @@ const generateMasterResponse = async (
           lore,
           journal,
           sections,
-          propensity
+          propensity,
+          fateRoll
         );
         let judgePromptTokens = 0;
         let judgeCompletionTokens = 0;
@@ -719,7 +730,7 @@ const generateMasterResponse = async (
         apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
       } catch (pipelineErr) {
         console.error("[generateMasterResponse] Error in agentic pipeline, falling back to unified prompt:", pipelineErr);
-        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections);
+        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll);
         masterResponseText = await fetchNarrative(
           provider,
           url,
@@ -735,7 +746,7 @@ const generateMasterResponse = async (
       }
     } else {
       // Classic single-call mode (or isStart)
-      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections);
+      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll);
       masterResponseText = await fetchNarrative(
         provider,
         url,
@@ -757,6 +768,7 @@ const generateMasterResponse = async (
       tokens: apiCompletionTokens || estimateTokens(masterResponseText),
       promptTokens: apiPromptTokens || undefined,
       judgeNote,
+      fateRoll,
     };
 
     const finalMessages = [...updatedMessages, masterMessage];

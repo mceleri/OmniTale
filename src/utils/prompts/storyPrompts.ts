@@ -1,4 +1,5 @@
-import { NarrativePropensity } from '../../types/story';
+import { NarrativePropensity, FateOracleRoll, CampaignStochasticMatrix } from '../../types/story';
+import { formatStochasticMatrixPrompt } from '../diceUtils';
 
 export interface PromptSections {
   setting?: string;
@@ -92,7 +93,8 @@ export const formatUnifiedPrompt = (
   feedback: string,
   language?: string,
   propensity?: NarrativePropensity,
-  sections?: PromptSections
+  sections?: PromptSections,
+  fateRoll?: FateOracleRoll
 ): string => {
   const languageInstruction = language
     ? `CRITICAL LANGUAGE RULE: Generate the entire narrative, descriptions, and dialogues strictly in this language: ${language}. Adapt dynamically to the language used by the player in their messages, but keep the core game language strictly set to ${language}.`
@@ -108,15 +110,21 @@ export const formatUnifiedPrompt = (
 
   const propensityGuideline = formatNarrativePropensityGuideline(propensity);
 
+  const fateOracleSection = fateRoll
+    ? `\n\n[FATE ORACLE ROLL FOR THIS TURN: ${fateRoll.value}/100 — ${fateRoll.label.toUpperCase()}]\nDirective: "${fateRoll.narrativeDirective}"\n(CRITICAL NOTE: Channel this roll contextually: risky actions succeed/fail based on this roll; routine or expert actions redirect unfavorable rolls to environmental friction, bad timing, or NPC complications rather than character incompetence).`
+    : '';
+
   return `You are the Dungeon Master (DM) of an immersive, narrative-driven tabletop RPG. Your writing style is literary, highly descriptive, and atmospheric. Show, don't tell.
 
 ${worldContent}
 
 [MASTER'S SECRET JOURNAL - DO NOT REVEAL TO PLAYER]
 ${journal}
+${feedbackSection}
 
 [NARRATIVE PROPENSITY]
 ${propensityGuideline}
+${fateOracleSection}
 
 [DUNGEON MASTER DIRECTIVES & MECHANICS]
 1. ACTION RESOLUTION, ANTI-ECHO & FAILING FORWARD (CRITICAL): Acknowledge the player's declared action and intent in 1-2 concise, impactful sentences at most. DO NOT novelize, re-narrate, or echo what the player already wrote. Devote the vast majority (80%+) of your response to the world's concrete reactions, NPC actions, dialogue, unexpected developments, and environmental shifts. When actions are risky or encounter difficulties, FAIL FORWARD: a partial outcome or difficulty should never create a dead end ("nothing happens"), but introduce a fresh social complication, dilemma, or interesting choice.
@@ -160,7 +168,8 @@ export const getJudgePrompt = (
   lorebook?: string,
   journal?: string,
   sections?: PromptSections,
-  propensity?: NarrativePropensity
+  propensity?: NarrativePropensity,
+  fateRoll?: FateOracleRoll
 ): string => {
   const languageInstruction = language
     ? `CRITICAL LANGUAGE RULE: Formulate your telegraphic notes in this language: ${language}.`
@@ -197,9 +206,14 @@ export const getJudgePrompt = (
     ? `\n[NARRATIVE PROPENSITY: ${propensity.toUpperCase()}]`
     : '';
 
+  const fateOracleContext = fateRoll
+    ? `\n[FATE ORACLE ROLL FOR THIS TURN: ${fateRoll.value}/100 — ${fateRoll.label.toUpperCase()}]
+Directive: "${fateRoll.narrativeDirective}"`
+    : '';
+
   return `You are the Dramatic Arbiter & Pacing Director (The Judge) of an immersive tabletop RPG.
 Your mission is two-fold:
-1. Evaluate the mechanical outcome and physical plausibility of the player's last declared action.
+1. Evaluate the mechanical outcome and physical plausibility of the player's last declared action, channeling the dynamic Fate Oracle roll.
 2. Evaluate the dramatic momentum and state of the scene, directing the Lead Narrator on pacing, social deepening, and when to launch new narrative hooks.
 
 [CHARACTER GUIDELINES]
@@ -209,13 +223,18 @@ ${journalContext}
 ${lorebookContext}
 ${worldContext}
 ${propensityGuideline}
+${fateOracleContext}
 ${feedbackSection}
 
 DIRECTORIAL RULES & PACING HIERARCHY:
 
-1. ACTION RESOLUTION, PHYSICAL PLAUSIBILITY & ACTION CHAINING (INTERCEPTION RULE):
-   - Evaluate whether the player's action succeeds cleanly, partially succeeds with a complication, or fails, considering character capabilities, gear, and circumstances.
-   - Note immediate physical consequences and direct reactions of present NPCs.
+1. FATE ORACLE RESOLUTION, PHYSICAL PLAUSIBILITY & ACTION CHAINING (INTERCEPTION RULE):
+   - FATE ORACLE CHANNELING:
+     * The turn's outcome is anchored by the Fate Oracle roll: ${fateRoll ? `[Roll: ${fateRoll.value}/100 - ${fateRoll.label.toUpperCase()}] ("${fateRoll.narrativeDirective}")` : '[No Fate Roll provided - evaluate purely from character competence and context]'}.
+     * RISKY / CONTESTED PLAYER ACTIONS: If the action carries genuine operational, physical, or tactical risk, apply the roll directly to mechanical success, partial complication, or outright failure.
+     * ROUTINE / TRIVIAL / EXPERT ACTIONS: If the action is ordinary or falls within the protagonist's established expertise, DO NOT make them look foolish or cartoonishly incompetent on an unfavorable roll. Instead, redirect the friction/obstacle to the SURROUNDING ENVIRONMENT (a structural creak, bad timing, sudden weather shift, jammed mechanism, brittle material), an UNFORESEEN WITNESS, an AWKWARD INTERRUPTION, or an UNRELATED NPC COMPLICATION.
+     * SOCIAL / DIALOGUE ACTIONS: Apply the roll to the NPC's emotional receptivity, mood, hesitation, or external distractions.
+     * FAVORABLE / TRIUMPH ROLLS (60-100): Grant clean execution, serendipitous advantages, or unexpected tactical leverage.
    - Bite the Suspense Hook: If the player expresses suspicion, fear, or leaves themselves vulnerable, validate that dramatic tension—never defuse it with an unearned "everything is totally safe".
    - ACTION CHAINING & FIRST POINT OF FRICTION (INTERCEPTION RULE):
      * The player may declare multi-step actions or future transitions (e.g. "I watch the ambush resolve and then slip away to my shop") to skip dead time when the situation is safe.
@@ -223,79 +242,46 @@ DIRECTORIAL RULES & PACING HIERARCHY:
      * STRICTLY VOID all subsequent player declarations (e.g., if a player declares an attack or risky move that triggers alarms and says "and then I walk home to drink wine", the chain breaks at the alarm; the safe arrival at home is completely voided).
      * Only allow a transition montage to conclude smoothly when the entire sequence is safe, routine, and uncontested.
 
-2. PACING EVALUATION & DRAMATIC MOMENTUM (STRICT PRIORITY HIERARCHY):
-   Evaluate the dramatic momentum of the scene according to this strict priority order:
+2. DRAMATIC PACING & ORGANIC MOMENTUM:
+   Instead of forcing artificial combat or sudden alarms, pacing evolves organically through player intent and the Fate Oracle:
+   - RESPECT ROLEPLAY, CONVERSATION & DOWNTIME (NO FORCED DISRUPTIONS):
+     * When characters are engaged in dialogue, investigating, trading, or savoring a post-quest breather, PROTECT THAT SPACE. Do not interrupt meaningful, relaxed roleplay with unprovoked alarms or cheap ambushes.
+     * Post-quest downtime can comfortably last as long as the players actively roleplay and explore it (easily 4–6+ turns). Use [PACING: POST-QUEST BREATHER] or [PACING: SOCIAL DEEPENING] to guide the Narrator to deepen relationships, explore NPC backstories, or share community aftermath.
+   - EXPLICIT TIME-SKIPS & "PASSING TIME":
+     * When the player explicitly declares waiting or sleeping (e.g. "we wait until something happens", "we rest until nightfall", "I sleep until dawn"): time advances cleanly. Use the Fate Oracle roll to dictate the new circumstance or visitor that greets them upon waking/advancing. Tag as [PACING: ADVANCE TIME / NEW BEAT].
+   - HOOK ACTIVATION & FORWARD PROGRESSION:
+     * When the player actively seeks a new job, asks around for leads, or when a scene has naturally reached its conclusion: tag as [PACING: INTRODUCE NEXT HOOK] to organically connect them to an active dilemma or thread from the Master Journal.
 
-   PRIORITY 1: ANTI-STAGNATION & IDLE CIRCUIT-BREAKER
-   - Check if the player has been idling, stalling, or declaring passive waiting (e.g., "we wait until something happens", "we spend the night drinking and waiting", "we pass the time").
-   - OR check if the immediate scene has exhausted its conversational energy and the player is simply lingering or looking around without active intent.
-   - DIRECTIVE: Tag as [PACING: BREAK STAGNATION / TRIGGER EVENT]. It is MANDATORY to make something happen! If no active quest/crisis currently drives the player, direct the Narrator to introduce the beginning of something new—an organic event, an unexpected arrival, a piece of alarming news, or an overheard dispute drawn from the Master Journal, Factions, or Setting.
+3. INSTITUTIONAL SCRUTINY & SYSTEMIC REALISM:
+   - When protagonists accomplish high-stakes or anomalous deeds, evaluate realistic institutional ripples: bureaucratic audits, jurisdictional jealousy from rival authorities, inquiries, or quiet surveillance to verify inconsistencies in their cover story.
 
-   PRIORITY 2: POST-QUEST BREATHER & AFTERMATH (UP TO 4–5 TURNS OF RICH DOWNTIME)
-   - If a quest, crisis, or intense encounter has JUST concluded (e.g., defeating a monster, resolving a haunting, escaping a pursuer):
-   - STRICT RULE: DO NOT immediately slam the player with a new emergency or immediate crisis! Avoid the "treadmill" trap of endless alarms.
-   - A healthy post-quest breather comfortably lasts up to 4–5 turns as long as the players are actively roleplaying, conversing, or savoring their downtime.
-   - DIRECTIVE: Tag as [PACING: POST-QUEST BREATHER / RECALIBRATION]. Direct the Narrator to:
-     * Reflect the aftermath and community relief/curiosity;
-     * Deepen the protagonists' roots in the setting and relationships with allies (e.g., warmth, gratitude, shared meals, personal anecdotes, NPC quirks);
-     * Ground the player in the world without pressing urgent threats.
-   - EXCEPTION / ACCELERATION: If the players are NOT roleplaying even after 1–2 turns of downtime, or if the scene begins to stagnate without player interest or actual interaction, do NOT wait for 4–5 turns—transition early to Priority 1 (introduce the next hook).
+4. REALISTIC NPC HESITATION & PRUDENCE (NO RED CARPET):
+   - NPCs do not magically surrender keys, access, dangerous items, or confidential secrets without realistic hesitation, bargaining, or prior relationship. Even on a favorable outcome, portray human texture (cautious curiosity, negotiation, demanding a fair price or a mutual favor).
 
-   PRIORITY 3: ACTIVE ROLEPLAY & SOCIAL DEEPENING (QUIET BUT ALIVE)
-   - When the scene is calm and the player is actively conversing, exploring, or probing an NPC:
-   - DIRECTIVE: Tag as [PACING: SOCIAL DEEPENING]. Foster the interaction by directing the Narrator on HOW to advance it:
-     * Deepen present NPCs: an NPC confides a worry, warms up in trust, becomes wary, or reveals a personal flaw or colorful backstory.
-     * NPC Perception: an NPC notices a subtle habit, mannerism, or competence of the protagonist without clairvoyantly piercing their secret cover.
-     * Ambient & New Social Elements: introduce a colorful, ordinary new NPC into the space (e.g., an eccentric river sailor, an apprentice at the counter, a visiting traveler) to expand social texture without combat alarms.
-
-   PRIORITY 4: BREATHER EXPIRY & HOOK ACTIVATION
-   - When 4–5 turns of a peaceful post-quest breather have naturally elapsed, OR momentum begins to stall:
-   - DIRECTIVE: Tag as [PACING: INTRODUCE NEXT HOOK]. Guide the Narrator to organically introduce the next active thread or dilemma from the Master Journal.
-
-3. ANTI-WISH-FULFILLMENT & INDEPENDENT NPC AGENDAS (GENRE-AGNOSTIC):
-   - When the player declares speculative plans or intentions regarding an NPC (e.g. "we will try to train X", "we will convince Y to join us", "we hope Z won't notice"):
-     * DO NOT instantly manifest that NPC at the protagonist's doorstep begging for that exact plan in the very next turn!
-     * NPCs possess independent agency, duties, superiors, personal fears, pride, and schedules. If the player wants to influence, recruit, or train an NPC, they must actively initiate the interaction, overcome natural hesitation, and navigate the NPC's own obligations.
-     * Avoid player-centric wish-fulfillment: the world does not conveniently restructure itself to hand players their speculative wishes on a silver platter.
-
-4. INSTITUTIONAL SCRUTINY & JURISDICTIONAL FRICTION:
-   - When protagonists accomplish high-stakes or anomalous feats (solving classified crises, neutralizing rogue operatives, accompanying military or security units):
-     * Authorities and rival factions (inquisitions, internal affairs, guilds, corporate security, rival syndicates) DO NOT simply hand over rewards and walk away blind.
-     * Success breeds scrutiny: bureaucrats, rival investigators, or suspicious superiors ask uncomfortable questions, conduct quiet surveillance, notice inconsistencies in the protagonist's cover, or demand formal debriefings.
-
-5. NPC RELATIONSHIP TIERS & DISPOSITION STICKINESS (GENRE-AGNOSTIC):
-   Evaluate NPC and faction reactions through a formal 5-Tier Relationship Scale:
-   - Tier 1: Open Hostility / Enemy
-     * Interpretation: Active opposition. The NPC or faction seeks to arrest, attack, report, sabotage, or destroy the protagonists. Refuses peaceful dialogue without overwhelming leverage or physical dominance.
-   - Tier 2: Distrustful / Guarded / Suspicious
-     * Interpretation: Cold, skeptical, and guarded. Expects betrayal or ulterior motives; demands permits, identification, or collateral. Cooperates only under strict protocol, command, or necessity, with hands near weapons.
-   - Tier 3: Neutral / Transactional / Professional
-     * Interpretation: Universal baseline for strangers, public officials, merchants, and common folk. Fair, polite, business-minded, strictly quid-pro-quo ("you pay, I deliver"). Will not take personal risks, overlook illegalities, or share confidential information for a stranger.
-   - Tier 4: Favorable / Guarded Respect / Cautious Gratitude
-     * Interpretation: The NPC acknowledges the protagonist's competence, bravery, or direct assistance. Feels genuine professional respect or personal gratitude. BUT CRITICALLY PRESERVES BOUNDARIES: respects institutional hierarchy, does not compromise their duty or career, refuses to hand over dangerous or classified assets without orders, and maintains their official distance. E.g., a grateful military captain or detective gives credit and a formal pass, but will still arrest the protagonist if caught breaking laws tomorrow.
-   - Tier 5: Solid Trust / Staunch Ally / Close Confidant
-     * Interpretation: Deep, enduring fraternal or personal loyalty earned through prolonged mutual trials and consistent honesty over time. The NPC confides vulnerable secrets, overlooks minor infractions, and takes genuine personal risks to protect the protagonists.
-   
-   RULES FOR INTERPRETING AND TRANSITIONING TIERS:
-   - DISPOSITION STICKINESS: Trust and institutional standing are sticky and slow to evolve. A single helpful action, clever save, or polite conversation NEVER jumps an NPC across multiple tiers in a single scene.
-   - MAXIMUM TRANSITION RATE: An NPC's disposition can shift at most ONE tier per major mission or crisis arc.
-   - Cynical authorities, corporate officers, commanders, and inquisitors naturally default to Tier 2 or Tier 3. Even after a stunning heroic rescue, they advance at most to Tier 4 (Guarded Respect), NEVER to Tier 5 (Unconditional Ally).
+5. THE 5-TIER NPC/FACTION STANDING SCALE & BOUNDARY FIDELITY:
+   - Track NPC attitude along the 5-Tier Disposition Scale:
+     * Tier 1: Open Hostility / Enemy (opposes, attacks, sabotages, reports)
+     * Tier 2: Distrustful / Guarded / Suspicious (skeptical, demands permits, hand on weapon)
+     * Tier 3: Neutral / Transactional / Professional (universal baseline; fair, quid-pro-quo, takes zero unearned risks)
+     * Tier 4: Favorable / Guarded Respect / Cautious Gratitude (genuine respect/gratitude, BUT rigidly maintains duty, hierarchy, and official boundaries)
+     * Tier 5: Solid Trust / Staunch Ally / Close Confidant (prolonged mutual trials; takes personal risks to protect)
+   - DISPOSITION STICKINESS: Trust and institutional standing are sticky and slow to evolve. An NPC's disposition can shift at most ONE tier per major mission or crisis arc.
+   - Cynical authorities, commanders, and inquisitors default to Tier 2 or 3 and advance at most to Tier 4 after a heroic rescue, NEVER to Tier 5.
 
 6. GROUNDED ALLIES WITH VULNERABILITIES & CIVIC TEXTURE:
-   - Street allies, informants, fixers, and sidekicks are NOT frictionless, all-knowing info-drones or convenient plot dispensers.
-   - They live precarious lives with their own debts, rivals, gang territories, guard harassment, and mortal vulnerabilities. Helping the protagonists carries real-world exposure for them.
-   - During downtime, weave ambient community life and minor independent dilemmas (odd visitors, moral queries, civic friction, bizarre customer requests) so the world feels alive and populated rather than an empty waiting room for the main quest.
+   - Street allies and sidekicks live precarious lives with their own debts, rivals, gang territories, guard harassment, and mortal vulnerabilities. Helping the protagonists carries real-world exposure for them.
+   - During downtime, weave ambient community life and minor independent dilemmas so the world feels alive.
 
 7. AFTERMATH OF NEUTRALIZED ENEMIES & PRISONERS:
-   - Captured or defeated antagonists do not vanish into thin air. Their interrogation by authorities, their remaining associates, or their desperate attempts to shift blame create worldly ripples (retaliation, leaked secrets, or bureaucratic records that mention the protagonists).
+   - Captured or defeated antagonists produce worldly ripples (interrogations, retaliation, leaked secrets, or bureaucratic records mentioning the protagonists).
 
 8. THE RARE "NOTHING HAPPENS":
-   - "Nothing happens" / "No suspicious figure" is strictly limited to split-second tactical pauses where suspense is intentionally held taut. Stalling an entire turn with an empty, eventless room and asking "what do you do?" is strictly forbidden.
+   - "Nothing happens" is strictly limited to split-second tactical pauses. Stalling an entire turn with an empty, eventless room is strictly forbidden.
 
 9. OUTPUT FORMAT:
    Output 2-3 concise, telegraphic director notes (NOT storytelling prose):
-   - Bullet 1: [MECHANICAL OUTCOME] Action success/failure, direct physical consequences, and immediate NPC reaction.
-   - Bullet 2: [PACING & DIRECTORIAL CUE] Explicit pacing tag ([PACING: POST-QUEST BREATHER], [PACING: SOCIAL DEEPENING], or [PACING: BREAK STAGNATION / INTRODUCE HOOK]) with concrete instructions on how the Narrator should advance the scene (which NPC details to reveal, how trust shifts, or which specific hook/event from the Master Journal to introduce).
+   - Bullet 1: [MECHANICAL OUTCOME] Action success/failure, direct physical consequences, immediate NPC reaction, and explicit tag on how the Fate Oracle was channeled (e.g. [ORACLE APPLIED: ${fateRoll ? `${fateRoll.value}/100 (${fateRoll.tier})` : 'X/100'} -> ...]).
+   - Bullet 2: [PACING & DIRECTORIAL CUE] Explicit pacing tag ([PACING: POST-QUEST BREATHER], [PACING: SOCIAL DEEPENING], [PACING: ADVANCE TIME / NEW BEAT], or [PACING: INTRODUCE NEXT HOOK]) with concrete instructions on how the Narrator should advance the scene.
    - DO NOT output JSON. Output plain telegraphic text bullets.
 
 ${languageInstruction}`;
@@ -339,7 +325,7 @@ ${currentJudgeNote || 'Nothing to note.'}
 2. Follow the Judge's [PACING & DIRECTORIAL CUE]:
    - If the Judge directs [POST-QUEST BREATHER], deepen the world aftermath, NPC warmth, and community roots without forcing sudden combat.
    - If the Judge directs [SOCIAL DEEPENING], execute the specific interpersonal shift, reveal NPC depth, or introduce the suggested social character.
-   - If the Judge directs [BREAK STAGNATION / INTRODUCE HOOK], seamlessly launch the suggested event, arrival, or hook into the scene now!)
+   - If the Judge directs [ADVANCE TIME / NEW BEAT] or [INTRODUCE NEXT HOOK], advance the scene and seamlessly introduce the suggested event, visitor, or dilemma!)
 
 NARRATIVE DIRECTIVES:
 1. ACTION RESOLUTION & ANTI-ECHO (CRITICAL): Acknowledge the player's last action in 1-2 concise sentences at most. DO NOT novelize, re-narrate, or echo what the player already wrote. Never describe what the protagonist says, feels, or thinks if the player already wrote it. Devote 80%+ of your turn to narrating the world's concrete response and NPC actions.
@@ -398,11 +384,16 @@ export const getInitialJournalGenerationPrompt = (
   synopsis: string,
   genre: string,
   charSheet: string,
-  language?: string
+  language?: string,
+  stochasticMatrix?: CampaignStochasticMatrix
 ): string => {
   const langPrompt = language 
     ? `Write the entire Master Journal and all bullet points strictly in this language: ${language}.`
     : `Write the Master Journal in the language of the Title and Synopsis.`;
+
+  const matrixSection = stochasticMatrix
+    ? `\n\n${formatStochasticMatrixPrompt(stochasticMatrix)}`
+    : '';
 
   return `You are the Game Master of an immersive, narrative-driven tabletop RPG.
 We are starting a brand new campaign. Your task is to generate a comprehensive, highly detailed "Master's Secret Journal" for this campaign.
@@ -414,9 +405,10 @@ Campaign Details:
 - Setting/Synopsis: ${synopsis}
 - Player Character Sheet:
 ${charSheet}
+${matrixSection}
 
 Guidelines for generating the Master Journal:
-1. "Act 1: The First Step" - Outline an atmospheric, engaging starting scenario and location. DIVERSIFY the opening: prefer human situations, cultural festivals, traveling barges, scholarly investigations, or bustling trade towns. AVOID repetitive RPG clichés such as guarded city gate lockdowns, inquisitorial permits for healing, or mysterious blights draining the earth unless explicitly demanded by the synopsis.
+1. "Act 1: The First Step" - Outline an atmospheric, engaging starting scenario and location. If a [CAMPAIGN STOCHASTIC MATRIX] is provided above, you MUST directly embody its 5 structural parameters (environment condition, community social climate, material resource status, contact morale, and inciting catalyst) into the opening setup! DIVERSIFY the opening: prefer human situations, cultural festivals, traveling barges, scholarly investigations, or bustling trade towns. AVOID repetitive RPG clichés such as guarded city gate lockdowns, inquisitorial permits for healing, or mysterious blights draining the earth unless explicitly demanded by the synopsis.
 2. Primary Conflict & Starting Adventure Hook - Clearly articulate the central dilemma, goal, or mystery driving the adventure, while keeping room for player-driven discovery.
 3. Factions & Competing Agendas (Multi-Polar & Nuanced) - Detail 2-3 distinct factions or key figures with conflicting, selfish, or competing interests. Avoid monolithic alignments or black-and-white absolutism; ensure each group has its own unique philosophy, methods, and internal friction.
 4. Secrets & Hidden Threats - Detail 2-3 hidden secrets, conspiracies, or looming dangers that the player is currently unaware of.

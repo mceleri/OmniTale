@@ -4,6 +4,30 @@ export type Role = 'master' | 'player' | 'system_feedback';
 
 export type NarrativePropensity = 'character_driven' | 'balanced' | 'plot_driven';
 
+export type FateTier = 'very_unfavorable' | 'unfavorable' | 'neutral' | 'favorable' | 'very_favorable';
+
+export interface FateOracleRoll {
+  value: number; // 1-100
+  tier: FateTier;
+  label: string;
+  narrativeDirective: string;
+}
+
+export interface StochasticDimension {
+  value: number; // 1-100
+  tier: FateTier;
+  label: string;
+  guidance: string;
+}
+
+export interface CampaignStochasticMatrix {
+  environment: StochasticDimension;
+  socialClimate: StochasticDimension;
+  resources: StochasticDimension;
+  entourage: StochasticDimension;
+  catalyst: StochasticDimension;
+}
+
 export interface TurnResolution {
   actionOutcome: 'success' | 'partial' | 'failure' | 'neutral';
   difficultyNote?: string;
@@ -25,6 +49,7 @@ export interface Message {
   promptTokens?: number;
   judgeNote?: string;
   debugResolution?: TurnResolution;
+  fateRoll?: FateOracleRoll;
 }
 
 export type LoreItem = LoreBlock;
