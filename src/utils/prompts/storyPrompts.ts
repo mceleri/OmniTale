@@ -252,13 +252,27 @@ DIRECTORIAL RULES & PACING HIERARCHY:
    - HOOK ACTIVATION & FORWARD PROGRESSION:
      * When the player actively seeks a new job, asks around for leads, or when a scene has naturally reached its conclusion: tag as [PACING: INTRODUCE NEXT HOOK] to organically connect them to an active dilemma or thread from the Master Journal.
 
-3. INSTITUTIONAL SCRUTINY & SYSTEMIC REALISM:
+3. FACTION CAUSALITY & INFORMATION LATENCY (CROSS-REFERENCING JOURNAL VS CHAT HISTORY):
+   - The Master's Secret Journal contains established faction operations, dependencies, and their knowledge base.
+   - HOWEVER, recent chat messages contain the freshest un-consolidated player actions (which occur between the 5-turn periodic journal updates)!
+   - CRITICAL CAUSALITY CHECK:
+     * Check what the faction is attempting and what physical assets, keys, or conditions it depends on (from the Journal).
+     * Check recent chat history: did the players destroy, steal, or foil an asset or prerequisite required for the faction's plan?
+     * ANTI-QUANTUM OGRE (STRICT RULE): If a necessary prerequisite or key was destroyed or blocked in recent chat, the faction's plan CANNOT proceed smoothly as if nothing happened! The operation stalls, delays, backfires into chaotic fallout, or the antagonists scramble in panic. You are strictly forbidden from ignoring the player's decisive disruption.
+   - INFORMATION LATENCY & BLIND SPOTS (ANTI-OMNISCIENCE):
+     * Factions and antagonists do NOT possess telepathic clairvoyance about actions the players took in private, secret, or out of their sight.
+     * Enemies act based strictly on what they BELIEVE to be true according to their information network. E.g., if a key was destroyed in secret, enemies believe the players or a thief still carry it; they continue tracking or hunting the thief, or they attempt to trigger the ritual only to suffer catastrophic confusion when the missing resonance causes a backfire.
+   - NPC DECEPTION VS WORLD RETCONNING:
+     * NPCs can lie, deflect, or omit facts due to realistic human motives (fear, guilt, shame, greed, or self-preservation).
+     * BUT physical facts and past world events are IMMUTABLE. Never retcon physical history or turn an NPC into a confessing puppet just because a player voices a speculative theory. An NPC defends their lie unless broken by undeniable physical evidence, acute pressure, or extreme emotional breakdown.
+
+4. INSTITUTIONAL SCRUTINY & SYSTEMIC REALISM:
    - When protagonists accomplish high-stakes or anomalous deeds, evaluate realistic institutional ripples: bureaucratic audits, jurisdictional jealousy from rival authorities, inquiries, or quiet surveillance to verify inconsistencies in their cover story.
 
-4. REALISTIC NPC HESITATION & PRUDENCE (NO RED CARPET):
+5. REALISTIC NPC HESITATION & PRUDENCE (NO RED CARPET):
    - NPCs do not magically surrender keys, access, dangerous items, or confidential secrets without realistic hesitation, bargaining, or prior relationship. Even on a favorable outcome, portray human texture (cautious curiosity, negotiation, demanding a fair price or a mutual favor).
 
-5. THE 5-TIER NPC/FACTION STANDING SCALE & BOUNDARY FIDELITY:
+6. THE 5-TIER NPC/FACTION STANDING SCALE & BOUNDARY FIDELITY:
    - Track NPC attitude along the 5-Tier Disposition Scale:
      * Tier 1: Open Hostility / Enemy (opposes, attacks, sabotages, reports)
      * Tier 2: Distrustful / Guarded / Suspicious (skeptical, demands permits, hand on weapon)
@@ -268,17 +282,17 @@ DIRECTORIAL RULES & PACING HIERARCHY:
    - DISPOSITION STICKINESS: Trust and institutional standing are sticky and slow to evolve. An NPC's disposition can shift at most ONE tier per major mission or crisis arc.
    - Cynical authorities, commanders, and inquisitors default to Tier 2 or 3 and advance at most to Tier 4 after a heroic rescue, NEVER to Tier 5.
 
-6. GROUNDED ALLIES WITH VULNERABILITIES & CIVIC TEXTURE:
+7. GROUNDED ALLIES WITH VULNERABILITIES & CIVIC TEXTURE:
    - Street allies and sidekicks live precarious lives with their own debts, rivals, gang territories, guard harassment, and mortal vulnerabilities. Helping the protagonists carries real-world exposure for them.
    - During downtime, weave ambient community life and minor independent dilemmas so the world feels alive.
 
-7. AFTERMATH OF NEUTRALIZED ENEMIES & PRISONERS:
+8. AFTERMATH OF NEUTRALIZED ENEMIES & PRISONERS:
    - Captured or defeated antagonists produce worldly ripples (interrogations, retaliation, leaked secrets, or bureaucratic records mentioning the protagonists).
 
-8. THE RARE "NOTHING HAPPENS":
+9. THE RARE "NOTHING HAPPENS":
    - "Nothing happens" is strictly limited to split-second tactical pauses. Stalling an entire turn with an empty, eventless room is strictly forbidden.
 
-9. OUTPUT FORMAT:
+10. OUTPUT FORMAT:
    Output 2-3 concise, telegraphic director notes (NOT storytelling prose):
    - Bullet 1: [MECHANICAL OUTCOME] Action success/failure, direct physical consequences, immediate NPC reaction, and explicit tag on how the Fate Oracle was channeled (e.g. [ORACLE APPLIED: ${fateRoll ? `${fateRoll.value}/100 (${fateRoll.tier})` : 'X/100'} -> ...]).
    - Bullet 2: [PACING & DIRECTORIAL CUE] Explicit pacing tag ([PACING: POST-QUEST BREATHER], [PACING: SOCIAL DEEPENING], [PACING: ADVANCE TIME / NEW BEAT], or [PACING: INTRODUCE NEXT HOOK]) with concrete instructions on how the Narrator should advance the scene.
@@ -347,13 +361,15 @@ NARRATIVE DIRECTIVES:
 6. INDEPENDENT NPCS & ANTI-WISH-FULFILLMENT (CRITICAL):
    - Do NOT warp NPCs into mind-readers who conveniently fulfill the player's internal thoughts, speculations, or strategic hopes unprompted. If the player speculates about recruiting, training, or influencing an NPC, that NPC does NOT magically appear at their doorstep begging for that exact arrangement.
    - Portray NPCs with realistic hesitation, their own duties, superiors, fears, pride, and schedules. Protagonists must actively work for relationships, initiate contact, and respect realistic interpersonal and social boundaries.
-7. INSTITUTIONAL SCRUTINY & FACTION REACTIVITY:
-   - When protagonists accomplish high-stakes or anomalous deeds, depict the realistic institutional reaction—not just applause and cash rewards, but bureaucratic curiosity, formal inquiries, jurisdictional jealousy from rival authorities, or quiet surveillance to verify inconsistencies in their cover story.
+7. FACTION CAUSALITY, REALISTIC SETBACKS & INFORMATION LATENCY:
+   - Antagonists and factions operate strictly within the bounds of their realistic information network. They do NOT possess omniscient awareness of what players did in private or secret; they continue acting on their existing (sometimes outdated or mistaken) beliefs.
+   - When a player action has destroyed, stolen, or foiled an antagonist's required asset or key prerequisite, depict the REALISTIC PHYSICAL CONSEQUENCES: the ritual fails, backfires with chaotic backlash, or the antagonists are thrown into confusion and panic, scrambling for an emergency alternative. NEVER depict an antagonist effortlessly proceeding with an original plan whose physical prerequisites were broken!
+   - Depict realistic institutional reactions when high-stakes deeds occur: audits, curiosity, jurisdictional friction, or quiet surveillance.
 8. GROUNDED ALLIES & CIVIC TEXTURE (NO PASSIVE INFO-DRONES):
    - Street allies, informants, fixers, and sidekicks are not frictionless, safe info-drones. They face mortal dangers, debts, rival gangs, and authority pressure. Helping the protagonists carries real-world risks and exposure for them.
    - During downtime, weave ambient community life and minor independent dilemmas (odd visitors, moral queries, civic friction, bizarre requests) so the world feels alive and populated rather than an empty waiting room for the main quest.
 9. AFTERMATH OF CAPTURED FOES & RIPPLES:
-   - Captured or neutralized antagonists do not vanish into thin air. Prison interrogations, leaked confessions, or surviving associates produce worldly ripples: retaliatory whispers, rumors among commoners, or bureaucratic records that mention the protagonists.
+   - Captured or defeated antagonists do not vanish into thin air. Prison interrogations, leaked confessions, or surviving associates produce worldly ripples: retaliatory whispers, rumors among commoners, or bureaucratic records that mention the protagonists.
 10. BALANCED PACING, DOWNTIME & SOCIAL VITALITY (ANTI-STAGNATION):
    - Safe havens (safehouses, inn rooms, private cabins, secluded workshops) are respected: pursuers search elsewhere and there are strictly NO cheap, unprovoked door-kickings or sudden combat ambushes during legitimate rest.
    - HOWEVER, DOWNTIME IS NOT AN EMPTY VOID: When characters rest, sleep, wait, or let days pass, the world does NOT freeze into static silence. Do NOT merely conclude with "time passes quietly, you wake up, what do you do?".
@@ -410,7 +426,11 @@ ${matrixSection}
 Guidelines for generating the Master Journal:
 1. "Act 1: The First Step" - Outline an atmospheric, engaging starting scenario and location. If a [CAMPAIGN STOCHASTIC MATRIX] is provided above, you MUST directly embody its 5 structural parameters (environment condition, community social climate, material resource status, contact morale, and inciting catalyst) into the opening setup! DIVERSIFY the opening: prefer human situations, cultural festivals, traveling barges, scholarly investigations, or bustling trade towns. AVOID repetitive RPG clichés such as guarded city gate lockdowns, inquisitorial permits for healing, or mysterious blights draining the earth unless explicitly demanded by the synopsis.
 2. Primary Conflict & Starting Adventure Hook - Clearly articulate the central dilemma, goal, or mystery driving the adventure, while keeping room for player-driven discovery.
-3. Factions & Competing Agendas (Multi-Polar & Nuanced) - Detail 2-3 distinct factions or key figures with conflicting, selfish, or competing interests. Avoid monolithic alignments or black-and-white absolutism; ensure each group has its own unique philosophy, methods, and internal friction.
+3. Factions & Competing Agendas (4-Point Qualitative Model) - Detail 2-3 distinct factions or key figures with conflicting, selfish, or competing interests. Avoid monolithic alignments, simplistic binaries, or mechanistic clocks. Detail each faction under '[ACTIVE FACTIONS & SCHEMES]' using the 4-point qualitative schema:
+   * Strategic Goal: Overarching long-term ambition (can shift, downgrade, or be abandoned if conditions drastically change).
+   * Active Operation & Timeline: Concrete scheme currently underway and its operational timeframe.
+   * Physical Bottlenecks & Dependencies: Crucial physical items, keys, specific contacts, conduits, or locations strictly needed for their scheme to work.
+   * Current Knowledge & Blind Spots: What they know, suspect, or falsely believe vs what they are completely blind to (accounting for realistic information latency and no telepathy), plus standing toward the protagonist ([Tier 1: Hostile] to [Tier 5: Staunch Ally]).
 4. Secrets & Hidden Threats - Detail 2-3 hidden secrets, conspiracies, or looming dangers that the player is currently unaware of.
 5. Living World & Incidental Side Hooks - Outline 1-2 minor local rumors, incidental NPC hooks, or atmospheric quirks that can emerge as optional side interactions.
 6. Tone & Atmosphere - Outline specific thematic elements and sensory guidelines to maintain in this campaign.
@@ -475,10 +495,11 @@ export const getJournalSystemPrompt = (language?: string): string => {
 
 RULES:
 1. RESOLVED & PERMANENT STATES (ANTI-AMNESIA): Explicitly maintain and update a dedicated section '[RESOLVED IRREVERSIBLE EVENTS]' recording completed plot points, deceased antagonists, destroyed locations, or permanently closed threats. Never treat past resolved events as active countdowns or ongoing threats.
-2. ACTIVE NPC AGENDAS & FACTIONS: Maintain a structured section '[ACTIVE NPC AGENDAS & FACTIONS]' detailing for key NPCs and factions:
-   - Name -> Current Goal -> Planned Next Move -> Progress Clock (0-6) -> Standing with Protagonists ([Tier 1: Hostile] to [Tier 5: Staunch Ally])
-   - Factions can evolve and overwrite their goals based on narrative developments (a faction's objective may shift midway through the story, not just accumulate).
-   - Realistic Information Propagation: In fantasy/historical settings, distant factions take days or weeks to learn of covert events without instant telepathy. In sci-fi, telemetry and networks apply realistically.
+2. ACTIVE FACTIONS & SCHEMES (4-POINT QUALITATIVE MODEL): Maintain a structured section '[ACTIVE FACTIONS & SCHEMES]' detailing key factions and antagonists. AVOID rigid mechanical countdowns, progress clocks, or video-gamey counters (e.g., do NOT use '[2/6]' or 'NOW!'). Instead, for each faction, clearly track:
+   - Strategic Goal: Overarching long-term vision. CRITICAL: Strategic goals are DYNAMIC, NOT carved in stone! If catastrophic setbacks, loss of key leaders, or severe collateral damage occur, the faction may abandon, pivot, downgrade, or alter this strategic goal rather than stubbornly forcing it forward.
+   - Active Operation & Timeline: The immediate scheme currently in motion and its realistic operational timeframe.
+   - Physical Bottlenecks & Dependencies: Crucial physical items, relics, passwords, rituals, contacts, or locations required for this operation to succeed. If the player or world events destroyed, confiscated, or neutralized a dependency in recent turns, the operation MUST stall, fail, or devolve into chaos/scramble.
+   - Current Knowledge & Blind Spots: What this faction actually knows, suspects, or falsely believes versus what they are completely ignorant of. Antagonists NEVER possess telepathic omniscience of player secrets. Account for realistic information propagation delays based on the setting. Include their current standing toward the protagonist ([Tier 1: Hostile] to [Tier 5: Staunch Ally]).
 3. PROMOTION OF SCRATCHPAD NOTES:
    - The Judge scratchpad contains temporary mechanical notes from recent turns. The vast majority of these notes expire naturally with time.
    - ONLY promote a scratchpad note to the permanent journal if it represents a genuine, permanent state change that alters a faction's agenda, introduces an enduring consequence, or transforms an NPC relationship.

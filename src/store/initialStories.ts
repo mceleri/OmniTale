@@ -538,6 +538,19 @@ Husband and wife for centuries and mortal vessels of the Collective Flame, livin
 2. Brother Julian's Errand: The young solar cleric drops by to collect ritual incense for the chapel, blushing nervously as he greets Leonor, but brings intriguing news: canal patrols recovered an odd dagger etched with shadowy runes from near the docks.
 3. The Overconfident Cutpurses: Sofi darts into the shop to warn that two young street thieves from the "Canal Wolves" are casing the apothecary, convinced a pair of young newlywed herbalists will make an easy, wealthy mark.
 
+[ACTIVE FACTIONS & SCHEMES]
+1. The Tyrant's Ashes (Willow Canal Cell)
+   - Strategic Goal: Awaken the dormant bloodline conduits beneath the city to restore their fallen matriarch. (Can pivot to silent retreat or reprisal if compromised).
+   - Active Operation & Timeline: Breach the sealed crypt beneath the canal locks during midnight high tide tonight.
+   - Physical Bottlenecks & Dependencies: The shadow-etched bone focus/dagger (lost during an earlier scuffle near the docks). Without this specific consecrated focus, forcing open the crypt's necrotic ward will trigger a violent backfire rather than unlocking it.
+   - Current Knowledge & Blind Spots: They know the dagger was dropped near the western docks. They believe an ordinary dock scavenger or canal patrol pocketed it; they have ZERO knowledge that Brother Julian brought it to the Willow Apothecary, and ZERO knowledge of Kael and Leonor's true past. [Standing: Tier 1 - Hostile, currently unaware of protagonists].
+
+2. Order of the Solar Flame (Local Canal Parish)
+   - Strategic Goal: Maintain spiritual purity, dispense charity, and root out dark superstition along the canal slums.
+   - Active Operation & Timeline: Routine parish rounds; Brother Julian is collecting blessed incense from the apothecary and showing the strange recovered dagger to knowledgeable locals for informal identification.
+   - Physical Bottlenecks & Dependencies: Chapel sanctification censers; lack of seasoned inquisitors in this humble district.
+   - Current Knowledge & Blind Spots: Julian believes the dagger is an inert or harmless pagan antique, completely unaware of its ritual resonance or the midnight timeline. He holds deep, flustered affection for Leonor and genuine respect for Kael. [Standing: Tier 4 - Favorable / Guarded Respect].
+
 [CORE DIRECTIVES FOR THE GAME MASTER]
 1. EVERYDAY VITALITY & GENUINE HIGH FANTASY:
    - Make magic feel tangible and alive: domestic cantrips, color-shifting herbal draughts, curious minor spirits, and lively banter between apothecaries and students.
