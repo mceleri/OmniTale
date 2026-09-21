@@ -67,6 +67,8 @@ export interface StorySlice {
   sendMessage: (content: string) => Promise<void>;
   editLastPlayerMessage: (newContent: string) => Promise<void>;
   deleteLastMessage: () => void;
+  deleteMessage: (messageId: string) => void;
+  regenerateLastResponse: () => Promise<void>;
   updateCharacterSheet: (text: string) => void;
   updateMasterJournal: (text: string) => void;
   updateMasterFeedback: (text: string) => void;
@@ -292,7 +294,9 @@ export const createStorySlice: StateCreator<
     if (!activeStory) return;
 
     const isStart = activeStory.messages.length === 0;
-    if (!content.trim() && !isStart) return;
+    const lastMsg = activeStory.messages[activeStory.messages.length - 1];
+    const isPendingPlayerAction = Boolean(lastMsg && lastMsg.role === 'player');
+    if (!content.trim() && !isStart && !isPendingPlayerAction) return;
 
     let updatedMessages = activeStory.messages;
 
@@ -342,6 +346,15 @@ export const createStorySlice: StateCreator<
 
     messages[lastPlayerIdx].content = newContent;
     messages[lastPlayerIdx].tokens = estimateTokens(newContent);
+
+    // Identify any messages after lastPlayerIdx that are being discarded
+    const discardedMessages = messages.slice(lastPlayerIdx + 1);
+    const discardedNotes = new Set(discardedMessages.map((m: Message) => m.judgeNote).filter(Boolean));
+    const currentScratchpad = activeStory.dynamicState.judgeScratchpad || [];
+    const updatedScratchpad = discardedNotes.size > 0
+      ? currentScratchpad.filter((note: string) => !discardedNotes.has(note))
+      : currentScratchpad;
+
     const updatedMessages = messages.slice(0, lastPlayerIdx + 1);
 
     set((s: StoryState) => {
@@ -350,6 +363,10 @@ export const createStorySlice: StateCreator<
           return {
             ...story,
             messages: updatedMessages,
+            dynamicState: {
+              ...story.dynamicState,
+              judgeScratchpad: updatedScratchpad,
+            },
             updatedAt: Date.now(),
           };
         }
@@ -364,14 +381,27 @@ export const createStorySlice: StateCreator<
   },
 
   deleteLastMessage: () => set((state: StoryState) => {
-    if (!state.activeStoryId) return {};
+    if (!state.activeStoryId || state.isGeneratingStory) return {};
 
     const updatedStories = state.stories.map((story: Story) => {
       if (story.id === state.activeStoryId) {
         if (story.messages.length === 0) return story;
+        const lastMsg = story.messages[story.messages.length - 1];
+        const updatedMessages = story.messages.slice(0, -1);
+
+        // Prune the judgeNote of the removed message if it exists
+        let updatedScratchpad = story.dynamicState.judgeScratchpad || [];
+        if (lastMsg.judgeNote) {
+          updatedScratchpad = updatedScratchpad.filter((note: string) => note !== lastMsg.judgeNote);
+        }
+
         return {
           ...story,
-          messages: story.messages.slice(0, -1),
+          messages: updatedMessages,
+          dynamicState: {
+            ...story.dynamicState,
+            judgeScratchpad: updatedScratchpad,
+          },
           updatedAt: Date.now(),
         };
       }
@@ -382,6 +412,82 @@ export const createStorySlice: StateCreator<
       stories: updatedStories,
     };
   }),
+
+  deleteMessage: (messageId: string) => set((state: StoryState) => {
+    if (!state.activeStoryId || state.isGeneratingStory) return {};
+
+    const updatedStories = state.stories.map((story: Story) => {
+      if (story.id === state.activeStoryId) {
+        const targetMsg = story.messages.find((m: Message) => m.id === messageId);
+        if (!targetMsg) return story;
+
+        const updatedMessages = story.messages.filter((m: Message) => m.id !== messageId);
+
+        // Prune the judgeNote of the deleted message if it exists
+        let updatedScratchpad = story.dynamicState.judgeScratchpad || [];
+        if (targetMsg.judgeNote) {
+          updatedScratchpad = updatedScratchpad.filter((note: string) => note !== targetMsg.judgeNote);
+        }
+
+        return {
+          ...story,
+          messages: updatedMessages,
+          dynamicState: {
+            ...story.dynamicState,
+            judgeScratchpad: updatedScratchpad,
+          },
+          updatedAt: Date.now(),
+        };
+      }
+      return story;
+    });
+
+    return {
+      stories: updatedStories,
+    };
+  }),
+
+  regenerateLastResponse: async () => {
+    const state = get() as StoryState;
+    if (state.isGeneratingStory) {
+      console.warn("regenerateLastResponse ignored: generation already in progress.");
+      return;
+    }
+
+    const activeStory = state.stories.find((s: Story) => s.id === state.activeStoryId);
+    if (!activeStory || activeStory.messages.length === 0) return;
+
+    const lastMsg = activeStory.messages[activeStory.messages.length - 1];
+    let messagesForGen = activeStory.messages;
+
+    if (lastMsg.role !== 'player') {
+      const prunedMessages = activeStory.messages.slice(0, -1);
+      let updatedScratchpad = activeStory.dynamicState.judgeScratchpad || [];
+      if (lastMsg.judgeNote) {
+        updatedScratchpad = updatedScratchpad.filter((note: string) => note !== lastMsg.judgeNote);
+      }
+      set((s: StoryState) => {
+        const updatedStories = s.stories.map((story: Story) => {
+          if (story.id === s.activeStoryId) {
+            return {
+              ...story,
+              messages: prunedMessages,
+              dynamicState: {
+                ...story.dynamicState,
+                judgeScratchpad: updatedScratchpad,
+              },
+              updatedAt: Date.now(),
+            };
+          }
+          return story;
+        });
+        return { stories: updatedStories };
+      });
+      messagesForGen = prunedMessages;
+    }
+
+    await generateMasterResponse(set, get, messagesForGen);
+  },
 
   updateCharacterSheet: (text: string) => set((state: StoryState) => {
     if (!state.activeStoryId) return {};

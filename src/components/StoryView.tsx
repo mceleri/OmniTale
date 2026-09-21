@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
 import { Message } from '../types/story';
 import { parseMarkdownToBlocks } from '../utils/markdownParser';
-import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit, ArrowDown } from 'lucide-react';
+import { ArrowLeft, Send, User, BookOpen, Eye, X, Trash2, Check, HelpCircle, MessageSquare, Loader, Edit, ArrowDown, RotateCcw } from 'lucide-react';
 import { MarkdownText } from './MarkdownText';
 
 export const StoryView: React.FC = () => {
@@ -21,7 +21,8 @@ export const StoryView: React.FC = () => {
     addLoreItem,
     deleteLoreItem,
     editLastPlayerMessage,
-    deleteLastMessage,
+    deleteMessage,
+    regenerateLastResponse,
     setNarrativePropensity,
   } = useStoryStore();
 
@@ -257,12 +258,13 @@ export const StoryView: React.FC = () => {
                     </button>
                     <button
                       type="button"
+                      disabled={isAnyLoading}
                       onClick={async () => {
-                        if (!editingText.trim()) return;
+                        if (!editingText.trim() || isAnyLoading) return;
                         setEditingMessageId(null);
                         await editLastPlayerMessage(editingText.trim());
                       }}
-                      className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+                      className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed text-zinc-950 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
                     >
                       <Check className="w-3.5 h-3.5" /> Save & Regenerate
                     </button>
@@ -275,7 +277,7 @@ export const StoryView: React.FC = () => {
           return (
             <div
               key={msg.id}
-              className={`flex flex-col max-w-[90%] lg:max-w-[75%] transition-all animate-fade-in ${
+              className={`group flex flex-col max-w-[90%] lg:max-w-[75%] transition-all animate-fade-in ${
                 isMaster ? 'mr-auto items-start' : 'ml-auto items-end text-right'
               }`}
             >
@@ -318,37 +320,54 @@ export const StoryView: React.FC = () => {
               </div>
 
               {/* Message Actions */}
-              {(isLastPlayerMessage || isLastMessage) && (
-                <div className="flex items-center gap-2 mt-1.5 px-1">
-                  {isLastPlayerMessage && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingMessageId(msg.id);
-                        setEditingText(msg.content);
-                      }}
-                      className="text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
-                      title="Edit last action and regenerate response"
-                    >
-                      <Edit className="w-3 h-3" /> Edit
-                    </button>
-                  )}
-                  {isLastMessage && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (confirm('Delete this message?')) {
-                          deleteLastMessage();
-                        }
-                      }}
-                      className="text-[11px] text-zinc-400 hover:text-red-400 flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
-                      title="Delete last message"
-                    >
-                      <Trash2 className="w-3 h-3" /> Delete
-                    </button>
-                  )}
-                </div>
-              )}
+              <div
+                className={`flex items-center gap-2 mt-1.5 px-1 transition-opacity ${
+                  isLastMessage || isLastPlayerMessage
+                    ? 'opacity-100'
+                    : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100'
+                }`}
+              >
+                {isLastPlayerMessage && (
+                  <button
+                    type="button"
+                    disabled={isAnyLoading}
+                    onClick={() => {
+                      setEditingMessageId(msg.id);
+                      setEditingText(msg.content);
+                    }}
+                    className="text-[11px] text-zinc-400 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                    title="Edit last action and regenerate response"
+                  >
+                    <Edit className="w-3 h-3" /> Edit
+                  </button>
+                )}
+                {isLastMessage && (
+                  <button
+                    type="button"
+                    disabled={isAnyLoading}
+                    onClick={async () => {
+                      await regenerateLastResponse();
+                    }}
+                    className="text-[11px] text-zinc-400 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                    title={isMaster ? "Re-roll this response" : "Generate response for this action"}
+                  >
+                    <RotateCcw className="w-3 h-3" /> Regenerate
+                  </button>
+                )}
+                <button
+                  type="button"
+                  disabled={isAnyLoading}
+                  onClick={() => {
+                    if (confirm('Delete this message?')) {
+                      deleteMessage(msg.id);
+                    }
+                  }}
+                  className="text-[11px] text-zinc-400 hover:text-red-400 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                  title="Delete this message"
+                >
+                  <Trash2 className="w-3 h-3" /> Delete
+                </button>
+              </div>
             </div>
           );
         })}

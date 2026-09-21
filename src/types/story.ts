@@ -139,6 +139,8 @@ export interface StoryState {
   sendMessage: (content: string) => Promise<void>;
   editLastPlayerMessage: (newContent: string) => Promise<void>;
   deleteLastMessage: () => void;
+  deleteMessage: (messageId: string) => void;
+  regenerateLastResponse: () => Promise<void>;
   updateCharacterSheet: (text: string) => void;
   updateMasterJournal: (text: string) => void;
   updateMasterFeedback: (text: string) => void;
