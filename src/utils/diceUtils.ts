@@ -23,35 +23,35 @@ export const classifyFateTier = (roll: number): {
   if (roll <= 10) {
     return {
       tier: 'very_unfavorable',
-      label: 'Very Unfavorable / Disaster',
-      narrativeDirective: '"No, and furthermore..." (Critical complication, failure, or major unforeseen hindrance)',
+      label: 'Very Unfavorable / Severe Complication',
+      narrativeDirective: '"No, and furthermore..." (Acute complication or failure strictly proportional to the action stakes. NEVER invent explosive retcons, instant death traps, or retroactive curses on mundane/safe actions).',
     };
   }
   if (roll <= 40) {
     return {
       tier: 'unfavorable',
       label: 'Unfavorable / Obstacle',
-      narrativeDirective: '"No, but..." or "Yes, but at a steep cost" (Friction, partial failure, or costly progress)',
+      narrativeDirective: '"No, but..." or "Yes, but with grounded friction" (Partial progress or modest obstacle. In safe, routine, or conversational scenes, translates to minor delays, fatigue, or awkwardness, NOT lethal ambushes or sudden emergencies).',
     };
   }
   if (roll <= 59) {
     return {
       tier: 'neutral',
       label: 'Neutral / Balanced',
-      narrativeDirective: '"Yes, but..." (Status quo holds; balanced effort, standard resistance, or fair outcome)',
+      narrativeDirective: '"Yes, but..." (Status quo holds; balanced effort, standard resistance, or fair outcome without manufactured drama).',
     };
   }
   if (roll <= 89) {
     return {
       tier: 'favorable',
       label: 'Favorable / Opportunity',
-      narrativeDirective: '"Yes" (Clean success, positive circumstance, or helpful opening)',
+      narrativeDirective: '"Yes" (Clean success, positive circumstance, or helpful opening).',
     };
   }
   return {
     tier: 'very_favorable',
     label: 'Very Favorable / Triumph',
-    narrativeDirective: '"Yes, and furthermore..." (Critical triumph, serendipitous advantage, or unexpected windfall)',
+    narrativeDirective: '"Yes, and furthermore..." (Critical triumph, serendipitous advantage, or unexpected windfall).',
   };
 };
 
