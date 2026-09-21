@@ -172,7 +172,7 @@ export const StoryView: React.FC = () => {
                   type="button"
                   onClick={() => setIsPropensityMenuOpen(!isPropensityMenuOpen)}
                   className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900/80 hover:bg-zinc-850 border border-zinc-800 rounded-lg text-zinc-300 hover:text-zinc-100 text-[11px] font-sans font-medium transition"
-                  title="Stile Narratore e Verbosità (Modificabile durante la partita)"
+                  title="Narrator Style & Verbosity (Change live during adventure)"
                 >
                   <span className="text-xs">{styleIcon}</span>
                   <span className="hidden sm:inline text-[11px]">{styleLabel}</span>
@@ -181,24 +181,24 @@ export const StoryView: React.FC = () => {
                 {isPropensityMenuOpen && (
                   <div className="absolute right-0 top-10 w-64 bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-2xl z-50 animate-scale-up text-left">
                     <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider px-2 py-1 block">
-                      Stile Narratore & Verbosità
+                      Narrator Style & Verbosity
                     </span>
                     <div className="space-y-1 mt-1">
                       {[
                         {
                           id: 'cinematic' as const,
-                          label: '⚡ Cinematic (2-3 §)',
-                          desc: 'Azione serrata, dialoghi diretti, ritmo televisivo e conciso.',
+                          label: '⚡ Cinematic (2-3 blocks)',
+                          desc: 'Fast-paced action, sharp dialogue, rapid mobile pacing.',
                         },
                         {
                           id: 'balanced' as const,
-                          label: '⚖️ Balanced (2-4 §)',
-                          desc: 'Equilibrio naturale tra azione, introspezione ed esplorazione.',
+                          label: '⚖️ Balanced (2-4 blocks)',
+                          desc: 'Natural rhythm between narrative, action, and dialogue.',
                         },
                         {
                           id: 'literary' as const,
-                          label: '📖 Literary (3-5 §)',
-                          desc: 'Prosa descrittiva, ricchezza sensoriale e dettagli psicologici.',
+                          label: '📖 Literary (3-5 blocks)',
+                          desc: 'Rich descriptions, sensory atmosphere, and psychological depth.',
                         },
                       ].map((item) => {
                         const isSelected = currentStyle === item.id;

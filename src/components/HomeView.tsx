@@ -90,7 +90,7 @@ export const HomeView: React.FC = () => {
       : undefined;
     const sourceTemplateJournal = sourceTemplate?.dynamicState.masterJournal;
     const defaultIntent = sourceTemplate?.dynamicState.defaultStartingIntent ||
-      `È una tranquilla giornata mentre ${characterName} si prepara per quello che sta per accadere.`;
+      `It is a quiet day as ${characterName} prepares for what lies ahead.`;
 
     setPendingJourneyData({
       title: title.trim(),
@@ -122,7 +122,7 @@ export const HomeView: React.FC = () => {
     ].filter(Boolean).join('\n\n') || story.dynamicState.lorebook || '';
 
     const defaultIntent = story.dynamicState.defaultStartingIntent ||
-      `È una tranquilla giornata mentre ${characterName} si prepara per quello che sta per accadere.`;
+      `It is a quiet day as ${characterName} prepares for what lies ahead.`;
 
     setPendingJourneyData({
       title: story.title,
@@ -549,7 +549,7 @@ export const HomeView: React.FC = () => {
                             title="Start Journey Directly"
                           >
                             <Play className="w-3 h-3 fill-current" />
-                            <span>Gioca</span>
+                            <span>Play</span>
                           </button>
                           <span className="text-zinc-800 select-none">|</span>
                         </>
@@ -678,21 +678,24 @@ export const HomeView: React.FC = () => {
                       {[
                         {
                           id: 'cinematic',
-                          label: 'Cinematic (2-3 §)',
+                          label: 'Cinematic',
+                          badge: '2-3 blocks',
                           icon: '⚡',
-                          desc: 'Azione serrata, dialoghi diretti, ritmo televisivo e smartphone-friendly.',
+                          desc: 'Fast-paced action, sharp dialogue, rapid mobile pacing.',
                         },
                         {
                           id: 'balanced',
-                          label: 'Balanced (2-4 §)',
+                          label: 'Balanced',
+                          badge: '2-4 blocks',
                           icon: '⚖️',
-                          desc: 'Equilibrio naturale tra azione, dialoghi, atmosfera ed esplorazione.',
+                          desc: 'Natural rhythm between narrative, action, and dialogue.',
                         },
                         {
                           id: 'literary',
-                          label: 'Literary (3-5 §)',
+                          label: 'Literary',
+                          badge: '3-5 blocks',
                           icon: '📖',
-                          desc: 'Prosa ricca, descrizioni sensoriali e profondità introspettiva.',
+                          desc: 'Rich descriptions, sensory atmosphere, and psychological depth.',
                         },
                       ].map((option) => {
                         const isSelected = canvasPropensity === option.id;
@@ -710,13 +713,20 @@ export const HomeView: React.FC = () => {
                                 : 'bg-zinc-950/40 border-zinc-850 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                             }`}
                           >
-                            <div className="flex items-center gap-1.5 text-xs font-semibold">
-                              <span>{option.icon}</span>
-                              <span>{option.label}</span>
+                            <div>
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="flex items-center gap-1.5 text-xs font-semibold">
+                                  <span>{option.icon}</span>
+                                  <span>{option.label}</span>
+                                </span>
+                                <span className="text-[9px] px-1.5 py-0.5 rounded font-mono bg-zinc-900 text-zinc-400">
+                                  {option.badge}
+                                </span>
+                              </div>
+                              <p className="text-[10px] text-zinc-400 mt-1.5 leading-snug">
+                                {option.desc}
+                              </p>
                             </div>
-                            <p className="text-[10px] text-zinc-400 mt-1.5 leading-snug">
-                              {option.desc}
-                            </p>
                           </button>
                         );
                       })}
@@ -825,22 +835,24 @@ export const HomeView: React.FC = () => {
                 Configure Your Journey
               </h3>
               <p className="text-xs text-zinc-400">
-                Personalizza l'avvio della tua avventura, l'intento iniziale e lo stile narrativo.
+                Customize your opening scene, character intent, and narrator pacing.
               </p>
             </div>
 
-            {/* Starting Intent (Turno 0) */}
+            {/* Starting Intent (Turn 0) */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-zinc-200 block">
-                  Cosa sta facendo il tuo personaggio in questo momento?
+              <div className="flex items-center justify-between gap-2">
+                <label className="text-xs font-semibold text-zinc-200 block truncate">
+                  What is your character doing right now?
                 </label>
-                <span className="text-[10px] text-zinc-500 font-sans">Turno 0</span>
+                <span className="text-[10px] text-zinc-400 font-sans shrink-0 px-2 py-0.5 bg-zinc-950/80 border border-zinc-800 rounded-full">
+                  Turn 0
+                </span>
               </div>
               <textarea
                 value={startingIntent}
                 onChange={(e) => setStartingIntent(e.target.value)}
-                placeholder="Es: Sto sorseggiando un infuso amaro in una locanda affollata cercando di evitare sguardi..."
+                placeholder="e.g., I'm sipping bitter tea in a crowded tavern, trying to avoid eye contact while waiting for my contact..."
                 rows={3}
                 disabled={isTranslating}
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
@@ -849,34 +861,34 @@ export const HomeView: React.FC = () => {
 
             {/* Narrator Style Selector */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
-                  <span>Stile Narratore</span>
+                  <span>Narrator Style</span>
                 </label>
-                <span className="text-[10px] text-zinc-500 font-sans">Modificabile in partita</span>
+                <span className="text-[10px] text-zinc-500 font-sans shrink-0">Adjustable mid-game</span>
               </div>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="space-y-2">
                 {[
                   {
-                    id: 'cinematic',
+                    id: 'cinematic' as const,
                     label: 'Cinematic',
-                    badge: '2-3 §',
+                    badge: '2-3 blocks',
                     icon: '⚡',
-                    desc: 'Azione serrata, dialoghi diretti, ritmo televisivo',
+                    desc: 'Fast-paced action, sharp dialogue, rapid mobile pacing.',
                   },
                   {
-                    id: 'balanced',
-                    label: 'Equilibrato',
-                    badge: '2-4 §',
+                    id: 'balanced' as const,
+                    label: 'Balanced',
+                    badge: '2-4 blocks',
                     icon: '⚖️',
-                    desc: 'Alternanza fluida tra narrazione, azione e atmosfera',
+                    desc: 'Natural rhythm between narrative, action, and dialogue.',
                   },
                   {
-                    id: 'literary',
-                    label: 'Letterario',
-                    badge: '3-5 §',
+                    id: 'literary' as const,
+                    label: 'Literary',
+                    badge: '3-5 blocks',
                     icon: '📖',
-                    desc: 'Prosa descrittiva, ricchezza sensoriale e dettagli',
+                    desc: 'Rich descriptions, sensory atmosphere, and psychological depth.',
                   },
                 ].map((p) => {
                   const isSelected = selectedPropensity === p.id;
@@ -886,25 +898,32 @@ export const HomeView: React.FC = () => {
                       type="button"
                       disabled={isTranslating}
                       onClick={() => setSelectedPropensity(p.id as any)}
-                      className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition ${
+                      className={`w-full p-3 rounded-xl border text-left flex items-center justify-between gap-3 transition ${
                         isSelected
-                          ? 'bg-zinc-100 border-zinc-100 text-zinc-950 font-semibold shadow-md'
+                          ? 'bg-zinc-100 border-zinc-100 text-zinc-950 shadow-sm'
                           : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:border-zinc-700'
                       } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      <div>
-                        <div className="flex items-center justify-between gap-1 text-xs">
-                          <span className="flex items-center gap-1">
-                            <span>{p.icon}</span>
-                            <span className="truncate">{p.label}</span>
-                          </span>
-                          <span className={`text-[9px] px-1 py-0.5 rounded font-mono ${isSelected ? 'bg-zinc-200 text-zinc-900 font-bold' : 'bg-zinc-850 text-zinc-400'}`}>
-                            {p.badge}
-                          </span>
+                      <div className="flex items-start gap-3 min-w-0">
+                        <span className="text-xl shrink-0 mt-0.5">{p.icon}</span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-semibold">{p.label}</span>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
+                              isSelected ? 'bg-zinc-200 text-zinc-900 font-semibold' : 'bg-zinc-800 text-zinc-400'
+                            }`}>
+                              {p.badge}
+                            </span>
+                          </div>
+                          <p className={`text-[11px] mt-1 leading-snug ${isSelected ? 'text-zinc-700' : 'text-zinc-400'}`}>
+                            {p.desc}
+                          </p>
                         </div>
-                        <p className={`text-[9px] mt-1.5 leading-snug ${isSelected ? 'text-zinc-700' : 'text-zinc-500'}`}>
-                          {p.desc}
-                        </p>
+                      </div>
+                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
+                        isSelected ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-700'
+                      }`}>
+                        {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                       </div>
                     </button>
                   );
@@ -923,10 +942,10 @@ export const HomeView: React.FC = () => {
                   <span className="text-sm">🎲</span>
                   <div>
                     <div className="text-xs font-semibold text-zinc-200">
-                      Matrice Stocastica (Varianti Iniziali)
+                      Stochastic Matrix (Opening Variables)
                     </div>
                     <div className="text-[10px] text-zinc-500 font-sans">
-                      Personalizza i fattori iniziali o lascia su 'Casuale' per un tiro d100
+                      Customize opening conditions or leave as 'Random' for d100 rolls
                     </div>
                   </div>
                 </div>
@@ -940,11 +959,11 @@ export const HomeView: React.FC = () => {
               {isStochasticAccordionOpen && (
                 <div className="p-3.5 pt-1 space-y-2.5 border-t border-zinc-800/60 bg-zinc-950/60">
                   {[
-                    { key: 'environment' as const, label: 'Ambiente & Meteo', icon: '🌦️' },
-                    { key: 'socialClimate' as const, label: 'Clima Sociale & Tensione', icon: '👥' },
-                    { key: 'resources' as const, label: 'Risorse Iniziali', icon: '🎒' },
-                    { key: 'entourage' as const, label: 'Compagni & Contatti', icon: '🤝' },
-                    { key: 'catalyst' as const, label: 'Catalizzatore Imprevisto', icon: '⚡' },
+                    { key: 'environment' as const, label: 'Environment & Weather', icon: '🌦️' },
+                    { key: 'socialClimate' as const, label: 'Social Climate & Tension', icon: '👥' },
+                    { key: 'resources' as const, label: 'Starting Resources', icon: '🎒' },
+                    { key: 'entourage' as const, label: 'Allies & Contacts', icon: '🤝' },
+                    { key: 'catalyst' as const, label: 'Unexpected Catalyst', icon: '⚡' },
                   ].map((dim) => (
                     <div key={dim.key} className="flex items-center justify-between gap-3">
                       <label className="text-[11px] text-zinc-300 flex items-center gap-1.5 truncate">
@@ -962,12 +981,12 @@ export const HomeView: React.FC = () => {
                         disabled={isTranslating}
                         className="bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-zinc-700 font-sans"
                       >
-                        <option value="random">🎲 Casuale (d100)</option>
-                        <option value="critical_low">💀 Critico Basso (1-10)</option>
-                        <option value="low">🔻 Sfavorevole (11-35)</option>
-                        <option value="neutral">⚖️ Neutro (36-65)</option>
-                        <option value="high">🔺 Favorevole (66-90)</option>
-                        <option value="critical_high">⭐ Critico Alto (91-100)</option>
+                        <option value="random">🎲 Random (d100)</option>
+                        <option value="critical_low">💀 Critical Low (1-10)</option>
+                        <option value="low">🔻 Unfavorable (11-35)</option>
+                        <option value="neutral">⚖️ Neutral (36-65)</option>
+                        <option value="high">🔺 Favorable (66-90)</option>
+                        <option value="critical_high">⭐ Critical High (91-100)</option>
                       </select>
                     </div>
                   ))}
@@ -1012,7 +1031,7 @@ export const HomeView: React.FC = () => {
 
             {/* Hint Box */}
             <div className="bg-zinc-950/40 border border-zinc-850/60 rounded-xl p-3 text-[10px] text-zinc-400 leading-relaxed font-sans">
-              💡 <strong>AI Master Note:</strong> Il Game Master narrerà in <strong>{selectedLanguage}</strong> con stile <strong>{selectedPropensity}</strong> partendo dall'intento del tuo personaggio. La plausibilità della scena ha sempre la priorità.
+              💡 <strong>AI Master Note:</strong> The Game Master will speak in <strong>{selectedLanguage}</strong> using <strong>{selectedPropensity}</strong> style, anchored in your character's current intent. Scene plausibility always takes precedence.
             </div>
 
             {/* Actions */}
