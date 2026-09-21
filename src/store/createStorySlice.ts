@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { Story, StoryState, Role, Message, NarrativePropensity, StorySections, FateOracleRoll } from '../types/story';
+import { Story, StoryState, Role, Message, NarrativePropensity, StorySections, FateOracleRoll, CampaignStochasticMatrix } from '../types/story';
 import { initialStories } from './initialStories';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
 import { fetchNarrative } from '../services/llmService';
@@ -12,7 +12,7 @@ import {
   PromptSections,
 } from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
-import { rollFateOracle, rollCampaignStochasticMatrix } from '../utils/diceUtils';
+import { rollFateOracle, rollCampaignStochasticMatrix, formatStochasticMatrixPrompt } from '../utils/diceUtils';
 
 export interface StorySlice {
   currentView: 'home' | 'story' | 'settings' | 'analytics';
@@ -684,6 +684,7 @@ const generateMasterResponse = async (
 
   const isStart = updatedMessages.length === 0;
   let journal = activeStory.dynamicState.masterJournal;
+  let stochasticMatrix: CampaignStochasticMatrix | undefined = undefined;
 
   // Only generate a new initial journal if the story does NOT already have an authored master journal
   const isJournalPreAuthored = journal && (
@@ -693,55 +694,83 @@ const generateMasterResponse = async (
     journal.length > 250
   );
 
-  if (isStart && !isJournalPreAuthored) {
-    set({ isUpdatingJournal: true });
-    try {
-      const stochasticMatrix = rollCampaignStochasticMatrix();
-      console.log("[generateMasterResponse] Generated initial Campaign Stochastic Matrix:", stochasticMatrix);
-      const journalPrompt = getInitialJournalGenerationPrompt(
-        activeStory.title,
-        activeStory.synopsis,
-        activeStory.genre,
-        charSheet,
-        activeStory.language,
-        stochasticMatrix
-      );
-      
-      console.log("[generateMasterResponse] Generating initial secret Master Journal for custom story...");
-      const generatedJournal = await fetchNarrative(
-        provider,
-        url,
-        key,
-        model,
-        journalPrompt,
-        []
-      );
+  if (isStart) {
+    // ALWAYS roll the 5-Axis Campaign Stochastic Matrix for a new campaign/story start!
+    stochasticMatrix = rollCampaignStochasticMatrix();
+    console.log("[generateMasterResponse] Rolled Campaign Stochastic Matrix for story start:", stochasticMatrix);
 
-      if (generatedJournal && generatedJournal.trim()) {
-        journal = generatedJournal.trim();
+    if (!isJournalPreAuthored) {
+      set({ isUpdatingJournal: true });
+      try {
+        const journalPrompt = getInitialJournalGenerationPrompt(
+          activeStory.title,
+          activeStory.synopsis,
+          activeStory.genre,
+          charSheet,
+          activeStory.language,
+          stochasticMatrix
+        );
         
-        // Update the master journal in store state
-        set((s: StoryState) => {
-          const updatedStories = s.stories.map((story: Story) => {
-            if (story.id === s.activeStoryId) {
-              return {
-                ...story,
-                dynamicState: {
-                  ...story.dynamicState,
-                  masterJournal: journal,
-                },
-                updatedAt: Date.now(),
-              };
-            }
-            return story;
+        console.log("[generateMasterResponse] Generating initial secret Master Journal for custom story...");
+        const generatedJournal = await fetchNarrative(
+          provider,
+          url,
+          key,
+          model,
+          journalPrompt,
+          []
+        );
+
+        if (generatedJournal && generatedJournal.trim()) {
+          journal = generatedJournal.trim();
+          
+          // Update the master journal and stochastic matrix in store state
+          set((s: StoryState) => {
+            const updatedStories = s.stories.map((story: Story) => {
+              if (story.id === s.activeStoryId) {
+                return {
+                  ...story,
+                  dynamicState: {
+                    ...story.dynamicState,
+                    masterJournal: journal,
+                    stochasticMatrix,
+                  },
+                  updatedAt: Date.now(),
+                };
+              }
+              return story;
+            });
+            return { stories: updatedStories };
           });
-          return { stories: updatedStories };
-        });
+        }
+      } catch (journalError) {
+        console.error("Error generating initial master journal, proceeding with default:", journalError);
+      } finally {
+        set({ isUpdatingJournal: false });
       }
-    } catch (journalError) {
-      console.error("Error generating initial master journal, proceeding with default:", journalError);
-    } finally {
-      set({ isUpdatingJournal: false });
+    } else {
+      // For pre-authored template stories, integrate the stochastic matrix into the master journal
+      const matrixPrompt = formatStochasticMatrixPrompt(stochasticMatrix);
+      if (!journal.includes('[CAMPAIGN STOCHASTIC MATRIX')) {
+        journal = `${matrixPrompt}\n\n${journal}`;
+      }
+      set((s: StoryState) => {
+        const updatedStories = s.stories.map((story: Story) => {
+          if (story.id === s.activeStoryId) {
+            return {
+              ...story,
+              dynamicState: {
+                ...story.dynamicState,
+                masterJournal: journal,
+                stochasticMatrix,
+              },
+              updatedAt: Date.now(),
+            };
+          }
+          return story;
+        });
+        return { stories: updatedStories };
+      });
     }
   }
 
@@ -836,7 +865,7 @@ const generateMasterResponse = async (
         apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
       } catch (pipelineErr) {
         console.error("[generateMasterResponse] Error in agentic pipeline, falling back to unified prompt:", pipelineErr);
-        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll);
+        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll, stochasticMatrix);
         masterResponseText = await fetchNarrative(
           provider,
           url,
@@ -852,7 +881,7 @@ const generateMasterResponse = async (
       }
     } else {
       // Classic single-call mode (or isStart)
-      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll);
+      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll, stochasticMatrix);
       masterResponseText = await fetchNarrative(
         provider,
         url,
@@ -875,6 +904,7 @@ const generateMasterResponse = async (
       promptTokens: apiPromptTokens || undefined,
       judgeNote,
       fateRoll,
+      stochasticMatrix,
     };
 
     const finalMessages = [...updatedMessages, masterMessage];
@@ -888,6 +918,8 @@ const generateMasterResponse = async (
             messages: finalMessages,
             dynamicState: {
               ...story.dynamicState,
+              ...(stochasticMatrix ? { stochasticMatrix } : {}),
+              masterJournal: journal,
               judgeScratchpad: evictedScratchpad,
             },
             updatedAt: Date.now(),

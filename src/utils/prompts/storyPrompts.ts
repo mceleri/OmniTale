@@ -94,7 +94,8 @@ export const formatUnifiedPrompt = (
   language?: string,
   propensity?: NarrativePropensity,
   sections?: PromptSections,
-  fateRoll?: FateOracleRoll
+  fateRoll?: FateOracleRoll,
+  stochasticMatrix?: CampaignStochasticMatrix
 ): string => {
   const languageInstruction = language
     ? `CRITICAL LANGUAGE RULE: Generate the entire narrative, descriptions, and dialogues strictly in this language: ${language}. Adapt dynamically to the language used by the player in their messages, but keep the core game language strictly set to ${language}.`
@@ -114,6 +115,28 @@ export const formatUnifiedPrompt = (
     ? `\n\n[FATE ORACLE ROLL FOR THIS TURN: ${fateRoll.value}/100 — ${fateRoll.label.toUpperCase()}]\nDirective: "${fateRoll.narrativeDirective}"\n(CRITICAL NOTE: Channel this roll contextually: risky actions succeed/fail based on this roll; routine or expert actions redirect unfavorable rolls to environmental friction, bad timing, or NPC complications rather than character incompetence).`
     : '';
 
+  const stochasticSection = stochasticMatrix
+    ? `\n\n[CAMPAIGN STOCHASTIC MATRIX — INITIAL STARTING PARAMETERS FOR THIS RUN]
+The opening scenario and atmospheric setup for THIS SPECIFIC RUN are dynamically shaped by these 5 randomized structural parameters:
+1. LOCAL ENVIRONMENT & SHELTER: [Roll: ${stochasticMatrix.environment.value}/100 — ${stochasticMatrix.environment.label.toUpperCase()}]
+   * Condition: ${stochasticMatrix.environment.guidance}
+2. SOCIAL CLIMATE & COMMUNITY STANDING: [Roll: ${stochasticMatrix.socialClimate.value}/100 — ${stochasticMatrix.socialClimate.label.toUpperCase()}]
+   * Condition: ${stochasticMatrix.socialClimate.guidance}
+3. MATERIAL RESOURCES & GEAR: [Roll: ${stochasticMatrix.resources.value}/100 — ${stochasticMatrix.resources.label.toUpperCase()}]
+   * Condition: ${stochasticMatrix.resources.guidance}
+4. ENTOURAGE & IMMEDIATE CONTACTS: [Roll: ${stochasticMatrix.entourage.value}/100 — ${stochasticMatrix.entourage.label.toUpperCase()}]
+   * Condition: ${stochasticMatrix.entourage.guidance}
+5. INCITING CATALYST / OPENING INCIDENT: [Roll: ${stochasticMatrix.catalyst.value}/100 — ${stochasticMatrix.catalyst.label.toUpperCase()}]
+   * Condition: ${stochasticMatrix.catalyst.guidance}
+
+CRITICAL STARTING SCENARIO DIRECTIVE (MANDATORY VARIATION):
+You are generating the very first scene for this playthrough. You MUST directly reflect and embody these 5 randomized rolls in your opening narration!
+Even if the Master Journal contains a pre-authored default starting scene, DO NOT copy it verbatim:
+- Treat the pre-authored scenario as a flexible foundation and DIVERSIFY it according to these 5 rolls.
+- Adapt the protagonist's starting gear/supplies to the Material Resources roll; adapt the demeanor of nearby NPCs to the Social Climate and Entourage rolls; adapt the immediate crisis or opportunity to the Inciting Catalyst roll.
+- Every playthrough must feel uniquely distinct right from the opening sentence!`
+    : '';
+
   return `You are the Dungeon Master (DM) of an immersive, narrative-driven tabletop RPG. Your writing style is literary, highly descriptive, and atmospheric. Show, don't tell.
 
 ${worldContent}
@@ -125,6 +148,7 @@ ${feedbackSection}
 [NARRATIVE PROPENSITY]
 ${propensityGuideline}
 ${fateOracleSection}
+${stochasticSection}
 
 [DUNGEON MASTER DIRECTIVES & MECHANICS]
 1. ACTION RESOLUTION, ANTI-ECHO & FAILING FORWARD (CRITICAL): Acknowledge the player's declared action and intent in 1-2 concise, impactful sentences at most. DO NOT novelize, re-narrate, or echo what the player already wrote. Devote the vast majority (80%+) of your response to the world's concrete reactions, NPC actions, dialogue, unexpected developments, and environmental shifts. When actions are risky or encounter difficulties, FAIL FORWARD: a partial outcome or difficulty should never create a dead end ("nothing happens"), but introduce a fresh social complication, dilemma, or interesting choice.
@@ -155,7 +179,7 @@ ${fateOracleSection}
    - In MODERN / THRILLER: Maintain realistic modern tools (smartphones, GPS maps, radio bands, forensic analysis).
 16. TIME PROGRESSION & SPATIAL INTEGRITY: Time and distance are real resources. Describe transitions and travel.
 17. PLAYER AGENCY & ANTI-RAILROADING: Never dictate protagonist feelings; pragmatic choices succeed logically.
-18. If the conversation history is empty, START THE STORY with an engaging, atmospheric situation based on the setting and secret journal. Introduce the protagonist in media res or within a vivid everyday slice-of-life setting (a bustling market, a scenic road, a quiet workshop, a harbor barge, or an academic hall) without immediately resorting to generic checkpoints, inquisitorial quarantines, or apocalyptic plagues.
+18. If the conversation history is empty, START THE STORY with an engaging, atmospheric situation based on the setting, secret journal, and any provided [CAMPAIGN STOCHASTIC MATRIX]. Weave the 5 stochastic dimensions into the opening scene to make this run unique.
 19. If there is a history, resolve the player's last action fairly, advance the narrative dynamically, and conclude with a prompt for action.
 20. ${languageInstruction}${feedbackSection}`;
 };

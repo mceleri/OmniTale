@@ -302,6 +302,14 @@ export const StoryView: React.FC = () => {
                     🎲 {msg.fateRoll.value} • {msg.fateRoll.label.split(' / ')[0]}
                   </span>
                 )}
+                {isMaster && msg.stochasticMatrix && (
+                  <span
+                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium tracking-normal border bg-purple-950/60 border-purple-800/80 text-purple-300 cursor-help"
+                    title={`Campaign Stochastic Matrix (5 Axes):\n• Environment: ${msg.stochasticMatrix.environment.value}/100 — ${msg.stochasticMatrix.environment.label}\n  (${msg.stochasticMatrix.environment.guidance})\n• Social Climate: ${msg.stochasticMatrix.socialClimate.value}/100 — ${msg.stochasticMatrix.socialClimate.label}\n  (${msg.stochasticMatrix.socialClimate.guidance})\n• Resources: ${msg.stochasticMatrix.resources.value}/100 — ${msg.stochasticMatrix.resources.label}\n  (${msg.stochasticMatrix.resources.guidance})\n• Entourage: ${msg.stochasticMatrix.entourage.value}/100 — ${msg.stochasticMatrix.entourage.label}\n  (${msg.stochasticMatrix.entourage.guidance})\n• Catalyst: ${msg.stochasticMatrix.catalyst.value}/100 — ${msg.stochasticMatrix.catalyst.label}\n  (${msg.stochasticMatrix.catalyst.guidance})`}
+                  >
+                    🎲 5-Axis Matrix: Env {msg.stochasticMatrix.environment.value} • Soc {msg.stochasticMatrix.socialClimate.value} • Res {msg.stochasticMatrix.resources.value} • Ent {msg.stochasticMatrix.entourage.value} • Cat {msg.stochasticMatrix.catalyst.value}
+                  </span>
+                )}
               </div>
 
               {/* Message Body */}

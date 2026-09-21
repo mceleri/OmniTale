@@ -50,6 +50,7 @@ export interface Message {
   judgeNote?: string;
   debugResolution?: TurnResolution;
   fateRoll?: FateOracleRoll;
+  stochasticMatrix?: CampaignStochasticMatrix;
 }
 
 export type LoreItem = LoreBlock;
@@ -80,6 +81,7 @@ export interface Story {
     conflicts?: string;
     historicalFacts?: string;
     judgeScratchpad?: string[];
+    stochasticMatrix?: CampaignStochasticMatrix;
   };
   messages: Message[];
   updatedAt: number;
