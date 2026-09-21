@@ -24,6 +24,7 @@ export const StoryView: React.FC = () => {
     deleteMessage,
     regenerateLastResponse,
     setNarrativePropensity,
+    setNarratorStyle,
   } = useStoryStore();
 
   const story = stories.find((s) => s.id === activeStoryId);
@@ -161,61 +162,78 @@ export const StoryView: React.FC = () => {
         </div>
 
         <div className="relative flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setIsPropensityMenuOpen(!isPropensityMenuOpen)}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900/80 hover:bg-zinc-850 border border-zinc-800 rounded-lg text-zinc-300 hover:text-zinc-100 text-[11px] font-sans font-medium transition"
-            title="Narrative Propensity (Change live during adventure)"
-          >
-            <span className="text-xs">
-              {story.narrativePropensity === 'character_driven' ? '🎭' : story.narrativePropensity === 'plot_driven' ? '⚡' : '⚖️'}
-            </span>
-            <span className="hidden sm:inline text-[11px]">
-              {story.narrativePropensity === 'character_driven' ? 'Character' : story.narrativePropensity === 'plot_driven' ? 'Plot' : 'Balanced'}
-            </span>
-          </button>
+          {(() => {
+            const currentStyle = (story.narratorStyle || story.narrativePropensity || 'balanced') as 'cinematic' | 'balanced' | 'literary';
+            const styleIcon = currentStyle === 'cinematic' ? '⚡' : currentStyle === 'literary' ? '📖' : '⚖️';
+            const styleLabel = currentStyle === 'cinematic' ? 'Cinematic' : currentStyle === 'literary' ? 'Literary' : 'Balanced';
+            return (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsPropensityMenuOpen(!isPropensityMenuOpen)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900/80 hover:bg-zinc-850 border border-zinc-800 rounded-lg text-zinc-300 hover:text-zinc-100 text-[11px] font-sans font-medium transition"
+                  title="Stile Narratore e Verbosità (Modificabile durante la partita)"
+                >
+                  <span className="text-xs">{styleIcon}</span>
+                  <span className="hidden sm:inline text-[11px]">{styleLabel}</span>
+                </button>
 
-          {isPropensityMenuOpen && (
-            <div className="absolute right-0 top-10 w-64 bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-2xl z-50 animate-scale-up text-left">
-              <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider px-2 py-1 block">
-                Narrative Propensity
-              </span>
-              <div className="space-y-1 mt-1">
-                {(['character_driven', 'balanced', 'plot_driven'] as const).map((prop) => {
-                  const isSelected = (story.narrativePropensity || 'balanced') === prop;
-                  return (
-                    <button
-                      key={prop}
-                      type="button"
-                      onClick={() => {
-                        setNarrativePropensity(story.id, prop);
-                        setIsPropensityMenuOpen(false);
-                      }}
-                      className={`w-full flex flex-col p-2 rounded-lg text-left transition ${
-                        isSelected
-                          ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
-                          : 'hover:bg-zinc-850 text-zinc-400 hover:text-zinc-200'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between text-xs font-semibold">
-                        <span className="flex items-center gap-1.5">
-                          {prop === 'character_driven' ? '🎭 Character-Driven' : prop === 'plot_driven' ? '⚡ Plot-Driven' : '⚖️ Balanced'}
-                        </span>
-                        {isSelected && <span className="text-emerald-400 text-[10px]">● Active</span>}
-                      </div>
-                      <span className="text-[10px] text-zinc-500 mt-0.5 leading-snug">
-                        {prop === 'character_driven'
-                          ? 'Prioritizes dialogue, personal dilemmas, companion banter & atmospheric downtime.'
-                          : prop === 'plot_driven'
-                          ? 'Prioritizes immediate stakes, action momentum, ticking clocks & dynamic complications.'
-                          : 'Equally balances character roleplay, plot progression & exploration.'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+                {isPropensityMenuOpen && (
+                  <div className="absolute right-0 top-10 w-64 bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-2xl z-50 animate-scale-up text-left">
+                    <span className="text-[10px] uppercase font-bold text-zinc-500 tracking-wider px-2 py-1 block">
+                      Stile Narratore & Verbosità
+                    </span>
+                    <div className="space-y-1 mt-1">
+                      {[
+                        {
+                          id: 'cinematic' as const,
+                          label: '⚡ Cinematic (2-3 §)',
+                          desc: 'Azione serrata, dialoghi diretti, ritmo televisivo e conciso.',
+                        },
+                        {
+                          id: 'balanced' as const,
+                          label: '⚖️ Balanced (2-4 §)',
+                          desc: 'Equilibrio naturale tra azione, introspezione ed esplorazione.',
+                        },
+                        {
+                          id: 'literary' as const,
+                          label: '📖 Literary (3-5 §)',
+                          desc: 'Prosa descrittiva, ricchezza sensoriale e dettagli psicologici.',
+                        },
+                      ].map((item) => {
+                        const isSelected = currentStyle === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              setNarratorStyle(story.id, item.id);
+                              setIsPropensityMenuOpen(false);
+                            }}
+                            className={`w-full flex flex-col p-2 rounded-lg text-left transition ${
+                              isSelected
+                                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
+                                : 'hover:bg-zinc-850 text-zinc-400 hover:text-zinc-200'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between text-xs font-semibold">
+                              <span className="flex items-center gap-1.5">
+                                {item.label}
+                              </span>
+                              {isSelected && <span className="text-emerald-400 text-[10px]">● Active</span>}
+                            </div>
+                            <span className="text-[10px] text-zinc-500 mt-0.5 leading-snug">
+                              {item.desc}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
 
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-1" />
         </div>

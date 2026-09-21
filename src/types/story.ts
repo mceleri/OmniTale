@@ -2,7 +2,9 @@ import { LoreBlock } from '../utils/markdownParser';
 
 export type Role = 'master' | 'player' | 'system_feedback';
 
-export type NarrativePropensity = 'character_driven' | 'balanced' | 'plot_driven';
+export type NarratorStyle = 'cinematic' | 'balanced' | 'literary';
+
+export type NarrativePropensity = NarratorStyle | 'character_driven' | 'plot_driven';
 
 export type FateTier = 'very_unfavorable' | 'unfavorable' | 'neutral' | 'favorable' | 'very_favorable';
 
@@ -82,6 +84,9 @@ export interface Story {
     historicalFacts?: string;
     judgeScratchpad?: string[];
     stochasticMatrix?: CampaignStochasticMatrix;
+    defaultStartingIntent?: string;
+    startingIntent?: string;
+    defaultStochasticMatrix?: CampaignStochasticMatrix | null;
   };
   messages: Message[];
   updatedAt: number;
@@ -121,7 +126,9 @@ export interface StoryState {
     language?: string,
     masterFeedback?: string,
     narrativePropensity?: NarrativePropensity,
-    sections?: StorySections
+    sections?: StorySections,
+    startingIntent?: string,
+    stochasticMatrix?: CampaignStochasticMatrix
   ) => void;
   updateStory: (
     storyId: string,
@@ -133,9 +140,12 @@ export interface StoryState {
     masterJournal?: string,
     masterFeedback?: string,
     narrativePropensity?: NarrativePropensity,
-    sections?: StorySections
+    sections?: StorySections,
+    startingIntent?: string,
+    stochasticMatrix?: CampaignStochasticMatrix
   ) => void;
   setNarrativePropensity: (storyId: string, propensity: NarrativePropensity) => void;
+  setNarratorStyle?: (storyId: string, style: NarratorStyle) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   sendMessage: (content: string) => Promise<void>;

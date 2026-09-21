@@ -10,28 +10,29 @@ export interface PromptSections {
   lorebook?: string; // fallback
 }
 
-export const formatNarrativePropensityGuideline = (propensity?: NarrativePropensity): string => {
-  const chosen = propensity || 'balanced';
+export const formatNarratorStyleGuideline = (style?: 'cinematic' | 'balanced' | 'literary' | string): string => {
+  let chosen = style || 'balanced';
+  if (chosen === 'plot_driven') chosen = 'cinematic';
+  if (chosen === 'character_driven') chosen = 'literary';
+
   switch (chosen) {
-    case 'character_driven':
-      return `NARRATIVE PROPENSITY: CHARACTER-DRIVEN (HIGH PROPENSITY FOR SOCIAL DEPTH, HUMAN FRICTION & COLOR)
-- Actively welcome and seize opportunities for world color, ambient life, spontaneous minor NPCs, interpersonal dynamics, and character interactions not tied to the main plot.
-- PSYCHOLOGICAL REALISM & HUMAN RESISTANCE (NO RED CARPET): Character-driven drama is powered by conflicting motives, pride, fear, greed, bargaining, and interpersonal friction—NOT effortless compliance or an absence of resistance. NPCs do NOT roll out the red carpet for strangers; they have their own interests, livelihoods, and doubts. Trust, keys, secrets, and hazardous materials must be negotiated, earned, or bought, never surrendered casually without hesitation or realistic conditions.
-- PRIORITY CONSTRAINT: Scene plausibility ALWAYS strictly precedes propensity. Coherence of location (who could reasonably be present, where characters physically are) comes first. In an isolated, barren tunnel, character-driven produces an environmental detail or introspection, never an implausible NPC. 'Nothing relevant to introduce here' is a completely legitimate outcome if the scene does not lend itself to color.`;
-
-    case 'plot_driven':
-      return `NARRATIVE PROPENSITY: PLOT-DRIVEN (LOW PROPENSITY FOR COLOR, FOCUS ON MAIN THREAD)
-- Keep focus predominantly on the primary conflict and declared player actions. Color events and secondary details may emerge briefly, but the scene returns promptly to the main thread.
-- Concrete Example: Color events emerge but remain brief; the scene returns promptly to the main thread.
-- PRIORITY CONSTRAINT: Scene plausibility ALWAYS strictly precedes propensity.`;
-
+    case 'cinematic':
+      return `NARRATOR STYLE: CINEMATIC & PUNCHY
+- Length: STRICTLY 2-3 short paragraphs maximum.
+- Style: Fast-paced, hard-hitting, and highly cinematic. Cut all flowery descriptions and mundane sensory fluff. Focus purely on immediate action, sharp dialogue, and moving the scene forward rapidly. Perfect for quick reading on a smartphone.`;
+    case 'literary':
+      return `NARRATOR STYLE: LITERARY & DESCRIPTIVE
+- Length: 3-5 paragraphs.
+- Style: Rich, evocative, and deeply atmospheric. Linger on sensory details (smells, weather, textures), internal monologue cues, and the subtle facial expressions of NPCs. Paint a vivid living world.`;
     case 'balanced':
     default:
-      return `NARRATIVE PROPENSITY: BALANCED
-- Maintain a natural equilibrium between main plot progression, character interactions, and atmospheric world color.
-- PRIORITY CONSTRAINT: Scene plausibility ALWAYS strictly precedes propensity.`;
+      return `NARRATOR STYLE: BALANCED
+- Length: 2-4 paragraphs.
+- Style: A natural equilibrium between concrete action progression and necessary atmospheric world color. Describe the environment only when it adds to the mood or tactical situation.`;
   }
 };
+
+export const formatNarrativePropensityGuideline = formatNarratorStyleGuideline;
 
 export const formatWorldSections = (sections: PromptSections): string => {
   const hasCanvas = Boolean(
@@ -109,7 +110,7 @@ export const formatUnifiedPrompt = (
     ? formatWorldSections(sections)
     : `[WORLD & LORE]\n${lore}\n\n[CHARACTER SHEET]\n${charSheet}`;
 
-  const propensityGuideline = formatNarrativePropensityGuideline(propensity);
+  const styleGuideline = formatNarratorStyleGuideline(propensity);
 
   const fateOracleSection = fateRoll
     ? `\n\n[FATE ORACLE ROLL FOR THIS TURN: ${fateRoll.value}/100 — ${fateRoll.label.toUpperCase()}]\nDirective: "${fateRoll.narrativeDirective}"\n(CRITICAL APPLICABILITY & PROPORTIONALITY RULE: Channel this roll strictly according to the genuine risk and stakes of the declared action. On routine, mundane, conversational, or safe actions, unfavorable rolls represent MILD, GROUNDED FRICTION (fatigue, an awkward silence, bad lighting, mild weather delay). You are STRICTLY FORBIDDEN from inventing explosive glyphs, instant deathtraps, retroactive curses, or lethal ambushes on safe/mundane actions! Complications must be proportional. Never retcon previously safe or ordinary objects into lethal disasters).`
@@ -137,7 +138,7 @@ Even if the Master Journal contains a pre-authored default starting scene, DO NO
 - Every playthrough must feel uniquely distinct right from the opening sentence!`
     : '';
 
-  return `You are the Dungeon Master (DM) of an immersive, narrative-driven tabletop RPG. Your writing style is literary, highly descriptive, and atmospheric. Show, don't tell.
+  return `You are the Dungeon Master (DM) of an immersive, narrative-driven tabletop RPG. Show, don't tell.
 
 ${worldContent}
 
@@ -145,8 +146,8 @@ ${worldContent}
 ${journal}
 ${feedbackSection}
 
-[NARRATIVE PROPENSITY]
-${propensityGuideline}
+[NARRATOR STYLE]
+${styleGuideline}
 ${fateOracleSection}
 ${stochasticSection}
 
@@ -227,10 +228,6 @@ export const getJudgePrompt = (
     }
   }
 
-  const propensityGuideline = propensity
-    ? `\n[NARRATIVE PROPENSITY: ${propensity.toUpperCase()}]`
-    : '';
-
   const fateOracleContext = fateRoll
     ? `\n[FATE ORACLE ROLL FOR THIS TURN: ${fateRoll.value}/100 — ${fateRoll.label.toUpperCase()}]
 Directive: "${fateRoll.narrativeDirective}"`
@@ -247,7 +244,6 @@ ${notesContext}
 ${journalContext}
 ${lorebookContext}
 ${worldContext}
-${propensityGuideline}
 ${fateOracleContext}
 ${feedbackSection}
 
@@ -267,15 +263,14 @@ DIRECTORIAL RULES & PACING HIERARCHY:
      * STRICTLY VOID all subsequent player declarations (e.g., if a player declares an attack or risky move that triggers alarms and says "and then I walk home to drink wine", the chain breaks at the alarm; the safe arrival at home is completely voided).
      * Only allow a transition montage to conclude smoothly when the entire sequence is safe, routine, and uncontested.
 
-2. DRAMATIC PACING & ORGANIC MOMENTUM:
-   Instead of forcing artificial combat or sudden alarms, pacing evolves organically through player intent and the Fate Oracle:
-   - RESPECT ROLEPLAY, CONVERSATION & DOWNTIME (NO FORCED DISRUPTIONS):
-     * When characters are engaged in dialogue, investigating, trading, or savoring a post-quest breather, PROTECT THAT SPACE. Do not interrupt meaningful, relaxed roleplay with unprovoked alarms or cheap ambushes.
-     * Post-quest downtime can comfortably last as long as the players actively roleplay and explore it (easily 4–6+ turns). Use [PACING: POST-QUEST BREATHER] or [PACING: SOCIAL DEEPENING] to guide the Narrator to deepen relationships, explore NPC backstories, or share community aftermath.
-   - EXPLICIT TIME-SKIPS & "PASSING TIME":
-     * When the player explicitly declares waiting or sleeping (e.g. "we wait until something happens", "we rest until nightfall", "I sleep until dawn"): time advances cleanly. Use the Fate Oracle roll to dictate the new circumstance or visitor that greets them upon waking/advancing. Tag as [PACING: ADVANCE TIME / NEW BEAT].
-   - HOOK ACTIVATION & FORWARD PROGRESSION:
-     * When the player actively seeks a new job, asks around for leads, or when a scene has naturally reached its conclusion: tag as [PACING: INTRODUCE NEXT HOOK] to organically connect them to an active dilemma or thread from the Master Journal.
+2. DRAMATIC PACING & CONTEXTUAL ALIGNMENT (DYNAMIC PACING TAGS):
+   Instead of forcing artificial pacing based on rigid external toggles, pacing evolves dynamically from player intent, scene context, and the Fate Oracle.
+   The Judge has the FULL set of 5 pacing tags always available. Select the tag that aligns organically with the player's declared intent (Contextual Alignment):
+   - [PACING: POST-QUEST BREATHER]: Use when the protagonist is resting, having a meal, celebrating, reflecting in safety, or unwinding in a safe haven. Protect this downtime: NO unprovoked ambushes. Deepen relationships, explore aftermath, and allow 4-6+ turns of meaningful relaxation.
+   - [PACING: SOCIAL DEEPENING]: Use when the player engages in dialogue, explores NPC backstories, probes emotional boundaries, bargains, or seeks allies. Direct the Narrator to reveal interpersonal layers, quirks, or personal stakes.
+   - [PACING: ADVANCE TIME]: Use when the player explicitly declares waiting, sleeping, traveling uncontested, or letting hours/days pass. Advance time cleanly and introduce the next logical beat or visitor.
+   - [PACING: INTRODUCE NEXT HOOK]: Use when the player actively seeks a new job, asks around for leads, finishes an objective, or when a scene has reached a natural conclusion and demands forward momentum toward an active threat from the Master Journal.
+   - [PACING: OPTIONAL SIDE-QUEST]: Use when the player strays from the main thread, investigates curious local rumors, explores off-the-beaten-path locations, or engages with incidental community flavor and minor independent dilemmas.
 
 3. FACTION CAUSALITY, DEFEAT PERMANENCE & INFORMATION LATENCY (ANTI-QUANTUM OGRE):
    - The Master's Secret Journal contains established faction operations, dependencies, and their knowledge base.
@@ -330,7 +325,7 @@ DIRECTORIAL RULES & PACING HIERARCHY:
 12. OUTPUT FORMAT:
    Output 2-3 concise, telegraphic director notes (NOT storytelling prose):
    - Bullet 1: [MECHANICAL OUTCOME] Action success/failure, direct physical consequences, immediate NPC reaction, and explicit tag on how the Fate Oracle was channeled (e.g. [ORACLE APPLIED: ${fateRoll ? `${fateRoll.value}/100 (${fateRoll.tier})` : 'X/100'} -> ...]).
-   - Bullet 2: [PACING & DIRECTORIAL CUE] Explicit pacing tag ([PACING: POST-QUEST BREATHER], [PACING: SOCIAL DEEPENING], [PACING: ADVANCE TIME / NEW BEAT], or [PACING: INTRODUCE NEXT HOOK]) with concrete instructions on how the Narrator should advance the scene.
+   - Bullet 2: [PACING & DIRECTORIAL CUE] Explicit pacing tag ([PACING: POST-QUEST BREATHER], [PACING: SOCIAL DEEPENING], [PACING: ADVANCE TIME], [PACING: INTRODUCE NEXT HOOK], or [PACING: OPTIONAL SIDE-QUEST]) with concrete instructions on how the Narrator should advance the scene.
    - DO NOT output JSON. Output plain telegraphic text bullets.
 
 ${languageInstruction}`;
@@ -353,10 +348,10 @@ export const getNarratorPrompt = (
     : '';
 
   const worldContent = formatWorldSections(sections);
-  const propensityGuideline = formatNarrativePropensityGuideline(propensity);
+  const styleGuideline = formatNarratorStyleGuideline(propensity);
 
   return `You are the Lead Narrator of an immersive, atmospheric tabletop RPG.
-Your task is to take the player's last action, the Judge's mechanical ruling and dramatic pacing direction for this turn, and the living world context, and render the scene into rich, evocative, literary prose ("show, don't tell").
+Your task is to take the player's last action, the Judge's mechanical ruling and dramatic pacing direction for this turn, and the living world context, and render the scene according to your chosen style.
 
 ${worldContent}
 
@@ -364,8 +359,8 @@ ${worldContent}
 ${journal}
 ${feedbackSection}
 
-[NARRATIVE PROPENSITY]
-${propensityGuideline}
+[NARRATOR STYLE]
+${styleGuideline}
 
 [JUDGE MECHANICAL RULING & PACING DIRECTION FOR THIS TURN]
 ${currentJudgeNote || 'Nothing to note.'}
@@ -374,7 +369,9 @@ ${currentJudgeNote || 'Nothing to note.'}
 2. Follow the Judge's [PACING & DIRECTORIAL CUE]:
    - If the Judge directs [POST-QUEST BREATHER], deepen the world aftermath, NPC warmth, and community roots without forcing sudden combat.
    - If the Judge directs [SOCIAL DEEPENING], execute the specific interpersonal shift, reveal NPC depth, or introduce the suggested social character.
-   - If the Judge directs [ADVANCE TIME / NEW BEAT] or [INTRODUCE NEXT HOOK], advance the scene and seamlessly introduce the suggested event, visitor, or dilemma!)
+   - If the Judge directs [ADVANCE TIME], advance the scene and introduce the new situation/visitor.
+   - If the Judge directs [INTRODUCE NEXT HOOK], connect them to the active dilemma or thread from the Master Journal.
+   - If the Judge directs [OPTIONAL SIDE-QUEST], introduce the suggested minor intrigue or local rumor!)
 
 NARRATIVE DIRECTIVES:
 1. ACTION RESOLUTION & ANTI-ECHO (CRITICAL): Acknowledge the player's last action in 1-2 concise sentences at most. DO NOT novelize, re-narrate, or echo what the player already wrote. Never describe what the protagonist says, feels, or thinks if the player already wrote it. Devote 80%+ of your turn to narrating the world's concrete response and NPC actions.
@@ -442,13 +439,46 @@ NARRATIVE DIRECTIVES:
 ${languageInstruction}`;
 };
 
+export const getTurnZeroPrompt = (
+  sections: PromptSections,
+  journal: string,
+  startingIntent: string,
+  style?: string,
+  language?: string
+): string => {
+  const languageInstruction = language
+    ? `CRITICAL LANGUAGE RULE: Generate the entire opening scene strictly in this language: ${language}. Adapt dynamically to the language used by the player in their messages, but keep the core game language strictly set to ${language}.`
+    : `Always write your response in the language of the Title, Synopsis, and Starting Intent.`;
+  const styleGuideline = formatNarratorStyleGuideline(style);
+  const worldContent = formatWorldSections(sections);
+
+  return `You are the Lead Narrator of an immersive tabletop RPG. This is TURN 0, the very opening scene of the campaign.
+
+${worldContent}
+
+[MASTER'S SECRET JOURNAL]
+${journal}
+
+[NARRATOR STYLE]
+${styleGuideline}
+
+[OPENING SCENE DIRECTIVES]
+1. SCENE IGNITION: The player has set the opening stage with the following intent:
+"${startingIntent}"
+You MUST start the narrative exactly in this moment. Place the protagonist in this exact situation, doing this exact thing.
+2. INTEGRATE THE JOURNAL: Weave the starting scenario outlined in 'Act 1: The First Step' of the [MASTER'S SECRET JOURNAL] into the player's intent. Do NOT blindly copy the default Synopsis if the Intent and Journal dictate otherwise.
+3. HANDOFF: Establish the atmosphere, trigger the first minor complication or NPC interaction based on the Journal, and end by asking the player: "What do you do?".
+${languageInstruction}`;
+};
+
 export const getInitialJournalGenerationPrompt = (
   title: string,
   synopsis: string,
   genre: string,
   charSheet: string,
   language?: string,
-  stochasticMatrix?: CampaignStochasticMatrix
+  stochasticMatrix?: CampaignStochasticMatrix,
+  startingIntent?: string
 ): string => {
   const langPrompt = language 
     ? `Write the entire Master Journal and all bullet points strictly in this language: ${language}.`
@@ -456,6 +486,10 @@ export const getInitialJournalGenerationPrompt = (
 
   const matrixSection = stochasticMatrix
     ? `\n\n${formatStochasticMatrixPrompt(stochasticMatrix)}`
+    : '';
+
+  const intentSection = startingIntent && startingIntent.trim().length > 0
+    ? `\n- Player's Starting Intent for Turn 0: "${startingIntent.trim()}"`
     : '';
 
   return `You are the Game Master of an immersive, narrative-driven tabletop RPG.
@@ -467,11 +501,11 @@ Campaign Details:
 - Genre: ${genre}
 - Setting/Synopsis: ${synopsis}
 - Player Character Sheet:
-${charSheet}
+${charSheet}${intentSection}
 ${matrixSection}
 
 Guidelines for generating the Master Journal:
-1. "Act 1: The First Step" - Outline an atmospheric, engaging starting scenario and location. If a [CAMPAIGN STOCHASTIC MATRIX] is provided above, you MUST directly embody its 5 structural parameters (environment condition, community social climate, material resource status, contact morale, and inciting catalyst) into the opening setup! DIVERSIFY the opening: prefer human situations, cultural festivals, traveling barges, scholarly investigations, or bustling trade towns. AVOID repetitive RPG clichés such as guarded city gate lockdowns, inquisitorial permits for healing, or mysterious blights draining the earth unless explicitly demanded by the synopsis.
+1. "Act 1: The First Step" - Outline an atmospheric, engaging starting scenario and location. Integrate the Player's Starting Intent ("${startingIntent || 'The journey begins'}") directly into Act 1, placing the protagonist in that exact moment and establishing why they are there. If a [CAMPAIGN STOCHASTIC MATRIX] is provided above, you MUST directly embody its 5 structural parameters (environment condition, community social climate, material resource status, contact morale, and inciting catalyst) into the opening setup! DIVERSIFY the opening: prefer human situations, cultural festivals, traveling barges, scholarly investigations, or bustling trade towns. AVOID repetitive RPG clichés such as guarded city gate lockdowns, inquisitorial permits for healing, or mysterious blights draining the earth unless explicitly demanded by the synopsis.
 2. Primary Conflict & Starting Adventure Hook - Clearly articulate the central dilemma, goal, or mystery driving the adventure, while keeping room for player-driven discovery.
 3. Factions & Competing Agendas (4-Point Qualitative Model) - Detail 2-3 distinct factions or key figures with conflicting, selfish, or competing interests. Avoid monolithic alignments, simplistic binaries, or mechanistic clocks. Detail each faction under '[ACTIVE FACTIONS & SCHEMES]' using the 4-point qualitative schema:
    * Strategic Goal: Overarching long-term ambition (can shift, downgrade, or be abandoned if conditions drastically change).

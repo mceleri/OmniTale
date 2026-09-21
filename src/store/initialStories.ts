@@ -76,6 +76,8 @@ Once a grand mountain sanctuary of the ancient Sun Elves, swallowed by the Whisp
 - An overgrown shrine dedicated to the elven deity of the hunt with a faded riddle granting a blessing of silent movement.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "Il sole sta tramontando. Sono appostata tra le felci, osservando il varco muschioso di Eldoria e cercando tracce recenti prima di decidere se oltrepassare i sigilli.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,
@@ -87,7 +89,7 @@ Once a grand mountain sanctuary of the ancient Sun Elves, swallowed by the Whisp
     title: 'Sector 7: Neon Drift',
     genre: 'Cyberpunk',
     synopsis: 'Rain pours over the towering neon monoliths of Sector 7. As a rogue decker, you hold a datachip that megacorporations would burn cities to retrieve.',
-    narrativePropensity: 'balanced',
+    narrativePropensity: 'cinematic',
     dynamicState: {
       characterSheet: `Name: Kaelen Vex
 Role: Rogue Decker & Infiltration Specialist
@@ -153,6 +155,8 @@ The rain-drenched underbelly of Neo-Kyoto. Corporate monoliths tower into toxic 
 - An illegal braindance dealer trying to fence stolen memory shards in the hotel lobby.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "Sono chiuso nella mia stanza-capsula al neon. La pioggia acida batte sul vetro mentre il mio cyberdeck cerca di decrittare il datachip rubato alla Shin-Megacorp.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,
@@ -164,7 +168,7 @@ The rain-drenched underbelly of Neo-Kyoto. Corporate monoliths tower into toxic 
     title: 'The Deep Ice',
     genre: 'Sci-Fi',
     synopsis: 'On Europa\'s frozen ocean, your mining outpost drilled deeper than ever before. Yesterday, the drill stopped. Today, something started tapping back.',
-    narrativePropensity: 'plot_driven',
+    narrativePropensity: 'cinematic',
     dynamicState: {
       characterSheet: `Name: Dr. Isaac Clarke
 Role: Chief Xenogeologist & Environmental Specialist
@@ -221,6 +225,8 @@ Deep-crust modular outpost on Europa, four kilometers beneath the ice shell. Gro
 - The flickering green glow of an emergency hydroponics monitor reporting abnormal algae growth responding to the acoustic vibration.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "Sono solo sulla piattaforma di osservazione del Pozzo 4. Sto analizzando i log della pressione termica, cercando di capire da dove provengano quei rumori ritmici nel ghiaccio.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,
@@ -291,6 +297,8 @@ Tiered metropolis built around the Great Portal. White stone architecture, canal
 - An Academy junior apprentice spilling a canister of shimmering ink and desperately trying to clean it before the Inquisitor notices.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "Sto terminando un turno massacrante di 14 ore ai condotti di manutenzione del Grande Portale. Fingo di compilare i registri arcani mentre cerco di silenziare i sussurri del demone nella mia testa.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,
@@ -302,7 +310,7 @@ Tiered metropolis built around the Great Portal. White stone architecture, canal
     title: 'Blackout',
     genre: 'Psychological Thriller',
     synopsis: 'You wake up in a luxury penthouse at night, with absolutely no memory of who you are or how you got there. No name, no date, no past.',
-    narrativePropensity: 'plot_driven',
+    narrativePropensity: 'cinematic',
     dynamicState: {
       characterSheet: `Name: [Discovered as "Julian Mercer" on passport]
 Role: Amnesiac Protagonist discovering identity through deductive action.
@@ -351,6 +359,8 @@ Every NPC possesses only their specific fragment of the truth and acts with real
 - Do not rush the player with sudden combat; focus on intense psychological tension, paranoia, and fragmented revelation.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "Mi sono appena risvegliato di scatto sul pavimento in legno di questo attico sconosciuto. Ho un forte mal di testa, la pioggia batte sulle vetrate e non ho la minima idea di come io sia arrivato qui.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,
@@ -426,6 +436,8 @@ Lawless red-dust frontier planet Tartarus. Corrugated iron cantinas, moisture va
 - A half-tamed desert sand-skimmer tied to the hitching post outside, sniffing the dusty wind.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "Sono seduta nell'ombra del balconcino superiore di una cantina a Rust-Crest. Pulisco l'ottica del mio fucile e ascolto le lamentele dei minatori, tenendo d'occhio la porta principale.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,
@@ -437,7 +449,7 @@ Lawless red-dust frontier planet Tartarus. Corrugated iron cantinas, moisture va
     title: 'The Collective Flame',
     genre: 'High Fantasy / Arcane Mystery',
     synopsis: 'Settled in the vibrant canal metropolis of Valoria for nearly a year under the mortal cover of Kael and Leonor, the Collective Flame—husband and wife, legendary sorcerer and sorceress whose souls unified into a single primordial flame centuries ago—enjoy the warm, colorful simplicity of their mortal life. Kael runs a modest apothecary as an arcane healer and herbalist, while Leonor is a respected sensitive who consoles spirits and families in mourning. A century after staging their legendary "Scission" to escape cosmic cartels and inquisitorial grasp, they rediscover themselves as two young mages in love, surrounded by colorful neighbors and street friends. But when unusual magical anomalies, rogue relics, and whispers of ancient shadows ripple across the city, they must use their mortal wits, street ties, and subtle magic to preserve the Balance—without blowing their cover or destroying the cozy life they have come to cherish.',
-    narrativePropensity: 'character_driven',
+    narrativePropensity: 'literary',
     dynamicState: {
       characterSheet: `Name: The Collective Flame (Public Mortal Identities: Kael & Leonor — Husband and Wife)
 True Nature: A unified primordial consciousness and soul residing simultaneously within two distinct, independent physical bodies. Centuries ago, Kizag (a sorcerer) and Lyra (a sorceress) met as wanderers, faced countless perils together, fell deeply in love, and married. Over epochs of profound spiritual harmony, their two souls fused into the Collective Flame. They have been husband and wife for centuries, romantic life companions, and STRICTLY NOT siblings or twins.
@@ -563,6 +575,8 @@ Husband and wife for centuries and mortal vessels of the Collective Flame, livin
    - When overcoming obstacles, encourage mundane ingenuity, practical herbalism, clever diplomacy, and subtle magic rather than overt cosmic displays.`,
       masterFeedback: '',
       judgeScratchpad: [],
+      defaultStartingIntent: "È una tranquilla mattinata all'Apoteca del Salice. Kael sta finendo di preparare un unguento mentre Leonor cataloga dei manoscritti funebri, godendoci la quiete del nostro quartiere.",
+      defaultStochasticMatrix: null,
     },
     messages: [],
     createdAt: 1782345600000,

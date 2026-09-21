@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { Story, StoryState, Role, Message, NarrativePropensity, StorySections, FateOracleRoll, CampaignStochasticMatrix } from '../types/story';
+import { Story, StoryState, Role, Message, NarrativePropensity, NarratorStyle, StorySections, FateOracleRoll, CampaignStochasticMatrix } from '../types/story';
 import { initialStories } from './initialStories';
 import { parseMarkdownToBlocks, compileBlocksToMarkdown, LoreBlock } from '../utils/markdownParser';
 import { fetchNarrative } from '../services/llmService';
@@ -9,6 +9,7 @@ import {
   getInitialJournalGenerationPrompt,
   getJudgePrompt,
   getNarratorPrompt,
+  getTurnZeroPrompt,
   PromptSections,
 } from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
@@ -47,7 +48,9 @@ export interface StorySlice {
     language?: string,
     masterFeedback?: string,
     narrativePropensity?: NarrativePropensity,
-    sections?: StorySections
+    sections?: StorySections,
+    startingIntent?: string,
+    stochasticMatrix?: CampaignStochasticMatrix
   ) => void;
   updateStory: (
     storyId: string,
@@ -59,9 +62,12 @@ export interface StorySlice {
     masterJournal?: string,
     masterFeedback?: string,
     narrativePropensity?: NarrativePropensity,
-    sections?: StorySections
+    sections?: StorySections,
+    startingIntent?: string,
+    stochasticMatrix?: CampaignStochasticMatrix
   ) => void;
   setNarrativePropensity: (storyId: string, propensity: NarrativePropensity) => void;
+  setNarratorStyle?: (storyId: string, style: NarratorStyle) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   sendMessage: (content: string) => Promise<void>;
@@ -136,7 +142,9 @@ export const createStorySlice: StateCreator<
     language?: string,
     masterFeedback?: string,
     narrativePropensity?: NarrativePropensity,
-    sections?: StorySections
+    sections?: StorySections,
+    startingIntent?: string,
+    stochasticMatrix?: CampaignStochasticMatrix
   ) => set((state: StoryState) => {
     const newId = 'story_' + Date.now();
     const storyFeedback = masterFeedback !== undefined ? masterFeedback : '';
@@ -165,6 +173,9 @@ export const createStorySlice: StateCreator<
         conflicts: initialConflicts,
         historicalFacts: initialHistoricalFacts,
         judgeScratchpad: [],
+        startingIntent,
+        defaultStartingIntent: startingIntent,
+        stochasticMatrix,
       },
       messages: [],
       createdAt: Date.now(),
@@ -199,7 +210,9 @@ export const createStorySlice: StateCreator<
     masterJournal?: string,
     masterFeedback?: string,
     narrativePropensity?: NarrativePropensity,
-    sections?: StorySections
+    sections?: StorySections,
+    startingIntent?: string,
+    stochasticMatrix?: CampaignStochasticMatrix
   ) => set((state: StoryState) => {
     const updatedStories = state.stories.map((s: Story) => {
       if (s.id === storyId) {
@@ -218,6 +231,8 @@ export const createStorySlice: StateCreator<
             factions: sections?.factions !== undefined ? sections.factions : s.dynamicState.factions,
             conflicts: sections?.conflicts !== undefined ? sections.conflicts : s.dynamicState.conflicts,
             historicalFacts: sections?.historicalFacts !== undefined ? sections.historicalFacts : s.dynamicState.historicalFacts,
+            startingIntent: startingIntent !== undefined ? startingIntent : s.dynamicState.startingIntent,
+            stochasticMatrix: stochasticMatrix !== undefined ? stochasticMatrix : s.dynamicState.stochasticMatrix,
           },
           updatedAt: Date.now(),
         };
@@ -242,6 +257,22 @@ export const createStorySlice: StateCreator<
       }
       return s;
     });
+
+    return { stories: updatedStories };
+  }),
+
+  setNarratorStyle: (storyId: string, style: NarratorStyle) => set((state: StoryState) => {
+    const updatedStories = state.stories.map((s: Story) => {
+      if (s.id === storyId) {
+        return {
+          ...s,
+          narrativePropensity: style,
+          updatedAt: Date.now(),
+        };
+      }
+      return s;
+    });
+
     return { stories: updatedStories };
   }),
 
@@ -695,9 +726,11 @@ const generateMasterResponse = async (
   );
 
   if (isStart) {
-    // ALWAYS roll the 5-Axis Campaign Stochastic Matrix for a new campaign/story start!
-    stochasticMatrix = rollCampaignStochasticMatrix();
-    console.log("[generateMasterResponse] Rolled Campaign Stochastic Matrix for story start:", stochasticMatrix);
+    // Use manual stochastic matrix override if provided, otherwise roll the 5-Axis matrix!
+    stochasticMatrix = activeStory.dynamicState.stochasticMatrix || rollCampaignStochasticMatrix();
+    console.log("[generateMasterResponse] Campaign Stochastic Matrix for story start:", stochasticMatrix);
+
+    const startingIntent = activeStory.dynamicState.startingIntent || activeStory.dynamicState.defaultStartingIntent || 'The adventure begins as the protagonist prepares for what lies ahead.';
 
     if (!isJournalPreAuthored) {
       set({ isUpdatingJournal: true });
@@ -708,10 +741,11 @@ const generateMasterResponse = async (
           activeStory.genre,
           charSheet,
           activeStory.language,
-          stochasticMatrix
+          stochasticMatrix,
+          startingIntent
         );
         
-        console.log("[generateMasterResponse] Generating initial secret Master Journal for custom story...");
+        console.log("[generateMasterResponse] Generating initial secret Master Journal for custom story with startingIntent...");
         const generatedJournal = await fetchNarrative(
           provider,
           url,
@@ -734,6 +768,7 @@ const generateMasterResponse = async (
                     ...story.dynamicState,
                     masterJournal: journal,
                     stochasticMatrix,
+                    startingIntent,
                   },
                   updatedAt: Date.now(),
                 };
@@ -749,10 +784,13 @@ const generateMasterResponse = async (
         set({ isUpdatingJournal: false });
       }
     } else {
-      // For pre-authored template stories, integrate the stochastic matrix into the master journal
+      // For pre-authored template stories, integrate the stochastic matrix & starting intent into the master journal
       const matrixPrompt = formatStochasticMatrixPrompt(stochasticMatrix);
       if (!journal.includes('[CAMPAIGN STOCHASTIC MATRIX')) {
         journal = `${matrixPrompt}\n\n${journal}`;
+      }
+      if (startingIntent && !journal.includes('[STARTING SCENARIO IGNITION')) {
+        journal = `[STARTING SCENARIO IGNITION & PLAYER INTENT]\n"${startingIntent}"\n\n${journal}`;
       }
       set((s: StoryState) => {
         const updatedStories = s.stories.map((story: Story) => {
@@ -763,6 +801,7 @@ const generateMasterResponse = async (
                 ...story.dynamicState,
                 masterJournal: journal,
                 stochasticMatrix,
+                startingIntent,
               },
               updatedAt: Date.now(),
             };
@@ -800,7 +839,31 @@ const generateMasterResponse = async (
       console.log(`[generateMasterResponse] Rolled Fate Oracle for this turn: ${fateRoll.value}/100 (${fateRoll.label})`);
     }
 
-    if (useAgenticPipeline && !isStart) {
+    if (isStart) {
+      // Dedicated Turn 0 opening scene generation via getTurnZeroPrompt
+      const startingIntent = activeStory.dynamicState.startingIntent || activeStory.dynamicState.defaultStartingIntent || 'The adventure begins as the protagonist prepares for what lies ahead.';
+      console.log("[generateMasterResponse] Executing Turn 0 Scene Ignition via getTurnZeroPrompt with intent:", startingIntent);
+      const turnZeroPrompt = getTurnZeroPrompt(
+        sections,
+        journal,
+        startingIntent,
+        propensity,
+        activeStory.language
+      );
+
+      masterResponseText = await fetchNarrative(
+        provider,
+        url,
+        key,
+        model,
+        turnZeroPrompt,
+        [],
+        (usage) => {
+          apiPromptTokens = usage.prompt_tokens;
+          apiCompletionTokens = usage.completion_tokens;
+        }
+      );
+    } else if (useAgenticPipeline) {
       console.log("[generateMasterResponse] Executing Agentic 2-Step Pipeline (Dramatic Arbiter & Pacing Director -> Narrator)...");
       try {
         // Step A: Dramatic Arbiter & Pacing Director Ruling
@@ -880,7 +943,7 @@ const generateMasterResponse = async (
         );
       }
     } else {
-      // Classic single-call mode (or isStart)
+      // Classic single-call mode
       const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll, stochasticMatrix);
       masterResponseText = await fetchNarrative(
         provider,

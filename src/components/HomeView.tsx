@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
 import { Story, NarrativePropensity, StorySections } from '../types/story';
-import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight, BarChart2, Loader } from 'lucide-react';
+import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight, ChevronDown, Play, BarChart2, Loader } from 'lucide-react';
 import { fetchNarrative } from '../services/llmService';
+import { buildStochasticMatrixWithOverrides, StochasticMatrixOverrides } from '../utils/diceUtils';
 
 const formatRelativeTime = (timestamp: number): string => {
   const diff = Date.now() - timestamp;
@@ -36,6 +37,15 @@ export const HomeView: React.FC = () => {
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [selectedPropensity, setSelectedPropensity] = useState<NarrativePropensity>('balanced');
+  const [startingIntent, setStartingIntent] = useState('');
+  const [isStochasticAccordionOpen, setIsStochasticAccordionOpen] = useState(false);
+  const [stochasticOverrides, setStochasticOverrides] = useState<StochasticMatrixOverrides>({
+    environment: 'random',
+    socialClimate: 'random',
+    resources: 'random',
+    entourage: 'random',
+    catalyst: 'random',
+  });
   const [pendingJourneyData, setPendingJourneyData] = useState<{
     title: string;
     synopsis: string;
@@ -75,9 +85,12 @@ export const HomeView: React.FC = () => {
       canvasHistory ? `## Historical Facts\n${canvasHistory}` : '',
     ].filter(Boolean).join('\n\n');
 
-    const sourceTemplateJournal = editingStoryId
-      ? stories.find((s) => s.id === editingStoryId)?.dynamicState.masterJournal
+    const sourceTemplate = editingStoryId
+      ? stories.find((s) => s.id === editingStoryId)
       : undefined;
+    const sourceTemplateJournal = sourceTemplate?.dynamicState.masterJournal;
+    const defaultIntent = sourceTemplate?.dynamicState.defaultStartingIntent ||
+      `È una tranquilla giornata mentre ${characterName} si prepara per quello che sta per accadere.`;
 
     setPendingJourneyData({
       title: title.trim(),
@@ -94,7 +107,40 @@ export const HomeView: React.FC = () => {
       },
       masterJournal: sourceTemplateJournal,
     });
+    setStartingIntent(defaultIntent);
     setSelectedPropensity(canvasPropensity);
+    setIsLanguageModalOpen(true);
+  };
+
+  const handleLaunchTemplateDirectly = (story: Story) => {
+    const characterName = story.dynamicState.characterSheet.split('\n')[0].replace(/^Name:\s*/i, '').trim() || 'Adventurer';
+    const compiledLorebookMarkdown = [
+      story.dynamicState.setting ? `## Setting\n${story.dynamicState.setting}` : '',
+      story.dynamicState.factions ? `## Factions\n${story.dynamicState.factions}` : '',
+      story.dynamicState.conflicts ? `## Conflicts\n${story.dynamicState.conflicts}` : '',
+      story.dynamicState.historicalFacts ? `## Historical Facts\n${story.dynamicState.historicalFacts}` : '',
+    ].filter(Boolean).join('\n\n') || story.dynamicState.lorebook || '';
+
+    const defaultIntent = story.dynamicState.defaultStartingIntent ||
+      `È una tranquilla giornata mentre ${characterName} si prepara per quello che sta per accadere.`;
+
+    setPendingJourneyData({
+      title: story.title,
+      synopsis: story.synopsis,
+      characterName,
+      compiledLorebookMarkdown,
+      characterSheetContent: story.dynamicState.characterSheet,
+      sections: {
+        setting: story.dynamicState.setting,
+        characterSheet: story.dynamicState.characterSheet,
+        factions: story.dynamicState.factions,
+        conflicts: story.dynamicState.conflicts,
+        historicalFacts: story.dynamicState.historicalFacts,
+      },
+      masterJournal: story.dynamicState.masterJournal,
+    });
+    setStartingIntent(defaultIntent);
+    setSelectedPropensity(story.narrativePropensity || 'balanced');
     setIsLanguageModalOpen(true);
   };
 
@@ -193,6 +239,8 @@ export const HomeView: React.FC = () => {
     const charNameMatch = finalCharSheet.match(/^Name:\s*(.+)$/m) || finalCharSheet.match(/^Nome:\s*(.+)$/m) || finalCharSheet.match(/^Nombre:\s*(.+)$/m) || finalCharSheet.match(/^Nom:\s*(.+)$/m);
     const finalCharName = charNameMatch ? charNameMatch[1].trim() : pendingJourneyData.characterName;
 
+    const stochasticMatrix = buildStochasticMatrixWithOverrides(stochasticOverrides);
+
     createStory(
       finalTitle,
       finalSynopsis,
@@ -205,7 +253,9 @@ export const HomeView: React.FC = () => {
       selectedLanguage,
       undefined,
       selectedPropensity,
-      finalSections
+      finalSections,
+      startingIntent.trim() || undefined,
+      stochasticMatrix
     );
 
     // Reset fields
@@ -216,6 +266,15 @@ export const HomeView: React.FC = () => {
     setCanvasConflicts('');
     setCanvasHistory('');
     setCanvasPropensity('balanced');
+    setStartingIntent('');
+    setStochasticOverrides({
+      environment: 'random',
+      socialClimate: 'random',
+      resources: 'random',
+      entourage: 'random',
+      catalyst: 'random',
+    });
+    setIsStochasticAccordionOpen(false);
     setEditingStoryId(null);
     setIsModalOpen(false);
     setIsLanguageModalOpen(false);
@@ -479,6 +538,22 @@ export const HomeView: React.FC = () => {
                       {formatRelativeTime(story.updatedAt)}
                     </span>
                     <div className="flex items-center gap-2">
+                      {story.type === 'template' && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleLaunchTemplateDirectly(story);
+                            }}
+                            className="px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-950 font-semibold text-[10px] rounded-md transition flex items-center gap-1 shadow-sm"
+                            title="Start Journey Directly"
+                          >
+                            <Play className="w-3 h-3 fill-current" />
+                            <span>Gioca</span>
+                          </button>
+                          <span className="text-zinc-800 select-none">|</span>
+                        </>
+                      )}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -594,30 +669,30 @@ export const HomeView: React.FC = () => {
                     />
                   </div>
 
-                  {/* Default Narrative Propensity in Setting Tab */}
+                  {/* Default Narrator Style in Setting Tab */}
                   <div className="pt-2 border-t border-zinc-800/60">
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
-                      Default Narrative Propensity
+                      Default Narrator Style
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {[
                         {
-                          id: 'character_driven',
-                          label: 'Character-Driven',
-                          icon: '🎭',
-                          desc: 'Dialogue, tridimensional psychology, personal dilemmas, companion banter & atmospheric downtime.',
+                          id: 'cinematic',
+                          label: 'Cinematic (2-3 §)',
+                          icon: '⚡',
+                          desc: 'Azione serrata, dialoghi diretti, ritmo televisivo e smartphone-friendly.',
                         },
                         {
                           id: 'balanced',
-                          label: 'Balanced',
+                          label: 'Balanced (2-4 §)',
                           icon: '⚖️',
-                          desc: 'Harmonious alternation between tactical action, social roleplay, and environmental exploration.',
+                          desc: 'Equilibrio naturale tra azione, dialoghi, atmosfera ed esplorazione.',
                         },
                         {
-                          id: 'plot_driven',
-                          label: 'Plot-Driven',
-                          icon: '⚡',
-                          desc: 'Forward momentum, escalating stakes, ticking clocks, active complications & emergent threats.',
+                          id: 'literary',
+                          label: 'Literary (3-5 §)',
+                          icon: '📖',
+                          desc: 'Prosa ricca, descrizioni sensoriali e profondità introspettiva.',
                         },
                       ].map((option) => {
                         const isSelected = canvasPropensity === option.id;
@@ -750,37 +825,58 @@ export const HomeView: React.FC = () => {
                 Configure Your Journey
               </h3>
               <p className="text-xs text-zinc-400">
-                Choose the narrative propensity and language for the AI Game Master.
+                Personalizza l'avvio della tua avventura, l'intento iniziale e lo stile narrativo.
               </p>
             </div>
 
-            {/* Narrative Propensity Selector */}
+            {/* Starting Intent (Turno 0) */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-zinc-200 block">
+                  Cosa sta facendo il tuo personaggio in questo momento?
+                </label>
+                <span className="text-[10px] text-zinc-500 font-sans">Turno 0</span>
+              </div>
+              <textarea
+                value={startingIntent}
+                onChange={(e) => setStartingIntent(e.target.value)}
+                placeholder="Es: Sto sorseggiando un infuso amaro in una locanda affollata cercando di evitare sguardi..."
+                rows={3}
+                disabled={isTranslating}
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+              />
+            </div>
+
+            {/* Narrator Style Selector */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
-                  <span>Narrative Propensity</span>
+                  <span>Stile Narratore</span>
                 </label>
-                <span className="text-[10px] text-zinc-500 font-sans">Can be changed mid-game</span>
+                <span className="text-[10px] text-zinc-500 font-sans">Modificabile in partita</span>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   {
-                    id: 'character_driven',
-                    label: 'Character',
-                    icon: '🎭',
-                    desc: 'Psychology, dialogue & quiet downtime',
+                    id: 'cinematic',
+                    label: 'Cinematic',
+                    badge: '2-3 §',
+                    icon: '⚡',
+                    desc: 'Azione serrata, dialoghi diretti, ritmo televisivo',
                   },
                   {
                     id: 'balanced',
-                    label: 'Balanced',
+                    label: 'Equilibrato',
+                    badge: '2-4 §',
                     icon: '⚖️',
-                    desc: 'Equal action, roleplay & exploration',
+                    desc: 'Alternanza fluida tra narrazione, azione e atmosfera',
                   },
                   {
-                    id: 'plot_driven',
-                    label: 'Plot',
-                    icon: '⚡',
-                    desc: 'Urgent stakes, momentum & complications',
+                    id: 'literary',
+                    label: 'Letterario',
+                    badge: '3-5 §',
+                    icon: '📖',
+                    desc: 'Prosa descrittiva, ricchezza sensoriale e dettagli',
                   },
                 ].map((p) => {
                   const isSelected = selectedPropensity === p.id;
@@ -796,17 +892,87 @@ export const HomeView: React.FC = () => {
                           : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:border-zinc-700'
                       } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <span>{p.icon}</span>
-                        <span className="truncate">{p.label}</span>
+                      <div>
+                        <div className="flex items-center justify-between gap-1 text-xs">
+                          <span className="flex items-center gap-1">
+                            <span>{p.icon}</span>
+                            <span className="truncate">{p.label}</span>
+                          </span>
+                          <span className={`text-[9px] px-1 py-0.5 rounded font-mono ${isSelected ? 'bg-zinc-200 text-zinc-900 font-bold' : 'bg-zinc-850 text-zinc-400'}`}>
+                            {p.badge}
+                          </span>
+                        </div>
+                        <p className={`text-[9px] mt-1.5 leading-snug ${isSelected ? 'text-zinc-700' : 'text-zinc-500'}`}>
+                          {p.desc}
+                        </p>
                       </div>
-                      <p className={`text-[9px] mt-1.5 leading-snug ${isSelected ? 'text-zinc-700' : 'text-zinc-500'}`}>
-                        {p.desc}
-                      </p>
                     </button>
                   );
                 })}
               </div>
+            </div>
+
+            {/* Stochastic Matrix Accordion */}
+            <div className="border border-zinc-800/80 rounded-xl overflow-hidden bg-zinc-950/30">
+              <button
+                type="button"
+                onClick={() => setIsStochasticAccordionOpen(!isStochasticAccordionOpen)}
+                className="w-full px-3.5 py-2.5 flex items-center justify-between hover:bg-zinc-900/50 transition text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">🎲</span>
+                  <div>
+                    <div className="text-xs font-semibold text-zinc-200">
+                      Matrice Stocastica (Varianti Iniziali)
+                    </div>
+                    <div className="text-[10px] text-zinc-500 font-sans">
+                      Personalizza i fattori iniziali o lascia su 'Casuale' per un tiro d100
+                    </div>
+                  </div>
+                </div>
+                <ChevronDown
+                  className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${
+                    isStochasticAccordionOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {isStochasticAccordionOpen && (
+                <div className="p-3.5 pt-1 space-y-2.5 border-t border-zinc-800/60 bg-zinc-950/60">
+                  {[
+                    { key: 'environment' as const, label: 'Ambiente & Meteo', icon: '🌦️' },
+                    { key: 'socialClimate' as const, label: 'Clima Sociale & Tensione', icon: '👥' },
+                    { key: 'resources' as const, label: 'Risorse Iniziali', icon: '🎒' },
+                    { key: 'entourage' as const, label: 'Compagni & Contatti', icon: '🤝' },
+                    { key: 'catalyst' as const, label: 'Catalizzatore Imprevisto', icon: '⚡' },
+                  ].map((dim) => (
+                    <div key={dim.key} className="flex items-center justify-between gap-3">
+                      <label className="text-[11px] text-zinc-300 flex items-center gap-1.5 truncate">
+                        <span>{dim.icon}</span>
+                        <span>{dim.label}</span>
+                      </label>
+                      <select
+                        value={stochasticOverrides[dim.key] || 'random'}
+                        onChange={(e) =>
+                          setStochasticOverrides((prev) => ({
+                            ...prev,
+                            [dim.key]: e.target.value as any,
+                          }))
+                        }
+                        disabled={isTranslating}
+                        className="bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-zinc-700 font-sans"
+                      >
+                        <option value="random">🎲 Casuale (d100)</option>
+                        <option value="critical_low">💀 Critico Basso (1-10)</option>
+                        <option value="low">🔻 Sfavorevole (11-35)</option>
+                        <option value="neutral">⚖️ Neutro (36-65)</option>
+                        <option value="high">🔺 Favorevole (66-90)</option>
+                        <option value="critical_high">⭐ Critico Alto (91-100)</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Languages Grid */}
@@ -846,7 +1012,7 @@ export const HomeView: React.FC = () => {
 
             {/* Hint Box */}
             <div className="bg-zinc-950/40 border border-zinc-850/60 rounded-xl p-3 text-[10px] text-zinc-400 leading-relaxed font-sans">
-              💡 <strong>AI Master Note:</strong> The Game Master will speak in <strong>{selectedLanguage}</strong> and adapt dynamically to your narrative inputs. Scene plausibility always takes precedence over propensity.
+              💡 <strong>AI Master Note:</strong> Il Game Master narrerà in <strong>{selectedLanguage}</strong> con stile <strong>{selectedPropensity}</strong> partendo dall'intento del tuo personaggio. La plausibilità della scena ha sempre la priorità.
             </div>
 
             {/* Actions */}

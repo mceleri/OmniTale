@@ -190,16 +190,57 @@ const classifyDimension = (
 };
 
 /**
+ * Resolves a stochastic dimension from either a specific tier override, a numerical roll, or 'random'.
+ */
+export const createStochasticDimension = (
+  tierOrValue: FateTier | number | 'random',
+  dimensionType: 'environment' | 'socialClimate' | 'resources' | 'entourage' | 'catalyst'
+): StochasticDimension => {
+  if (tierOrValue === 'random') {
+    return classifyDimension(rollD100(), dimensionType);
+  }
+  if (typeof tierOrValue === 'number') {
+    return classifyDimension(tierOrValue, dimensionType);
+  }
+  const tierRepresentativeValues: Record<FateTier, number> = {
+    very_unfavorable: 5,
+    unfavorable: 25,
+    neutral: 50,
+    favorable: 75,
+    very_favorable: 95,
+  };
+  const val = tierRepresentativeValues[tierOrValue] || 50;
+  return classifyDimension(val, dimensionType);
+};
+
+export interface StochasticMatrixOverrides {
+  environment?: FateTier | number | 'random';
+  socialClimate?: FateTier | number | 'random';
+  resources?: FateTier | number | 'random';
+  entourage?: FateTier | number | 'random';
+  catalyst?: FateTier | number | 'random';
+}
+
+/**
+ * Builds a 5-Axis Campaign Stochastic Matrix respecting user overrides (or rolling randomly where 'random').
+ */
+export const buildStochasticMatrixWithOverrides = (
+  overrides?: StochasticMatrixOverrides
+): CampaignStochasticMatrix => {
+  return {
+    environment: createStochasticDimension(overrides?.environment ?? 'random', 'environment'),
+    socialClimate: createStochasticDimension(overrides?.socialClimate ?? 'random', 'socialClimate'),
+    resources: createStochasticDimension(overrides?.resources ?? 'random', 'resources'),
+    entourage: createStochasticDimension(overrides?.entourage ?? 'random', 'entourage'),
+    catalyst: createStochasticDimension(overrides?.catalyst ?? 'random', 'catalyst'),
+  };
+};
+
+/**
  * Rolls the 5-Axis Stochastic Matrix for a new campaign initialization.
  */
 export const rollCampaignStochasticMatrix = (): CampaignStochasticMatrix => {
-  return {
-    environment: classifyDimension(rollD100(), 'environment'),
-    socialClimate: classifyDimension(rollD100(), 'socialClimate'),
-    resources: classifyDimension(rollD100(), 'resources'),
-    entourage: classifyDimension(rollD100(), 'entourage'),
-    catalyst: classifyDimension(rollD100(), 'catalyst'),
-  };
+  return buildStochasticMatrixWithOverrides();
 };
 
 /**
