@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
 import { ArrowLeft, Save, Check, Download, Upload } from 'lucide-react';
+import { validateBackupPayload } from '../utils/validation';
 
 export const SettingsView: React.FC = () => {
   const { llmProvider, llmUrl, llmKey, modelName, useAgenticPipeline, updateLlmSettings, setView, importStore } = useStoryStore();
@@ -73,9 +74,10 @@ export const SettingsView: React.FC = () => {
     reader.onload = (event) => {
       try {
         const json = JSON.parse(event.target?.result as string);
-        
-        if (!json.stories || !Array.isArray(json.stories)) {
-          alert('Invalid backup file format. Must contain stories array.');
+        const validation = validateBackupPayload(json);
+
+        if (!validation.isValid || !validation.data) {
+          alert(`Invalid backup file: ${validation.error || 'Unknown error'}`);
           return;
         }
 
@@ -84,7 +86,7 @@ export const SettingsView: React.FC = () => {
         );
         if (!confirmImport) return;
 
-        importStore(json);
+        importStore(validation.data);
         alert('Database imported successfully!');
       } catch (err) {
         alert('Error parsing JSON backup file: ' + (err as Error).message);

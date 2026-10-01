@@ -12,6 +12,16 @@ export interface BackgroundUpdatesResult {
   updatedJournal?: string;
 }
 
+const isNoChangesResponse = (text: string): boolean => {
+  if (!text) return true;
+  const stripped = text
+    .replace(/^```[a-z]*\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .replace(/['"`]/g, '')
+    .trim();
+  return /^(NO_CHANGES|NO CHANGES|NOCHANGES)[.!?]*$/i.test(stripped);
+};
+
 export const executeBackgroundUpdates = async (
   provider: 'openrouter' | 'gemini' | 'openai',
   url: string,
@@ -46,8 +56,8 @@ export const executeBackgroundUpdates = async (
       ]);
 
       const cleanedResponse = response.trim();
-      if (cleanedResponse && cleanedResponse !== 'NO_CHANGES' && cleanedResponse !== "'NO_CHANGES'") {
-        onLorebookSuccess(response);
+      if (cleanedResponse && !isNoChangesResponse(cleanedResponse)) {
+        onLorebookSuccess(cleanedResponse);
       }
     } catch (err) {
       console.error('Error in background lorebook update:', err);
@@ -68,8 +78,8 @@ export const executeBackgroundUpdates = async (
       ]);
 
       const cleanedResponse = response.trim();
-      if (cleanedResponse && cleanedResponse !== 'NO_CHANGES' && cleanedResponse !== "'NO_CHANGES'") {
-        onJournalSuccess(response);
+      if (cleanedResponse && !isNoChangesResponse(cleanedResponse)) {
+        onJournalSuccess(cleanedResponse);
       }
     } catch (err) {
       console.error('Error in background master journal update:', err);

@@ -233,6 +233,10 @@ export const getJudgePrompt = (
 Directive: "${fateRoll.narrativeDirective}"`
     : '';
 
+  const styleGuideline = propensity
+    ? `\n[TARGET NARRATOR STYLE & PACING]\n${formatNarratorStyleGuideline(propensity)}`
+    : '';
+
   return `You are the Dramatic Arbiter & Pacing Director (The Judge) of an immersive tabletop RPG.
 Your mission is two-fold:
 1. Evaluate the mechanical outcome and physical plausibility of the player's last declared action, channeling the dynamic Fate Oracle roll.
@@ -245,6 +249,7 @@ ${journalContext}
 ${lorebookContext}
 ${worldContext}
 ${fateOracleContext}
+${styleGuideline}
 ${feedbackSection}
 
 DIRECTORIAL RULES & PACING HIERARCHY:

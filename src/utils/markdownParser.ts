@@ -1,8 +1,6 @@
-export interface LoreBlock {
-  id: string;
-  title: string;
-  content: string;
-}
+import { LoreBlock } from '../types/story';
+
+export type { LoreBlock };
 
 export const parseMarkdownToBlocks = (markdown: string): LoreBlock[] => {
   if (!markdown) {

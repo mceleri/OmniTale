@@ -155,7 +155,22 @@ const GeminiPlugin: LLMProviderPlugin = {
     };
   },
   parseResponse(data) {
+    if (data.promptFeedback?.blockReason) {
+      throw new Error(`Gemini blocked prompt: ${data.promptFeedback.blockReason}`);
+    }
     const candidate = data.candidates?.[0];
+    if (candidate?.finishReason && candidate.finishReason !== 'STOP' && candidate.finishReason !== 'MAX_TOKENS') {
+      if (candidate.finishReason === 'SAFETY') {
+        throw new Error('Gemini generation stopped due to safety filters.');
+      }
+    }
+    const parts = candidate?.content?.parts;
+    if (Array.isArray(parts)) {
+      const textParts = parts.map((p: any) => (typeof p?.text === 'string' ? p.text : '')).filter(Boolean);
+      if (textParts.length > 0) {
+        return textParts.join('').trim();
+      }
+    }
     return (candidate?.content?.parts?.[0]?.text || '').trim();
   },
   parseUsage(data) {

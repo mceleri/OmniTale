@@ -1,4 +1,8 @@
-import { LoreBlock } from '../utils/markdownParser';
+export interface LoreBlock {
+  id: string;
+  title: string;
+  content: string;
+}
 
 export type Role = 'master' | 'player' | 'system_feedback';
 
@@ -72,6 +76,7 @@ export interface Story {
   genre: string;
   synopsis: string;
   language?: string;
+  narratorStyle?: NarratorStyle;
   narrativePropensity?: NarrativePropensity;
   dynamicState: {
     characterSheet: string;
@@ -145,7 +150,7 @@ export interface StoryState {
     stochasticMatrix?: CampaignStochasticMatrix
   ) => void;
   setNarrativePropensity: (storyId: string, propensity: NarrativePropensity) => void;
-  setNarratorStyle?: (storyId: string, style: NarratorStyle) => void;
+  setNarratorStyle: (storyId: string, style: NarratorStyle) => void;
   deleteStory: (storyId: string) => void;
   addMessage: (role: Role, content: string) => void;
   sendMessage: (content: string) => Promise<void>;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
 import { Story, NarrativePropensity, StorySections } from '../types/story';
 import { Plus, BookOpen, Trash2, Clock, Sparkles, Settings, X, ChevronRight, ChevronDown, Play, BarChart2, Loader } from 'lucide-react';
-import { fetchNarrative } from '../services/llmService';
+import { translateJourneyBatch } from '../services/translationService';
 import { buildStochasticMatrixWithOverrides, StochasticMatrixOverrides } from '../utils/diceUtils';
 
 const formatRelativeTime = (timestamp: number): string => {
@@ -161,73 +161,32 @@ export const HomeView: React.FC = () => {
       : `// AI Master Notes — ${finalTitle}\n// Act 1: The First Step\n- Character: ${pendingJourneyData.characterName}\n- Introduce the primary conflict.\n- Build atmospheric world-building.`;
     let finalSections = pendingJourneyData.sections;
 
-    if (key) {
+    if (key && selectedLanguage.toLowerCase() !== 'english') {
       setIsTranslating(true);
       setTranslationStatus('Translating adventure...');
       try {
-        const translateField = async (text: string, systemPrompt: string): Promise<string> => {
-          if (!text.trim()) return text;
-          try {
-            const result = await fetchNarrative(
-              state.llmProvider || 'openrouter',
-              url,
-              key,
-              model,
-              systemPrompt,
-              [{ id: 'trans_' + Date.now() + Math.random(), role: 'player', content: text }]
-            );
-            return result.trim() || text;
-          } catch (err) {
-            console.error('Field translation error:', err);
-            return text;
+        const translated = await translateJourneyBatch(
+          state.llmProvider || 'openrouter',
+          url,
+          key,
+          model,
+          selectedLanguage,
+          {
+            title: finalTitle,
+            synopsis: finalSynopsis,
+            characterSheetContent: finalCharSheet,
+            compiledLorebookMarkdown: finalLorebook,
+            masterJournal: finalJournal,
+            sections: finalSections,
           }
-        };
+        );
 
-        const titlePrompt = `You are a professional translator. Translate the following adventure title into ${selectedLanguage}. Make it sound natural, evocative, and epic in ${selectedLanguage}. Return ONLY the translated title text, with no explanations, no quotes, and no extra commentary.`;
-        const synopsisPrompt = `You are an expert fantasy/RPG translator. Translate the following adventure synopsis into ${selectedLanguage}. Keep it engaging, dramatic, and atmospheric. Return ONLY the translated synopsis text, with no explanations or metadata.`;
-        const charSheetPrompt = `You are an expert RPG system translator. Translate the following character sheet into ${selectedLanguage}. Preserve the original text structure, layout, newlines, and labels exactly. Return ONLY the translated character sheet.`;
-        const lorebookPrompt = `You are an expert fantasy worldbuilding translator. Translate the following lorebook markdown content into ${selectedLanguage}. Preserve all markdown syntax exactly. Return ONLY the translated markdown.`;
-        const journalPrompt = `You are a Game Master assistant. Translate the following GM notes/journal into ${selectedLanguage}. Preserve the format, bullet points, and comment markers exactly. Return ONLY the translated notes.`;
-        const sectionSettingPrompt = `You are an expert RPG translator. Translate the following world setting description into ${selectedLanguage}. Preserve the tone, imagery, and paragraphs. Return ONLY the translated text.`;
-        const sectionFactionsPrompt = `You are an expert RPG translator. Translate the following factions and groups into ${selectedLanguage}. Preserve the bullet points and structure exactly. Return ONLY the translated text.`;
-        const sectionConflictsPrompt = `You are an expert RPG translator. Translate the following structural conflicts and frictions into ${selectedLanguage}. Preserve the bullet points and structure exactly. Return ONLY the translated text.`;
-        const sectionHistoryPrompt = `You are an expert RPG translator. Translate the following historical facts and established lore into ${selectedLanguage}. Preserve the bullet points and structure exactly. Return ONLY the translated text.`;
-
-        const [
-          translatedTitle,
-          translatedSynopsis,
-          translatedCharSheet,
-          translatedLorebook,
-          translatedJournal,
-          translatedSetting,
-          translatedFactions,
-          translatedConflicts,
-          translatedHistory,
-        ] = await Promise.all([
-          translateField(finalTitle, titlePrompt),
-          translateField(finalSynopsis, synopsisPrompt),
-          translateField(finalCharSheet, charSheetPrompt),
-          translateField(finalLorebook, lorebookPrompt),
-          translateField(finalJournal, journalPrompt),
-          translateField(pendingJourneyData.sections?.setting || '', sectionSettingPrompt),
-          translateField(pendingJourneyData.sections?.factions || '', sectionFactionsPrompt),
-          translateField(pendingJourneyData.sections?.conflicts || '', sectionConflictsPrompt),
-          translateField(pendingJourneyData.sections?.historicalFacts || '', sectionHistoryPrompt),
-        ]);
-
-        finalTitle = translatedTitle;
-        finalSynopsis = translatedSynopsis;
-        finalCharSheet = translatedCharSheet;
-        finalLorebook = translatedLorebook;
-        finalJournal = translatedJournal;
-        finalSections = {
-          setting: translatedSetting,
-          characterSheet: translatedCharSheet,
-          factions: translatedFactions,
-          conflicts: translatedConflicts,
-          historicalFacts: translatedHistory,
-        };
-
+        finalTitle = translated.title;
+        finalSynopsis = translated.synopsis;
+        finalCharSheet = translated.characterSheetContent;
+        finalLorebook = translated.compiledLorebookMarkdown;
+        finalJournal = translated.masterJournal;
+        finalSections = translated.sections;
       } catch (error) {
         console.error('Translation process error:', error);
       } finally {

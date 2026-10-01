@@ -2,11 +2,15 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { idbStorage } from '../utils/storage/idbStorage';
 import { StoryState } from '../types/story';
-import { createStorySlice } from './createStorySlice';
+import { createUISlice } from './slices/uiSlice';
+import { createSettingsSlice } from './slices/settingsSlice';
+import { createStorySlice } from './slices/storySlice';
 
 export const useStoryStore = create<StoryState>()(
   persist(
     (...a) => ({
+      ...createUISlice(...a),
+      ...createSettingsSlice(...a),
       ...createStorySlice(...a),
     }),
     {
@@ -43,12 +47,13 @@ export const useStoryStore = create<StoryState>()(
         });
 
         // Filter out the outdated Italian template ID if it is left in the user's DB
-        // and ensure narrativePropensity and judgeScratchpad are gracefully defaulted
+        // and ensure narrativePropensity, narratorStyle, and judgeScratchpad are gracefully defaulted
         const cleanStories = mergedStories
           .filter((s: any) => s.id !== 'echi-del-vuoto')
           .map((s: any) => ({
             ...s,
-            narrativePropensity: s.narrativePropensity || 'balanced',
+            narrativePropensity: s.narrativePropensity || s.narratorStyle || 'balanced',
+            narratorStyle: s.narratorStyle || (['cinematic', 'balanced', 'literary'].includes(s.narrativePropensity) ? s.narrativePropensity : 'balanced'),
             dynamicState: {
               ...s.dynamicState,
               judgeScratchpad: Array.isArray(s.dynamicState?.judgeScratchpad) ? s.dynamicState.judgeScratchpad : [],

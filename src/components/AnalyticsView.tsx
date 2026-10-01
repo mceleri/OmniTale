@@ -62,11 +62,29 @@ export const AnalyticsView: React.FC = () => {
   const journalTokens = estimateTokens(journalText);
   const coreInstructionTokens = 350; // Approximating base prompt text tokens in formatUnifiedPrompt
 
-  // Unified system prompt size
+  // Unified system prompt size with full 5-section canvas accuracy
   const totalSystemTokens = useMemo(() => {
-    const fullUnifiedText = formatUnifiedPrompt(loreText, charSheetText, journalText, feedbackText);
+    const sections = {
+      setting: story.dynamicState.setting,
+      characterSheet: story.dynamicState.characterSheet,
+      factions: story.dynamicState.factions,
+      conflicts: story.dynamicState.conflicts,
+      historicalFacts: story.dynamicState.historicalFacts,
+      lorebook: story.dynamicState.lorebook,
+    };
+    const fullUnifiedText = formatUnifiedPrompt(
+      loreText,
+      charSheetText,
+      journalText,
+      feedbackText,
+      story.language,
+      story.narrativePropensity,
+      sections,
+      undefined,
+      story.dynamicState.stochasticMatrix
+    );
     return estimateTokens(fullUnifiedText);
-  }, [loreText, charSheetText, journalText, feedbackText]);
+  }, [loreText, charSheetText, journalText, feedbackText, story]);
 
   // Entire message history token sum
   const messageTokensList = useMemo(() => {
