@@ -175,7 +175,8 @@ export const orchestrateMasterResponse = async (
         journal,
         startingIntent,
         propensity,
-        activeStory.language
+        activeStory.language,
+        stochasticMatrix
       );
 
       masterResponseText = await fetchNarrative(

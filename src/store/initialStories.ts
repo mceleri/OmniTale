@@ -55,25 +55,37 @@ Once a grand mountain sanctuary of the ancient Sun Elves, swallowed by the Whisp
 - Spectral Lanterns: Residual wisps over sunken plazas.
 - Timber-Stalkers: Chitinous predators of the outer woods.`,
       masterJournal: `// AI Master Notes — The Whispers of Eldoria
-// Act 1: The Moss-Covered Gateway
+// Act 1: The Gateway to the Whispering Woods
 
-[STARTING SCENARIO & ATMOSPHERE]
-- Evelyn arrives at the colossal moss-grown arch of Eldoria as twilight descends over the Whispering Woods.
-- Cold mountain mist rolls through the ruined pillars; the air smells of crushed pine needles, ancient damp stone, and ozone.
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Evelyn operates around the ancient moss-grown redoubts of Eldoria as twilight descends over the Whispering Woods.
+- Cold mountain mist rolls through ruined pillars; the air smells of crushed pine needles, damp granite, and ozone.
 - Soft violet pulses emanate from deep within the ruins, causing Evelyn's silver pendant to hum with resonant warmth.
 
-[IMMEDIATE DILEMMAS & CHOICES FOR THE PLAYER]
-1. The Wounded Scholar: Near the collapsed gatehouse lies Scholar Elian, clutching a bleeding shoulder and a leather-bound satchel. A feral Timber-Stalker is circling in the nearby ferns.
-2. The Warden's Mark: Sylvan warning runes carved fresh into the archway warn that passing the threshold triggers ancient warding traps.
-3. The Mercenary Campfire: Smoke rises from a ravine 300 paces east where Torin's mercenaries are arguing over their scout's failure to return.
+[ACTIVE FACTIONS & SCHEMES]
+1. The Sylvan Wardens
+   - Strategic Goal: Preserve the ancient seal of Eldoria at all costs and prevent outside contamination.
+   - Active Operation & Timeline: Patrol the outer brier boundaries; warding rune maintenance before the solstice.
+   - Physical Bottlenecks & Dependencies: Boundary wardstones and ancient heartwood totems.
+   - Current Knowledge & Blind Spots: Wary of imperial scholars; currently unaware of the protagonist's specific botanical cover. [Standing: Tier 2 - Distrustful / Guarded].
 
-[SECRETS & HIDDEN TRUTHS (DM ONLY)]
+2. The High Arcane Conclave of Oakhaven
+   - Strategic Goal: Tap into Eldoria's ancient conduits to replenish dying magical engines in the capital.
+   - Active Operation & Timeline: Setting up forward excavation camps near the forest perimeter.
+   - Physical Bottlenecks & Dependencies: Runic breach-spikes and planar stabilization anchors.
+   - Current Knowledge & Blind Spots: Believe the ruins hold an energy engine, unaware of the contained Void entity. [Standing: Tier 3 - Neutral / Transactional].
+
+3. The Gilded Talon Mercenary Company
+   - Strategic Goal: Secure salvageable relics and ancient elven gold for private patrons.
+   - Active Operation & Timeline: Scouting perimeter ruins and establishing fortified supply lines.
+   - Physical Bottlenecks & Dependencies: Local mountain guides and unmapped trail charts.
+   - Current Knowledge & Blind Spots: Purely pragmatic, motivated by coin; oblivious to arcane rift hazards. [Standing: Tier 3 - Neutral / Transactional].
+
+[SECRETS & LATENT THREATS]
 - The Violet Beacon is not an engine; it is a cage containing "Valithar", a fallen elven solar guardian corrupted by the Void. The Conclave's dispelling runes will shatter the cage rather than harness it.
-- Scholar Elian's wound was inflicted not by beasts, but by Warden Maeve's arrows when he tried to plant an arcane breach-spike.
 
-[INCIDENTAL WORLD HOOKS]
-- A lost pack mule caught in briars carrying ancient astrological tablets.
-- An overgrown shrine dedicated to the elven deity of the hunt with a faded riddle granting a blessing of silent movement.`,
+[CORE DIRECTIVES FOR THE MASTER]
+- Maintain rich sensory atmosphere, wilderness mystery, and tactical caution.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "The sun is setting. I am crouched among the ferns, observing the mossy gateway to Eldoria and searching for fresh tracks before deciding whether to cross the wards.",
@@ -134,25 +146,38 @@ The rain-drenched underbelly of Neo-Kyoto. Corporate monoliths tower into toxic 
 - The Rust Syndicate: Street cyber-yakuza.
 - Precinct 9: Cynical municipal police force.`,
       masterJournal: `// AI Master Notes — Sector 7: Neon Drift
-// Act 1: Safehouse Grid Lockdown
+// Act 1: The Sump Lockdown
 
-[STARTING SCENARIO]
-- Kaelen is inside a cramped, vibrating capsule hotel room (Unit 204) in the Sump as torrential rain hammers against the rusted exhaust fan.
-- On the desk: the glowing red datachip plugged into a portable deck scanner, decoding layer 3 of 5 encryption firewalls.
-- Outside: the distant whine of Shin-Megacorp search drones sweeping the alley with spotlight beams.
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Kaelen operates in Sector 7 ("The Sump"), the rain-drenched underbelly of Neo-Kyoto.
+- Acidic rain, flickering neon advertisements, distant search drone whines, steam rising from sewer grates.
+- The stolen "Project Lazarus" datachip is in Kaelen's possession, undergoing decryption.
 
-[IMMEDIATE DILEMMAS & BRANCHING HOOKS]
-1. Drone Ping: Kaelen's neural link registers an active wireless pulse scan from Sec-Ops closing in on the hotel block.
-2. Blue's Comm Call: Fixer Blue sends a frantic ping: "They're raiding my lounge. Meet me at Kaito's clinic or the deal is dead."
-3. The Neighbor: A frantic banging on Kaelen's door—an injured courier in the adjacent capsule is begging for a trauma-patch.
+[ACTIVE FACTIONS & SCHEMES]
+1. Shin-Megacorp Sec-Ops
+   - Strategic Goal: Retrieve Project Lazarus at all costs and eliminate all rogue handlers.
+   - Active Operation & Timeline: Grid-by-grid signal sweeps and biometric checkpoints in lower Sector 7.
+   - Physical Bottlenecks & Dependencies: Local relay uplinks and subnet packet sniffers.
+   - Current Knowledge & Blind Spots: Know the datachip is in Sector 7; do not yet know Kaelen's cover alias as Derrick Vance. [Standing: Tier 1 - Hostile].
 
-[DM SECRETS & FACTION TENSIONS]
-- Blue's debt is owed directly to Shin-Megacorp's regional security chief; she is torn between saving Kaelen or turning him in to clear her record.
-- Null-Vector has sleeper agents inside Precinct 9 who are monitoring police radio bands to locate Kaelen first.
+2. Null-Vector
+   - Strategic Goal: Intercept and liberate corporate data to expose megacorp crimes to the public.
+   - Active Operation & Timeline: Monitoring police frequencies and tapping black-clinic networks.
+   - Physical Bottlenecks & Dependencies: Secure proxy nodes and trusted physical runners.
+   - Current Knowledge & Blind Spots: Scented a major data breach; trying to locate the decker before Sec-Ops. [Standing: Tier 3 - Neutral / Opportunistic].
 
-[INCIDENTAL WORLD ELEMENTS]
-- An automated noodle delivery drone malfunctioning in the hallway, repeating cheerful greetings in three languages.
-- An illegal braindance dealer trying to fence stolen memory shards in the hotel lobby.`,
+3. The Rust Syndicate
+   - Strategic Goal: Control illicit cyber-clinics and black-market trade in Sector 7 without drawing full corporate military raids.
+   - Active Operation & Timeline: Enforcing turf protection and taxing clandestine safehouses.
+   - Physical Bottlenecks & Dependencies: Back-alley clinic networks and smuggled military cyberware.
+   - Current Knowledge & Blind Spots: Cautious about corporate activity; willing to fence high-value tech for exorbitant cuts. [Standing: Tier 3 - Neutral / Transactional].
+
+[SECRETS & FACTION TENSIONS]
+- Fixer Blue's debt is owed directly to Shin-Megacorp's regional security chief; she is caught between protecting Kaelen and clearing her debt.
+- Null-Vector has sleeper agents inside Precinct 9 police dispatch.
+
+[CORE DIRECTIVES FOR THE MASTER]
+- Fast-paced, gritty cyberpunk realism, electronic hums, neon shadows, and high stakes.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "I am holed up in my neon capsule room. Acid rain lashes against the glass as my cyberdeck decrypts the datachip stolen from Shin-Megacorp.",
@@ -204,25 +229,38 @@ Deep-crust modular outpost on Europa, four kilometers beneath the ice shell. Gro
 - Drilling Crew: Industrial miners on the verge of mutiny over safety concerns.
 - Scientific Division: Researchers investigating anomalous sub-ice acoustics.`,
       masterJournal: `// AI Master Notes — The Deep Ice
-// Act 1: The Silence Beneath Shaft 4
+// Act 1: Outpost Boreas Under Pressure
 
-[STARTING SCENARIO]
-- Isaac stands on the observation platform overlooking the abyssal cavern of Shaft 4.
-- Below: the massive drill bit sits frozen in black hydrothermal ice, surrounded by plumes of super-heated steam and eerie blue luminescence.
-- Through the soles of his magnetic boots comes a distinct, rhythmic cadence: THREE SLOW TAPS, followed by TWO RAPID PULSES.
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Outpost Boreas is anchored 4 kilometers beneath Europa's surface ice above a pitch-black subterranean ocean.
+- Temperatures drop to -60°C outside; the station creaks continuously under Jupiter's gravitational tidal friction.
+- Shaft 4 has reached deep hydrothermal vents, where rhythmic acoustic pulses hum through the ice.
 
-[IMMEDIATE DILEMMAS FOR ISAAC]
-1. The Seized Drill Head: Sensor readings show an organic crystalline crust actively fusing with the titanium drill bit, rapidly draining the station's thermal capacitors.
-2. The Crew Argument: Heated voices over the comm channel—Chief Engineer Petrova is refusing Commander Harris's direct order to send a dive team into the shaft.
-3. The Acoustic Anomaly: Dr. Soren has slipped past security into the lower maintenance tunnel, heading directly toward the unsealed borehole.
+[ACTIVE FACTIONS & SCHEMES]
+1. Station Administration
+   - Strategic Goal: Maintain mining quotas and enforce strict corporate quarantine protocols.
+   - Active Operation & Timeline: Preparing automated core extraction despite anomalous telemetry.
+   - Physical Bottlenecks & Dependencies: Central station power grid and communication relay.
+   - Current Knowledge & Blind Spots: Dismissing crew psychological reports as standard cabin fever. [Standing: Tier 3 - Neutral / Bureaucratic].
+
+2. The Roughneck Drilling Crew
+   - Strategic Goal: Station structural survival and preventing catastrophic ice fractures.
+   - Active Operation & Timeline: Demanding emergency shutoff of Shaft 4 and inspecting thermal stress seals.
+   - Physical Bottlenecks & Dependencies: Heavy plasma torches and pressure hatch hydraulics.
+   - Current Knowledge & Blind Spots: Terrified of hull breach, superstitious about sub-ice sounds. [Standing: Tier 4 - Favorable / Guarded Respect].
+
+3. The Xenobiology Research Team
+   - Strategic Goal: Analyze and record anomalous bio-acoustic frequencies from the abyss.
+   - Active Operation & Timeline: Deploying acoustic resonators and sub-ice sensor buoys into Shaft 4.
+   - Physical Bottlenecks & Dependencies: Cryo-sensor telemetry pods and bio-containment seals.
+   - Current Knowledge & Blind Spots: Fascinated by the signals, oblivious to neurological synaptic rewiring risks. [Standing: Tier 3 - Neutral / Transactional].
 
 [SECRETS & THE NATURE OF THE ENTITY]
-- The entity is an ancient piezoelectric bio-matrix living in the subterranean ocean. It does not think with human logic; its acoustic pulses induce synaptic rewiring and audio hallucinations in carbon-based life forms.
-- Harris's secret orders are to seal all personnel inside the station and trigger automated sample return if bio-containment fails.
+- The entity is an ancient piezoelectric bio-matrix whose harmonic pulses cause synaptic hallucinations and cellular crystallization.
+- Corporate command has pre-programmed emergency lockdown protocols to seal the station if containment fails.
 
-[INCIDENTAL STATION DETAILS]
-- Condensation freezing into delicate frost fractals on Isaac's suit visor.
-- The flickering green glow of an emergency hydroponics monitor reporting abnormal algae growth responding to the acoustic vibration.`,
+[CORE DIRECTIVES FOR THE MASTER]
+- Claustrophobic sci-fi survival, acoustic tension, condensation on visors, and scientific problem-solving.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "I am alone on the observation platform of Shaft 4. I am analyzing thermal pressure logs, trying to figure out the source of rhythmic thumps in the ice.",
@@ -276,25 +314,38 @@ Tiered metropolis built around the Great Portal. White stone architecture, canal
 - The Osys Enclave: Foreign rift-maintenance mages.
 - The Silt Veil Syndicate: Black-market canal smugglers.`,
       masterJournal: `// AI Master Notes — Tariald Chronicles
-// Act 1: The Portal's Secret
+// Act 1: The Great Portal Maintenance
 
-[STARTING SCENARIO]
-- Zor is finishing a grueling 14-hour shift on the lower maintenance gantry beneath the Great Portal's primary aperture.
-- The air is thick with the scent of burning copper, raw ozone, and the faint, sweet smell of brimstone.
-- In the back of his skull, Malok's raspy voice whispers: *"The rift is bleeding, little mage... Reach out and taste what approaches."*
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Zor operates on the lower maintenance gantries of the Great Portal in the tiered canal metropolis of Tariald.
+- Ozone, burning copper, distant chants of high sorcerers, canal gondolas laden with planar crystals.
+- Malok the Render whispers constantly in the back of Zor's mind, seeking planar rifts and entropic mana.
 
-[IMMEDIATE DILEMMAS FOR ZOR]
-1. The Unregistered Anomaly: The portal's exhaust valves spit out an **Obsidian Shard**—a hyper-dense, sub-zero planar anchor radiating black frost. If Zor reports it, Inquisitors will inspect the area; if he conceals it, Malok will gain power.
-2. Inquisitor on the Gantry: Inquisitor Morwen and two iron-clad guards have just stepped onto the upper catwalk for an unannounced inspection of the Osys crew.
-3. Valerius's Order: Supervisor Valerius signals Zor from across the platform with the enclave sign: *"Stall the inspectors at all costs."*
+[ACTIVE FACTIONS & SCHEMES]
+1. The Tariald Academy of High Sorcery
+   - Strategic Goal: Regulate portal commerce, extract massive planar tariffs, and preserve aristocratic arcane dominance.
+   - Active Operation & Timeline: Scheduling intensive portal cycle rotations to maximize cargo throughput.
+   - Physical Bottlenecks & Dependencies: Aperture mana-dampeners and Osys technician maintenance shifts.
+   - Current Knowledge & Blind Spots: View Osys mages as expendable laborers; blind to demonic bindings among clerks. [Standing: Tier 3 - Neutral / Hierarchical].
 
-[DEMONIC MECHANICS (DM ONLY)]
-- Whenever Zor uses magic beyond minor cantrips, describe subtle physical manifestations (sulfur scent, eyes turning void-black for a microsecond).
-- If Zor acts with restraint and clever deception, reward him with narrative momentum; do not force Malok to break cover unless the player actively taps into demonic power.
+2. The Inquisitorial Eye
+   - Strategic Goal: Detect and eradicate entropic magic, demonic taint, and unauthorized dimensional breaches.
+   - Active Operation & Timeline: Unannounced sweeps and soul-hound inspections along the maintenance catwalks.
+   - Physical Bottlenecks & Dependencies: Consecrated soul-hound constructs and mana-resonance censers.
+   - Current Knowledge & Blind Spots: Highly suspicious of foreign workers, but rely on standard arcane tests that Zor's seals can mask. [Standing: Tier 2 - Distrustful / Hostile if exposed].
 
-[INCIDENTAL WORLD ELEMENTS]
-- A cage of fluttering astral moths used by the crew to test for planar poison leaks.
-- An Academy junior apprentice spilling a canister of shimmering ink and desperately trying to clean it before the Inquisitor notices.`,
+3. The Osys Mage Enclave
+   - Strategic Goal: Protect immigrant workers, secure fair wages, and maintain solidarity against Academy exploitation.
+   - Active Operation & Timeline: Covering for exhausted members and managing emergency repair schedules.
+   - Physical Bottlenecks & Dependencies: Shared toolkits, warding chalk, and mutual trust.
+   - Current Knowledge & Blind Spots: Loyal to fellow Osys mages; oblivious to Zor's demonic host status. [Standing: Tier 4 - Favorable / Solidarity].
+
+[DEMONIC MECHANICS & SECRETS]
+- Malok gains power and manifests physical signs (sulfur scent, black eyes) whenever Zor taps into entropic magic.
+- Capital law mandates immediate soul-severing execution for demon hosts.
+
+[CORE DIRECTIVES FOR THE MASTER]
+- Dark fantasy intrigue, oppressive class hierarchy, internal struggle, and arcane caution.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "I am finishing a grueling 14-hour shift in the Great Gate's maintenance conduits. I pretend to log arcane entries while trying to drown out the demon's whispers in my head.",
@@ -342,21 +393,35 @@ Top-floor luxury penthouse (Suite 44A) overlooking a rain-drenched metropolitan 
 ## NPC Compartmentalization Directive
 Every NPC possesses only their specific fragment of the truth and acts with realistic suspicion or corporate reserve.`,
       masterJournal: `// AI Master Notes — Blackout
+// Act 1: Awakening in Suite 44A
+
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Penthouse Suite 44A in the glass metropolitan financial district. Cold rain drumming against floor-to-ceiling windows.
+- The protagonist has awakened with complete retrograde declarative amnesia, bruised knuckles, a stopped watch (01:14 AM), and a dead phone.
+
+[ACTIVE FACTIONS & SCHEMES]
+1. Private Executive Security (Apex Capital)
+   - Strategic Goal: Secure confidential asset records and monitor high-level personnel movements.
+   - Active Operation & Timeline: Routine night patrols and lobby surveillance in Tower 44.
+   - Physical Bottlenecks & Dependencies: Electronic keycard logs and elevator biometric passes.
+   - Current Knowledge & Blind Spots: Expecting the protagonist to attend scheduled morning executive meetings. [Standing: Tier 3 - Professional / Cautious].
+
+2. Metropolitan Police Department (Night Detectives)
+   - Strategic Goal: Investigate dockside incident reports and financial district security triggers.
+   - Active Operation & Timeline: Following leads related to a violent confrontation earlier tonight.
+   - Physical Bottlenecks & Dependencies: Forensic warrants and surveillance footage access.
+   - Current Knowledge & Blind Spots: Tracking a suspect matching the protagonist's physical profile. [Standing: Tier 2 - Distrustful / Investigating].
+
+[HIDDEN TRUTHS & SECRETS (DM ONLY)]
 // STRICT RULE: Choose ONE Hidden Truth below at the start of the game and NEVER deviate. NPCs only know their specific fragments.
+// Option A (The Whistleblower): Discovered the firm was financing an international trafficking ring; drugged to silence before federal testimony.
+// Option B (The Clean-up Architect): The syndicate mastermind whose psychological dissociative break followed a betrayal hit ordered last night.
+// Option C (The Double Agent): An undercover federal operative whose cover was blown hours ago; handler compromised.
+- The wall safe holds emergency funds ($45,000), a passport, and a photo linking the protagonist to a dockside warehouse.
 
-// [TRUTH OPTIONS - SELECT ONE AT START]
-// Option A (The Whistleblower): You discovered your firm was financing an international human trafficking syndicate; you gathered evidence and were drugged by Marsh to silence you before the FBI meeting tonight.
-// Option B (The Clean-up Architect): You were the syndicate's mastermind. The guilt caused a psychological dissociative break after you ordered a hit on your closest partner last night.
-// Option C (The Double Agent): You are an undercover federal operative whose cover was blown 6 hours ago. Your handler was compromised.
-
-[ACT 1: THE AWAKENING]
-- The player wakes up on the cold hardwood floor of the penthouse living room.
-- Sensory details: The hum of the climate control, the steady patter of rain on the glass panorama, the blinking red light of the answering machine.
-- Immediate Clue: A faint dark smudge on the entrance rug, half-concealed beneath a designer ottoman.
-
-[PACING & REVEAL RULES]
-- Reveal only ONE concrete clue per scene. Let the player explore, inspect objects, test phone contacts, and decide how to interact with callers.
-- Do not rush the player with sudden combat; focus on intense psychological tension, paranoia, and fragmented revelation.`,
+[CORE DIRECTIVES FOR THE MASTER]
+- Intense psychological thriller tension, tactile deduction, grounded realism, and fragmented revelations.
+- Reveal only ONE concrete clue per scene. Let the player explore, inspect objects, test contacts, and decide how to interact.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "I just woke up with a start on the hardwood floor of this unfamiliar penthouse. A throbbing headache pounds in my skull, rain hammers the windows, and I have no idea how I got here.",
@@ -414,26 +479,38 @@ Lawless red-dust frontier planet Tartarus. Corrugated iron cantinas, moisture va
 - Frontier Settlers Union: Impoverished miners defending their autonomy.
 - Void Scrappers Guild: Resourceful salvage operators.`,
       masterJournal: `// AI Master Notes — Echoes of the Void
-// Act 1: Fire on the Frontier
+// Act 1: Rust-Crest Outpost
 
-[STARTING SCENARIO]
-- Lyra sits in the shadowy balcony of a dusty cantina in the frontier outpost of "Rust-Crest" on planet Tartarus.
-- Harsh twin suns bake the rust-red canyon outside; hot desert wind rattles the corrugated iron roof.
-- In her mind, psychic whispers ripple: a mixture of local miners' anxiety and a deep, humming vibration beneath the planet's mantle.
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Lyra operates in the frontier outpost of "Rust-Crest" on the dusty red planet Tartarus under twin suns.
+- Corrugated iron cantinas, moisture vaporators, hot desert wind, and distant planetary hums.
+- Psionic echoes and latent voices in the void ripple through Lyra's consciousness.
 
-[CORE CONFLICT HOOKS FOR THE DM]
-1. Vanguard Extortion: Three heavily armored Vanguard Syndicate enforcers are shoving the elderly cantina owner against the bar, demanding immediate fuel tithes.
-2. The Whispering Cavern: Deep beneath the settlement, an ancient Precursor beacon is pulsing, transmitting memories of an ancient war directly into Lyra's head.
-3. The Sheriff's Plea: Sheriff Reed is quietly watching the mercenaries from a corner booth, his hand hovering over his holster, knowing a shootout will destroy the cantina.
+[ACTIVE FACTIONS & SCHEMES]
+1. The Vanguard Syndicate
+   - Strategic Goal: Enforce debt contracts and seize regional water/fuel reserves for private export.
+   - Active Operation & Timeline: Extorting local settlers and enforcing armed tithes in frontier settlements.
+   - Physical Bottlenecks & Dependencies: Armored skimmers and corporate ammunition supply lines.
+   - Current Knowledge & Blind Spots: Arrogant and heavy-handed; unaware that an ex-Ghost operative is in the sector. [Standing: Tier 1 - Hostile / Oppressive].
 
-[DM GUIDELINES & SENSORY TONE]
-- Gritty space-western tone, intense dust-swept atmosphere, moral ambiguity.
-- Give Lyra freedom to resolve conflicts via sniper overwatch, social deception with her cover persona, or direct intervention.
-- The "voices of the void" should be atmospheric narrative flavor rather than constant disabling penalties.
+2. The Frontier Settlers Union
+   - Strategic Goal: Defend local autonomy, protect shared aquifers, and resist corporate extortion.
+   - Active Operation & Timeline: Organizing mutual defense watches and bartering scrap components.
+   - Physical Bottlenecks & Dependencies: Working moisture evaporators and hunting rations.
+   - Current Knowledge & Blind Spots: Desperate for skilled allies, wary of bounty hunters. [Standing: Tier 3 - Neutral / Receptive].
 
-[INCIDENTAL WORLD ELEMENTS]
-- A clanking water vaporator leaking precious clean droplets into a rusted bucket.
-- A half-tamed desert sand-skimmer tied to the hitching post outside, sniffing the dusty wind.`,
+3. The Void Scrappers Guild
+   - Strategic Goal: Salvage ancient pre-collapse terraformer engines and trade tech on the black market.
+   - Active Operation & Timeline: Exploring canyon trenches and subterranean Precursor conduits.
+   - Physical Bottlenecks & Dependencies: Heavy cutting rigs and atmospheric suits.
+   - Current Knowledge & Blind Spots: Pragmatic junk dealers; possess rumors of ancient underground ruins. [Standing: Tier 3 - Neutral / Transactional].
+
+[SECRETS & LATENT THREATS]
+- Deep beneath Tartarus, an ancient Precursor beacon is pulsing, transmitting memories of an ancient cosmic war.
+- A secret bounty exists across the Kepler Sector for surviving Ghost operatives.
+
+[CORE DIRECTIVES FOR THE MASTER]
+- Space-western grit, heat shimmer, moral ambiguity, sniper overwatch, and empathetic defense of the weak.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "I am sitting in the shadows of the upper balcony of a cantina in Rust-Crest. I clean the scope of my rifle and listen to the miners grumbling below, keeping one eye on the main entrance.",
@@ -540,39 +617,37 @@ Husband and wife for centuries and mortal vessels of the Collective Flame, livin
       masterJournal: `// AI Master Notes — The Collective Flame
 // Act 1: Life and Mysteries along the Willow Canals
 
-[STARTING SCENARIO & ATMOSPHERE]
-- Kael and Leonor have lived peacefully at The Willow Apothecary for nearly a year. The shop smells of dried mint, spruce resin, and beeswax candles.
-- They are well-known and liked throughout the lower canal district: locals know Kael can set a dislocated shoulder or soothe a virulent fever with remarkable arcane touch, while Leonor gently listens to spirit murmurs to bring comfort to grieving families.
-- Their couple dynamic is affectionate, witty, and peppered with unspoken telepathic banter.
-
-[IMMEDIATE SCENE HOOKS (CHOOSE OR COMBINE ORGANICALLY)]
-1. Master Tarek's Plight: The half-orc innkeeper knocks on the apothecary door, rubbing his aching back with a grimace: strange ghostly whispers and faint blue glows have been rising from his tavern cellar ever since he purchased three barrels of spiced cider from an out-of-town barge captain.
-2. Brother Julian's Errand: The young solar cleric drops by to collect ritual incense for the chapel, blushing nervously as he greets Leonor, but brings intriguing news: canal patrols recovered an odd dagger etched with shadowy runes from near the docks.
-3. The Overconfident Cutpurses: Sofi darts into the shop to warn that two young street thieves from the "Canal Wolves" are casing the apothecary, convinced a pair of young newlywed herbalists will make an easy, wealthy mark.
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Kael and Leonor live and work at The Willow Apothecary in the lower canals district of Valoria. The shop smells of dried mint, spruce resin, and beeswax candles.
+- Both are the mortal vessels of the Collective Flame, deeply in love and united in soul for centuries, dedicated to protecting their cozy neighborhood life without leaking their divine cosmic nature.
 
 [ACTIVE FACTIONS & SCHEMES]
 1. The Tyrant's Ashes (Willow Canal Cell)
-   - Strategic Goal: Awaken the dormant bloodline conduits beneath the city to restore their fallen matriarch. (Can pivot to silent retreat or reprisal if compromised).
-   - Active Operation & Timeline: Breach the sealed crypt beneath the canal locks during midnight high tide tonight.
-   - Physical Bottlenecks & Dependencies: The shadow-etched bone focus/dagger (lost during an earlier scuffle near the docks). Without this specific consecrated focus, forcing open the crypt's necrotic ward will trigger a violent backfire rather than unlocking it.
-   - Current Knowledge & Blind Spots: They know the dagger was dropped near the western docks. They believe an ordinary dock scavenger or canal patrol pocketed it; they have ZERO knowledge that Brother Julian brought it to the Willow Apothecary, and ZERO knowledge of Kael and Leonor's true past. [Standing: Tier 1 - Hostile, currently unaware of protagonists].
+   - Strategic Goal: Awaken dormant bloodline conduits beneath the city to restore their fallen matriarch.
+   - Active Operation & Timeline: Conducting clandestine rites in sunken crypts beneath the canal locks.
+   - Physical Bottlenecks & Dependencies: Necrotic blood reagents, shadow-etched bone foci, and midnight tide windows.
+   - Current Knowledge & Blind Spots: Operating in secret; entirely unaware of Kael and Leonor's true primordial identities. [Standing: Tier 1 - Hostile / Latent Threat].
 
 2. Order of the Solar Flame (Local Canal Parish)
    - Strategic Goal: Maintain spiritual purity, dispense charity, and root out dark superstition along the canal slums.
-   - Active Operation & Timeline: Routine parish rounds; Brother Julian is collecting blessed incense from the apothecary and showing the strange recovered dagger to knowledgeable locals for informal identification.
-   - Physical Bottlenecks & Dependencies: Chapel sanctification censers; lack of seasoned inquisitors in this humble district.
-   - Current Knowledge & Blind Spots: Julian believes the dagger is an inert or harmless pagan antique, completely unaware of its ritual resonance or the midnight timeline. He holds deep, flustered affection for Leonor and genuine respect for Kael. [Standing: Tier 4 - Favorable / Guarded Respect].
+   - Active Operation & Timeline: Routine parish rounds, market blessings, and aid for the impoverished (such as Brother Julian).
+   - Physical Bottlenecks & Dependencies: Chapel sanctification censers, soothing incense supplies, and limited district clergy.
+   - Current Knowledge & Blind Spots: Respect Kael and Leonor as skilled local apothecaries. [Standing: Tier 4 - Favorable / Guarded Respect].
 
-[CORE DIRECTIVES FOR THE GAME MASTER]
-1. EVERYDAY VITALITY & GENUINE HIGH FANTASY:
-   - Make magic feel tangible and alive: domestic cantrips, color-shifting herbal draughts, curious minor spirits, and lively banter between apothecaries and students.
-   - ABSOLUTELY NO industrial anachronisms (no modern plumbing, heavy metal pipes, chemical factory pollution, or notarized tax bureaucracy).
-2. SOCIAL CHARM, WIT & FLIRTATION:
-   - Celebrate the protagonists' personal charm: appreciative passersby, playful neighborhood flirtations, and affectionate telepathic repartee between husband and wife.
-   - Bring NPCs to life with distinct warmth and quirks: Master Tarek is rustic and protective, Sofi is sharp and loyal, Julian is gentle and flustered.
-3. THE ART OF RESTRAINT:
-   - The primary stake is not avoiding death in combat, but safeguarding their cozy mortal life and friends without alerting ancient watchful eyes (the Obsidian Watchers or Tyrant's Ashes).
-   - When overcoming obstacles, encourage mundane ingenuity, practical herbalism, clever diplomacy, and subtle magic rather than overt cosmic displays.`,
+3. The Academy of Channelers (Valoria's Arcane Guild)
+   - Strategic Goal: Regulate civic magical commerce and maintain guild dominance over potions and scrolls.
+   - Active Operation & Timeline: Periodic informal inspections of hedge-shops and academic debates.
+   - Physical Bottlenecks & Dependencies: Guild licensure registries and rigid formal formulas.
+   - Current Knowledge & Blind Spots: Condescendingly view Kael as a lucky hedge-healer, oblivious to his true arcane mastery. [Standing: Tier 3 - Neutral / Transactional].
+
+[SECRETS & LATENT THREATS]
+- The Obsidian Watchers constantly scan the city for reality-bending anomalies or immortal avatars.
+- Revealing the true divine nature of the Collective Flame would summon ancient cosmic powers and destroy their cherished peace.
+
+[CORE DIRECTIVES FOR THE MASTER]
+- Make high fantasy magic feel tangible, vibrant, and pre-industrial (strictly no modern industrial anachronisms).
+- Celebrate the couple's personal charm, affectionate telepathic banter, and warm bonds with neighbors (Master Tarek, Sofi, Julian).
+- Encourage practical herbalism, clever mortal ingenuity, diplomacy, and subtle magic rather than overt cosmic displays.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "It is a quiet morning at the Willow Apothecary. Kael is finishing preparing an ointment while Leonor catalogs funeral manuscripts, enjoying the peace of our neighborhood.",

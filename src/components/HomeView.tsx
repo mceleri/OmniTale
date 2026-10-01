@@ -940,12 +940,12 @@ export const HomeView: React.FC = () => {
                         disabled={isTranslating}
                         className="bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-zinc-700 font-sans"
                       >
-                        <option value="random">🎲 Random (d100)</option>
-                        <option value="critical_low">💀 Critical Low (1-10)</option>
-                        <option value="low">🔻 Unfavorable (11-35)</option>
-                        <option value="neutral">⚖️ Neutral (36-65)</option>
-                        <option value="high">🔺 Favorable (66-90)</option>
-                        <option value="critical_high">⭐ Critical High (91-100)</option>
+                        <option value="random">🎲 Random</option>
+                        <option value="critical_low">💀 Critical Low (Severe Complication)</option>
+                        <option value="low">🔻 Unfavorable (Obstacle)</option>
+                        <option value="neutral">⚖️ Neutral (Balanced)</option>
+                        <option value="high">🔺 Favorable (Opportunity)</option>
+                        <option value="critical_high">⭐ Critical High (Triumph)</option>
                       </select>
                     </div>
                   ))}
