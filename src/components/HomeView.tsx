@@ -839,29 +839,29 @@ export const HomeView: React.FC = () => {
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-xs font-semibold text-zinc-200">
-                            Condizioni Iniziali (Stochastic Matrix)
+                            Stochastic Matrix (5 Starting Variables)
                           </span>
                           {customCount === 0 ? (
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono border border-zinc-700/60">
-                              🎲 Tutte Casuali (d100)
+                              🎲 All Random (d100)
                             </span>
                           ) : (
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 font-mono border border-emerald-700/70 font-medium flex items-center gap-1">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                              {customCount}/5 Personalizzati
+                              {customCount}/5 Customized
                             </span>
                           )}
                         </div>
                         <p className="text-[10px] text-zinc-400 font-sans mt-0.5 truncate">
                           {isStochasticAccordionOpen
-                            ? 'Configura manualmente o lascia "Random" per tirare i dadi'
-                            : 'Ambiente, Clima Sociale, Risorse, Contatti, Catalizzatore'}
+                            ? 'Configure manually or leave "Random" to roll d100'
+                            : 'Environment, Social Climate, Resources, Contacts, Catalyst'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0 ml-2">
                       <span className="text-[11px] font-sans text-zinc-400 hidden sm:inline">
-                        {isStochasticAccordionOpen ? 'Chiudi' : 'Personalizza'}
+                        {isStochasticAccordionOpen ? 'Close' : 'Customize'}
                       </span>
                       <ChevronDown
                         className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${
@@ -874,17 +874,17 @@ export const HomeView: React.FC = () => {
                   {isStochasticAccordionOpen && (
                     <div className="p-4 pt-2 space-y-3 border-t border-zinc-800/80 bg-zinc-950/90 animate-fade-in">
                       <p className="text-[11px] text-zinc-400 leading-snug">
-                        Puoi impostare manualmente il livello di partenza per ciascun asse, oppure lasciare <strong>🎲 Random</strong> per affidarti al tiro di d100.
+                        Optionally customize starting levels for each structural axis, or leave as <strong>🎲 Random</strong> to determine them with d100 rolls on launch.
                       </p>
                       <div className="space-y-2 pt-1">
                         {[
-                          { key: 'environment' as const, label: 'Ambiente & Rifugio', desc: 'Condizione fisica e sicurezza', icon: '🌦️' },
-                          { key: 'socialClimate' as const, label: 'Clima Sociale & Tensione', desc: 'Accoglienza, diffidenza o sorveglianza', icon: '👥' },
-                          { key: 'resources' as const, label: 'Risorse & Equipaggiamento', desc: 'Scarsità o abbondanza scorte', icon: '🎒' },
-                          { key: 'entourage' as const, label: 'Contatti & Alleati', desc: 'Affidabilità dei conoscenti vicini', icon: '🤝' },
-                          { key: 'catalyst' as const, label: 'Catalizzatore Imprevisto', desc: 'Natura della complicazione iniziale', icon: '⚡' },
+                          { key: 'environment' as const, label: 'Environment & Shelter', desc: 'Physical safety & condition', icon: '🌦️' },
+                          { key: 'socialClimate' as const, label: 'Social Climate & Standing', desc: 'Hospitality, suspicion, or surveillance', icon: '👥' },
+                          { key: 'resources' as const, label: 'Resources & Gear', desc: 'Scarcity or abundance of supplies', icon: '🎒' },
+                          { key: 'entourage' as const, label: 'Entourage & Contacts', desc: 'Reliability of nearby allies/contacts', icon: '🤝' },
+                          { key: 'catalyst' as const, label: 'Unexpected Catalyst', desc: 'Nature of the opening complication', icon: '⚡' },
                         ].map((dim) => (
-                          <div key={dim.key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 p-2.5 rounded-lg bg-zinc-900/50 border border-zinc-850">
+                          <div key={dim.key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 p-2.5 rounded-lg bg-zinc-900/50 border border-zinc-855">
                             <label className="text-xs text-zinc-200 flex items-center gap-2">
                               <span className="text-sm shrink-0">{dim.icon}</span>
                               <div>
@@ -907,12 +907,12 @@ export const HomeView: React.FC = () => {
                                   : 'border-zinc-800 text-zinc-300 focus:border-zinc-700'
                               }`}
                             >
-                              <option value="random">🎲 Random (Tiro d100)</option>
-                              <option value="critical_low">💀 Critical Low (Crisi / Complicazione)</option>
-                              <option value="low">🔻 Unfavorable (Ostacolo)</option>
-                              <option value="neutral">⚖️ Neutral (Equilibrato)</option>
-                              <option value="high">🔺 Favorable (Opportunità)</option>
-                              <option value="critical_high">⭐ Critical High (Trionfale)</option>
+                              <option value="random">🎲 Random (d100 roll)</option>
+                              <option value="critical_low">💀 Critical Low (Severe Complication)</option>
+                              <option value="low">🔻 Unfavorable (Obstacle)</option>
+                              <option value="neutral">⚖️ Neutral (Balanced)</option>
+                              <option value="high">🔺 Favorable (Opportunity)</option>
+                              <option value="critical_high">⭐ Critical High (Triumph)</option>
                             </select>
                           </div>
                         ))}
@@ -933,7 +933,7 @@ export const HomeView: React.FC = () => {
                             }
                             className="text-[11px] text-zinc-400 hover:text-zinc-200 hover:underline flex items-center gap-1 transition"
                           >
-                            <span>↺ Reimposta tutti su Random</span>
+                            <span>↺ Reset all to Random</span>
                           </button>
                         </div>
                       )}
@@ -947,32 +947,32 @@ export const HomeView: React.FC = () => {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
                 <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
-                  <span>Stile del Narratore</span>
+                  <span>Narrator Style</span>
                 </label>
-                <span className="text-[10px] text-zinc-500 font-sans shrink-0">Modificabile in partita</span>
+                <span className="text-[10px] text-zinc-500 font-sans shrink-0">Adjustable mid-game</span>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   {
                     id: 'cinematic' as const,
                     label: 'Cinematic',
-                    badge: '2-3 blocchi',
+                    badge: '2-3 blocks',
                     icon: '⚡',
-                    desc: 'Azione rapida e dialoghi incisivi.',
+                    desc: 'Fast-paced action & sharp dialogue.',
                   },
                   {
                     id: 'balanced' as const,
                     label: 'Balanced',
-                    badge: '2-4 blocchi',
+                    badge: '2-4 blocks',
                     icon: '⚖️',
-                    desc: 'Equilibrio tra azione e atmosfera.',
+                    desc: 'Balanced rhythm of action & lore.',
                   },
                   {
                     id: 'literary' as const,
                     label: 'Literary',
-                    badge: '3-5 blocchi',
+                    badge: '3-5 blocks',
                     icon: '📖',
-                    desc: 'Ricco di dettagli e introspezione.',
+                    desc: 'Rich descriptions & atmospheric depth.',
                   },
                 ].map((p) => {
                   const isSelected = selectedPropensity === p.id;
