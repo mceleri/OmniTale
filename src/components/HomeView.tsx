@@ -818,36 +818,161 @@ export const HomeView: React.FC = () => {
               />
             </div>
 
-            {/* Narrator Style Selector */}
-            <div className="space-y-2">
+            {/* Stochastic Matrix (5 Opening Variables) - Prominent Accordion */}
+            {(() => {
+              const customCount = Object.values(stochasticOverrides).filter((v) => v !== 'random').length;
+              return (
+                <div className={`border rounded-xl overflow-hidden transition-all ${
+                  isStochasticAccordionOpen
+                    ? 'border-zinc-700 bg-zinc-950/80 shadow-lg'
+                    : customCount > 0
+                    ? 'border-emerald-800/80 bg-emerald-950/20'
+                    : 'border-zinc-800 bg-zinc-950/50 hover:border-zinc-700'
+                }`}>
+                  <button
+                    type="button"
+                    onClick={() => setIsStochasticAccordionOpen(!isStochasticAccordionOpen)}
+                    className="w-full px-4 py-3 flex items-center justify-between hover:bg-zinc-900/50 transition text-left"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className="text-lg shrink-0">🎲</span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-semibold text-zinc-200">
+                            Condizioni Iniziali (Stochastic Matrix)
+                          </span>
+                          {customCount === 0 ? (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono border border-zinc-700/60">
+                              🎲 Tutte Casuali (d100)
+                            </span>
+                          ) : (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 font-mono border border-emerald-700/70 font-medium flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              {customCount}/5 Personalizzati
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-zinc-400 font-sans mt-0.5 truncate">
+                          {isStochasticAccordionOpen
+                            ? 'Configura manualmente o lascia "Random" per tirare i dadi'
+                            : 'Ambiente, Clima Sociale, Risorse, Contatti, Catalizzatore'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <span className="text-[11px] font-sans text-zinc-400 hidden sm:inline">
+                        {isStochasticAccordionOpen ? 'Chiudi' : 'Personalizza'}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${
+                          isStochasticAccordionOpen ? 'rotate-180 text-zinc-200' : ''
+                        }`}
+                      />
+                    </div>
+                  </button>
+
+                  {isStochasticAccordionOpen && (
+                    <div className="p-4 pt-2 space-y-3 border-t border-zinc-800/80 bg-zinc-950/90 animate-fade-in">
+                      <p className="text-[11px] text-zinc-400 leading-snug">
+                        Puoi impostare manualmente il livello di partenza per ciascun asse, oppure lasciare <strong>🎲 Random</strong> per affidarti al tiro di d100.
+                      </p>
+                      <div className="space-y-2 pt-1">
+                        {[
+                          { key: 'environment' as const, label: 'Ambiente & Rifugio', desc: 'Condizione fisica e sicurezza', icon: '🌦️' },
+                          { key: 'socialClimate' as const, label: 'Clima Sociale & Tensione', desc: 'Accoglienza, diffidenza o sorveglianza', icon: '👥' },
+                          { key: 'resources' as const, label: 'Risorse & Equipaggiamento', desc: 'Scarsità o abbondanza scorte', icon: '🎒' },
+                          { key: 'entourage' as const, label: 'Contatti & Alleati', desc: 'Affidabilità dei conoscenti vicini', icon: '🤝' },
+                          { key: 'catalyst' as const, label: 'Catalizzatore Imprevisto', desc: 'Natura della complicazione iniziale', icon: '⚡' },
+                        ].map((dim) => (
+                          <div key={dim.key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 p-2.5 rounded-lg bg-zinc-900/50 border border-zinc-850">
+                            <label className="text-xs text-zinc-200 flex items-center gap-2">
+                              <span className="text-sm shrink-0">{dim.icon}</span>
+                              <div>
+                                <span className="font-medium text-zinc-200 block">{dim.label}</span>
+                                <span className="text-[10px] text-zinc-500 block">{dim.desc}</span>
+                              </div>
+                            </label>
+                            <select
+                              value={stochasticOverrides[dim.key] || 'random'}
+                              onChange={(e) =>
+                                setStochasticOverrides((prev) => ({
+                                  ...prev,
+                                  [dim.key]: e.target.value as any,
+                                }))
+                              }
+                              disabled={isTranslating}
+                              className={`bg-zinc-950 border text-xs rounded-lg px-2.5 py-1.5 focus:outline-none font-sans transition shrink-0 ${
+                                stochasticOverrides[dim.key] && stochasticOverrides[dim.key] !== 'random'
+                                  ? 'border-emerald-700 text-emerald-300 bg-emerald-950/40 font-medium'
+                                  : 'border-zinc-800 text-zinc-300 focus:border-zinc-700'
+                              }`}
+                            >
+                              <option value="random">🎲 Random (Tiro d100)</option>
+                              <option value="critical_low">💀 Critical Low (Crisi / Complicazione)</option>
+                              <option value="low">🔻 Unfavorable (Ostacolo)</option>
+                              <option value="neutral">⚖️ Neutral (Equilibrato)</option>
+                              <option value="high">🔺 Favorable (Opportunità)</option>
+                              <option value="critical_high">⭐ Critical High (Trionfale)</option>
+                            </select>
+                          </div>
+                        ))}
+                      </div>
+
+                      {customCount > 0 && (
+                        <div className="pt-1 flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setStochasticOverrides({
+                                environment: 'random',
+                                socialClimate: 'random',
+                                resources: 'random',
+                                entourage: 'random',
+                                catalyst: 'random',
+                              })
+                            }
+                            className="text-[11px] text-zinc-400 hover:text-zinc-200 hover:underline flex items-center gap-1 transition"
+                          >
+                            <span>↺ Reimposta tutti su Random</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* Narrator Style Selector (Compact Grid) */}
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
                 <label className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5">
-                  <span>Narrator Style</span>
+                  <span>Stile del Narratore</span>
                 </label>
-                <span className="text-[10px] text-zinc-500 font-sans shrink-0">Adjustable mid-game</span>
+                <span className="text-[10px] text-zinc-500 font-sans shrink-0">Modificabile in partita</span>
               </div>
-              <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-2">
                 {[
                   {
                     id: 'cinematic' as const,
                     label: 'Cinematic',
-                    badge: '2-3 blocks',
+                    badge: '2-3 blocchi',
                     icon: '⚡',
-                    desc: 'Fast-paced action, sharp dialogue, rapid mobile pacing.',
+                    desc: 'Azione rapida e dialoghi incisivi.',
                   },
                   {
                     id: 'balanced' as const,
                     label: 'Balanced',
-                    badge: '2-4 blocks',
+                    badge: '2-4 blocchi',
                     icon: '⚖️',
-                    desc: 'Natural rhythm between narrative, action, and dialogue.',
+                    desc: 'Equilibrio tra azione e atmosfera.',
                   },
                   {
                     id: 'literary' as const,
                     label: 'Literary',
-                    badge: '3-5 blocks',
+                    badge: '3-5 blocchi',
                     icon: '📖',
-                    desc: 'Rich descriptions, sensory atmosphere, and psychological depth.',
+                    desc: 'Ricco di dettagli e introspezione.',
                   },
                 ].map((p) => {
                   const isSelected = selectedPropensity === p.id;
@@ -857,100 +982,30 @@ export const HomeView: React.FC = () => {
                       type="button"
                       disabled={isTranslating}
                       onClick={() => setSelectedPropensity(p.id as any)}
-                      className={`w-full p-3 rounded-xl border text-left flex items-center justify-between gap-3 transition ${
+                      className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition ${
                         isSelected
                           ? 'bg-zinc-100 border-zinc-100 text-zinc-950 shadow-sm'
                           : 'bg-zinc-950/50 border-zinc-850 text-zinc-300 hover:border-zinc-700'
                       } ${isTranslating ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                      <div className="flex items-start gap-3 min-w-0">
-                        <span className="text-xl shrink-0 mt-0.5">{p.icon}</span>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-xs font-semibold">{p.label}</span>
-                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
-                              isSelected ? 'bg-zinc-200 text-zinc-900 font-semibold' : 'bg-zinc-800 text-zinc-400'
-                            }`}>
-                              {p.badge}
-                            </span>
-                          </div>
-                          <p className={`text-[11px] mt-1 leading-snug ${isSelected ? 'text-zinc-700' : 'text-zinc-400'}`}>
-                            {p.desc}
-                          </p>
+                      <div>
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <span className="text-base">{p.icon}</span>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${
+                            isSelected ? 'bg-zinc-300 text-zinc-900 font-semibold' : 'bg-zinc-900 text-zinc-400'
+                          }`}>
+                            {p.badge}
+                          </span>
                         </div>
-                      </div>
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${
-                        isSelected ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-700'
-                      }`}>
-                        {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        <span className="text-xs font-semibold block">{p.label}</span>
+                        <p className={`text-[10px] mt-0.5 leading-snug line-clamp-2 ${isSelected ? 'text-zinc-700' : 'text-zinc-500'}`}>
+                          {p.desc}
+                        </p>
                       </div>
                     </button>
                   );
                 })}
               </div>
-            </div>
-
-            {/* Stochastic Matrix Accordion */}
-            <div className="border border-zinc-800/80 rounded-xl overflow-hidden bg-zinc-950/30">
-              <button
-                type="button"
-                onClick={() => setIsStochasticAccordionOpen(!isStochasticAccordionOpen)}
-                className="w-full px-3.5 py-2.5 flex items-center justify-between hover:bg-zinc-900/50 transition text-left"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">🎲</span>
-                  <div>
-                    <div className="text-xs font-semibold text-zinc-200">
-                      Stochastic Matrix (Opening Variables)
-                    </div>
-                    <div className="text-[10px] text-zinc-500 font-sans">
-                      Customize opening conditions or leave as 'Random' for d100 rolls
-                    </div>
-                  </div>
-                </div>
-                <ChevronDown
-                  className={`w-4 h-4 text-zinc-400 transition-transform duration-200 ${
-                    isStochasticAccordionOpen ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-
-              {isStochasticAccordionOpen && (
-                <div className="p-3.5 pt-1 space-y-2.5 border-t border-zinc-800/60 bg-zinc-950/60">
-                  {[
-                    { key: 'environment' as const, label: 'Environment & Weather', icon: '🌦️' },
-                    { key: 'socialClimate' as const, label: 'Social Climate & Tension', icon: '👥' },
-                    { key: 'resources' as const, label: 'Starting Resources', icon: '🎒' },
-                    { key: 'entourage' as const, label: 'Allies & Contacts', icon: '🤝' },
-                    { key: 'catalyst' as const, label: 'Unexpected Catalyst', icon: '⚡' },
-                  ].map((dim) => (
-                    <div key={dim.key} className="flex items-center justify-between gap-3">
-                      <label className="text-[11px] text-zinc-300 flex items-center gap-1.5 truncate">
-                        <span>{dim.icon}</span>
-                        <span>{dim.label}</span>
-                      </label>
-                      <select
-                        value={stochasticOverrides[dim.key] || 'random'}
-                        onChange={(e) =>
-                          setStochasticOverrides((prev) => ({
-                            ...prev,
-                            [dim.key]: e.target.value as any,
-                          }))
-                        }
-                        disabled={isTranslating}
-                        className="bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-zinc-700 font-sans"
-                      >
-                        <option value="random">🎲 Random</option>
-                        <option value="critical_low">💀 Critical Low (Severe Complication)</option>
-                        <option value="low">🔻 Unfavorable (Obstacle)</option>
-                        <option value="neutral">⚖️ Neutral (Balanced)</option>
-                        <option value="high">🔺 Favorable (Opportunity)</option>
-                        <option value="critical_high">⭐ Critical High (Triumph)</option>
-                      </select>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Languages Grid */}
