@@ -620,11 +620,11 @@ export const AnalyticsView: React.FC = () => {
                           </div>
 
                           {/* Structured Decomposition breakdown (Judge vs Narrator) */}
-                          <div className="grid grid-cols-2 gap-2 text-[9px] font-mono bg-zinc-900/60 p-2 rounded-lg border border-zinc-850 mb-1.5">
+                          <div className="grid grid-cols-2 gap-2 text-[9px] font-mono bg-zinc-900/60 p-2 rounded-lg border border-zinc-850">
                             <div className="flex flex-col">
                               <span className="text-amber-400 font-semibold flex items-center gap-1">
                                 <Scale className="w-3 h-3" />
-                                Giudice (Judge): {chartData[hoveredMessageIndex].judgeTotal.toLocaleString()} tok
+                                Judge: {chartData[hoveredMessageIndex].judgeTotal.toLocaleString()} tok
                               </span>
                               <span className="text-zinc-400 text-[8px] pl-4">
                                 In (Prompt): {chartData[hoveredMessageIndex].judgeIn} • Out: {chartData[hoveredMessageIndex].judgeOut}
@@ -634,17 +634,13 @@ export const AnalyticsView: React.FC = () => {
                             <div className="flex flex-col">
                               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                                 <BookOpen className="w-3 h-3" />
-                                Narratore (Narrator): {chartData[hoveredMessageIndex].narratorTotal.toLocaleString()} tok
+                                Narrator: {chartData[hoveredMessageIndex].narratorTotal.toLocaleString()} tok
                               </span>
                               <span className="text-zinc-400 text-[8px] pl-4">
                                 In (Prompt): {chartData[hoveredMessageIndex].narratorIn} • Out: {chartData[hoveredMessageIndex].narratorOut}
                               </span>
                             </div>
                           </div>
-
-                          <p className="text-zinc-400 line-clamp-1 italic bg-zinc-900/30 p-1 rounded font-serif px-2 border border-zinc-900">
-                            "{chartData[hoveredMessageIndex].content}"
-                          </p>
                         </div>
                       ) : (
                         <span className="text-[10px] text-zinc-500 italic flex items-center gap-1.5">
@@ -821,8 +817,8 @@ export const AnalyticsView: React.FC = () => {
                       </div>
                       {m.role === 'master' && (m.judgeTotal > 0 || m.narratorTotal > 0) && (
                         <div className="flex justify-between border-t border-zinc-900/20 pt-1 text-[7.5px] text-zinc-500">
-                          <span>Giudice: <strong className="text-amber-400/90">{m.judgeTotal} tok</strong></span>
-                          <span>Narratore: <strong className="text-emerald-400/90">{m.narratorTotal} tok</strong></span>
+                          <span>Judge: <strong className="text-amber-400/90">{m.judgeTotal} tok</strong></span>
+                          <span>Narrator: <strong className="text-emerald-400/90">{m.narratorTotal} tok</strong></span>
                         </div>
                       )}
                     </div>
