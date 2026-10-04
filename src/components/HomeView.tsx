@@ -593,7 +593,7 @@ export const HomeView: React.FC = () => {
             </div>
 
             {/* Modal Scrollable Content Area */}
-            <div className="flex-1 flex flex-col min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 no-scrollbar">
+            <div className="flex-1 flex flex-col min-h-0 overflow-y-auto p-3.5 sm:p-6 space-y-3.5 sm:space-y-5 no-scrollbar">
               {/* Adventure Title */}
               <div className="shrink-0">
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
@@ -605,15 +605,15 @@ export const HomeView: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. The Forgotten Vault"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-500"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-zinc-200 focus:outline-none focus:border-zinc-700 placeholder-zinc-500"
                 />
               </div>
 
               {/* Tab 1: Setting */}
               {activeCanvasTab === 'setting' && (
-                <div className="flex-1 flex flex-col min-h-0 space-y-3 sm:space-y-4 animate-fade-in">
-                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
-                    🌍 <strong>World Setting & Tone:</strong> Defines atmosphere, geography, mood, and reality rules. The AI Master strictly uses this as tone and consistency guidelines without forcing active plot mandates.
+                <div className="flex-1 flex flex-col min-h-0 space-y-3 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/40 border border-zinc-850/60 rounded-lg p-2 sm:p-3 text-[10px] sm:text-[11px] text-zinc-400 leading-snug">
+                    🌍 <strong>World Setting & Tone:</strong> Defines atmosphere, geography, mood, and reality rules for the AI Master.
                   </div>
                   <div className="flex-1 flex flex-col min-h-0">
                     <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
@@ -623,37 +623,37 @@ export const HomeView: React.FC = () => {
                       value={canvasSetting}
                       onChange={(e) => setCanvasSetting(e.target.value)}
                       placeholder="Describe the environment, aesthetics, architecture, weather, and world rules..."
-                      className="w-full flex-1 min-h-[180px] sm:min-h-[140px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                      className="w-full flex-1 min-h-[220px] sm:min-h-[160px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
                     />
                   </div>
 
-                  {/* Default Narrator Style in Setting Tab */}
-                  <div className="shrink-0 pt-2 border-t border-zinc-800/60">
-                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
+                  {/* Default Narrator Style in Setting Tab - Compact Horizontal Segmented Bar */}
+                  <div className="shrink-0 pt-2 border-t border-zinc-850/70">
+                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
                       Default Narrator Style
                     </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                       {[
                         {
                           id: 'cinematic',
                           label: 'Cinematic',
-                          badge: '2-3 blocks',
+                          badge: '2-3 blk',
                           icon: '⚡',
-                          desc: 'Fast-paced action, sharp dialogue, rapid mobile pacing.',
+                          desc: 'Fast action & dialogue.',
                         },
                         {
                           id: 'balanced',
                           label: 'Balanced',
-                          badge: '2-4 blocks',
+                          badge: '2-4 blk',
                           icon: '⚖️',
-                          desc: 'Natural rhythm between narrative, action, and dialogue.',
+                          desc: 'Action & prose balance.',
                         },
                         {
                           id: 'literary',
                           label: 'Literary',
-                          badge: '3-5 blocks',
+                          badge: '3-5 blk',
                           icon: '📖',
-                          desc: 'Rich descriptions, sensory atmosphere, and psychological depth.',
+                          desc: 'Rich descriptive prose.',
                         },
                       ].map((option) => {
                         const isSelected = canvasPropensity === option.id;
@@ -665,23 +665,23 @@ export const HomeView: React.FC = () => {
                               setCanvasPropensity(option.id as any);
                               setSelectedPropensity(option.id as any);
                             }}
-                            className={`p-3 rounded-xl border text-left transition flex flex-col justify-between ${
+                            className={`py-2 px-1.5 sm:p-2.5 rounded-lg sm:rounded-xl border text-center sm:text-left transition flex flex-col justify-between ${
                               isSelected
-                                ? 'bg-zinc-800/80 border-zinc-600 text-zinc-100 shadow-md'
+                                ? 'bg-zinc-800/90 border-zinc-500 text-zinc-100 shadow-sm'
                                 : 'bg-zinc-950/40 border-zinc-850 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                             }`}
                           >
-                            <div>
-                              <div className="flex items-center justify-between gap-1">
-                                <span className="flex items-center gap-1.5 text-xs font-semibold">
+                            <div className="w-full">
+                              <div className="flex items-center justify-center sm:justify-between gap-1">
+                                <span className="flex items-center gap-1 text-[11px] sm:text-xs font-semibold">
                                   <span>{option.icon}</span>
                                   <span>{option.label}</span>
                                 </span>
-                                <span className="text-[9px] px-1.5 py-0.5 rounded font-mono bg-zinc-900 text-zinc-400">
+                                <span className="hidden sm:inline-block text-[9px] px-1 py-0.5 rounded font-mono bg-zinc-900 text-zinc-400">
                                   {option.badge}
                                 </span>
                               </div>
-                              <p className="text-[10px] text-zinc-400 mt-1.5 leading-snug">
+                              <p className="hidden sm:block text-[10px] text-zinc-400 mt-1 leading-snug">
                                 {option.desc}
                               </p>
                             </div>
@@ -695,9 +695,9 @@ export const HomeView: React.FC = () => {
 
               {/* Tab 2: Character Sheet */}
               {activeCanvasTab === 'character' && (
-                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
-                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
-                    👤 <strong>Character Sheet Guidelines:</strong> Protagonist name, qualitative traits, demeanor, capabilities, cover identities, and equipment. Qualitative guidelines only — no numerical stats or HP trackers.
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/40 border border-zinc-850/60 rounded-lg p-2 sm:p-3 text-[10px] sm:text-[11px] text-zinc-400 leading-snug">
+                    👤 <strong>Character Dossier:</strong> Protagonist name, qualitative traits, demeanor, capabilities, and equipment.
                   </div>
                   <div className="flex-1 flex flex-col min-h-0">
                     <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
@@ -707,7 +707,7 @@ export const HomeView: React.FC = () => {
                       value={canvasCharSheet}
                       onChange={(e) => setCanvasCharSheet(e.target.value)}
                       placeholder={`Name: Adventurer\nRole: Wandering Scholar & Scout\n\nQualitative Demeanor & Traits:\n- Observant, cautious, respectful of ancient ruins.\n\nCapabilities & Skills:\n- Herbalism, cartography, light swordsmanship.\n\nEquipment:\n- Traveling cloak, brass compass, leather satchel, iron rations.`}
-                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-mono"
+                      className="w-full flex-1 min-h-[300px] sm:min-h-[250px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-mono"
                     />
                   </div>
                 </div>
@@ -715,9 +715,9 @@ export const HomeView: React.FC = () => {
 
               {/* Tab 3: Factions */}
               {activeCanvasTab === 'factions' && (
-                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
-                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
-                    ⚔️ <strong>Factions & Competing Agendas:</strong> Active organizations, guilds, or powers. Each faction must possess its own internal logic and goals, rather than simply existing to oppose the player.
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/40 border border-zinc-850/60 rounded-lg p-2 sm:p-3 text-[10px] sm:text-[11px] text-zinc-400 leading-snug">
+                    ⚔️ <strong>Factions & Agendas:</strong> Active organizations, guilds, or powers with their own internal motivations.
                   </div>
                   <div className="flex-1 flex flex-col min-h-0">
                     <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
@@ -727,7 +727,7 @@ export const HomeView: React.FC = () => {
                       value={canvasFactions}
                       onChange={(e) => setCanvasFactions(e.target.value)}
                       placeholder={`- The Sylvan Wardens: Elven druids sworn to protect the forest from outside exploitation.\n- The High Arcane Conclave: Scholars seeking lost magical engines to sustain city infrastructure.\n- The Merchant League: Trade oligarchy seeking open riverways and low tariffs.`}
-                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                      className="w-full flex-1 min-h-[300px] sm:min-h-[250px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
                     />
                   </div>
                 </div>
@@ -735,9 +735,9 @@ export const HomeView: React.FC = () => {
 
               {/* Tab 4: Conflicts */}
               {activeCanvasTab === 'conflicts' && (
-                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
-                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
-                    ⚡ <strong>Structural Conflicts:</strong> Relational friction, jurisdictional disputes, and competing interests between factions. Generative material for the master to draw from when organically relevant.
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/40 border border-zinc-850/60 rounded-lg p-2 sm:p-3 text-[10px] sm:text-[11px] text-zinc-400 leading-snug">
+                    ⚡ <strong>Structural Conflicts:</strong> Relational friction, rivalries, and competing interests between factions.
                   </div>
                   <div className="flex-1 flex flex-col min-h-0">
                     <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
@@ -747,7 +747,7 @@ export const HomeView: React.FC = () => {
                       value={canvasConflicts}
                       onChange={(e) => setCanvasConflicts(e.target.value)}
                       placeholder={`- Territorial standoff between woodland wardens and university expeditions.\n- Economic competition over river trade rights between merchant cartels and provincial towns.\n- Inquisitorial scrutiny over untaxed alchemical imports.`}
-                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                      className="w-full flex-1 min-h-[300px] sm:min-h-[250px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
                     />
                   </div>
                 </div>
@@ -755,9 +755,9 @@ export const HomeView: React.FC = () => {
 
               {/* Tab 5: Historical Facts */}
               {activeCanvasTab === 'history' && (
-                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
-                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
-                    📜 <strong>Historical Facts & Established Lore:</strong> Past covenants, founding legends, and historical facts. Used by the AI Master purely as atmospheric color and consistency context — never as active quest mandates.
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/40 border border-zinc-850/60 rounded-lg p-2 sm:p-3 text-[10px] sm:text-[11px] text-zinc-400 leading-snug">
+                    📜 <strong>Historical Lore:</strong> Past covenants, founding legends, and world facts for narrative consistency.
                   </div>
                   <div className="flex-1 flex flex-col min-h-0">
                     <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
@@ -767,7 +767,7 @@ export const HomeView: React.FC = () => {
                       value={canvasHistory}
                       onChange={(e) => setCanvasHistory(e.target.value)}
                       placeholder={`- Three centuries ago, the Cataclysm of the Pale Moon opened planar fissures across the mountains.\n- The realm's civil charter was established following the historic Peace of Valoria.\n- The ancient sanctuary was carved by elven architects directly from living bedrock.`}
-                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                      className="w-full flex-1 min-h-[300px] sm:min-h-[250px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
                     />
                   </div>
                 </div>
