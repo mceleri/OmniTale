@@ -6,16 +6,13 @@ export interface SettingsSlice {
   llmUrl: string;
   llmKey: string;
   modelName: string;
-  useAgenticPipeline: boolean;
 
   updateLlmSettings: (
     provider: LLMProvider,
     url: string,
     key: string,
-    modelName: string,
-    useAgenticPipeline?: boolean
+    modelName: string
   ) => void;
-  setUseAgenticPipeline: (enabled: boolean) => void;
 }
 
 export const createSettingsSlice: StateCreator<
@@ -32,22 +29,17 @@ export const createSettingsSlice: StateCreator<
   llmUrl: import.meta.env.VITE_LLM_URL || 'https://openrouter.ai/api/v1/chat/completions',
   llmKey: import.meta.env.VITE_LLM_KEY || '',
   modelName: import.meta.env.VITE_MODEL_NAME || 'google/gemma-2-9b-it:free',
-  useAgenticPipeline: false,
-
-  setUseAgenticPipeline: (enabled: boolean) => set({ useAgenticPipeline: enabled }),
 
   updateLlmSettings: (
     provider: LLMProvider,
     url: string,
     key: string,
-    modelName: string,
-    useAgenticPipeline?: boolean
+    modelName: string
   ) =>
-    set((state: StoryState) => ({
+    set(() => ({
       llmProvider: provider,
       llmUrl: url,
       llmKey: key,
       modelName,
-      useAgenticPipeline: useAgenticPipeline !== undefined ? useAgenticPipeline : state.useAgenticPipeline,
     })),
 });

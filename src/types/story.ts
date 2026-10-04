@@ -119,7 +119,6 @@ export interface StoryState {
   llmUrl: string;
   llmKey: string;
   modelName: string;
-  useAgenticPipeline: boolean;
 
   // Loading States
   isGeneratingStory: boolean;
@@ -173,7 +172,6 @@ export interface StoryState {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
-  updateLlmSettings: (provider: LLMProvider, url: string, key: string, modelName: string, useAgenticPipeline?: boolean) => void;
-  setUseAgenticPipeline: (enabled: boolean) => void;
+  updateLlmSettings: (provider: LLMProvider, url: string, key: string, modelName: string) => void;
   importStore: (data: any) => void;
 }

@@ -42,7 +42,6 @@ export const orchestrateMasterResponse = async (
   const url = state.llmUrl;
   const key = state.llmKey;
   const model = state.modelName;
-  const useAgenticPipeline = Boolean(state.useAgenticPipeline);
   const lore = activeStory.dynamicState.lorebook;
   const charSheet = activeStory.dynamicState.characterSheet;
   const feedback = activeStory.dynamicState.masterFeedback !== undefined
@@ -241,7 +240,7 @@ export const orchestrateMasterResponse = async (
         completionTokens: apiCompletionTokens,
         totalTokens: apiPromptTokens + apiCompletionTokens,
       };
-    } else if (useAgenticPipeline) {
+    } else {
       try {
         const judgePrompt = getJudgePrompt(
           charSheet,
@@ -340,29 +339,6 @@ export const orchestrateMasterResponse = async (
           totalTokens: apiPromptTokens + apiCompletionTokens,
         };
       }
-    } else {
-      const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll, stochasticMatrix);
-      masterResponseText = await fetchNarrative(
-        provider,
-        url,
-        key,
-        model,
-        UNIFIED_PROMPT,
-        last10Messages,
-        (usage) => {
-          apiPromptTokens = usage.prompt_tokens;
-          apiCompletionTokens = usage.completion_tokens;
-        },
-        (fullText) => {
-          streamProgressiveChunk(fullText);
-        }
-      );
-
-      narratorTokensData = {
-        promptTokens: apiPromptTokens,
-        completionTokens: apiCompletionTokens,
-        totalTokens: apiPromptTokens + apiCompletionTokens,
-      };
     }
 
     const masterMessage: Message = {
