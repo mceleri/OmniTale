@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
-import { ArrowLeft, Save, Check, Download, Upload, Terminal, Sparkles, ExternalLink, Cpu } from 'lucide-react';
+import { ArrowLeft, Save, Check, Download, Upload, ExternalLink } from 'lucide-react';
 import { validateBackupPayload } from '../utils/validation';
 import { LLMProvider } from '../types/story';
 
@@ -131,29 +131,27 @@ export const SettingsView: React.FC = () => {
             <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 lg:p-6 space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 backdrop-blur-sm">
               <div className="lg:col-span-2">
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
-                  LLM Provider (Local / Remote)
+                  LLM Provider
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { id: 'local' as const, label: 'Local (Ollama / vLLM / llama.cpp)', icon: Cpu },
-                    { id: 'openrouter' as const, label: 'OpenRouter', icon: Sparkles },
-                    { id: 'gemini' as const, label: 'Gemini (Native)', icon: Terminal },
+                    { id: 'local' as const, label: 'Local' },
+                    { id: 'openrouter' as const, label: 'OpenRouter' },
+                    { id: 'gemini' as const, label: 'Gemini' },
                   ].map((item) => {
                     const active = provider === item.id;
-                    const Icon = item.icon;
                     return (
                       <button
                         key={item.id}
                         type="button"
                         onClick={() => handleProviderChange(item.id)}
-                        className={`py-2.5 px-2 text-xs font-medium rounded-lg border transition flex flex-col sm:flex-row items-center justify-center gap-1.5 text-center ${
+                        className={`py-2 px-1 text-xs font-medium rounded-lg border transition text-center ${
                           active
                             ? 'bg-zinc-100 border-zinc-100 text-zinc-950 shadow-sm'
                             : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                         }`}
                       >
-                        <Icon className="w-3.5 h-3.5 shrink-0" />
-                        <span className="truncate">{item.label}</span>
+                        {item.label}
                       </button>
                     );
                   })}
@@ -197,7 +195,7 @@ export const SettingsView: React.FC = () => {
                     </button>
                   </div>
                   <p className="text-[11px] text-zinc-400 leading-relaxed pt-1">
-                    💡 <strong className="text-zinc-300">Suggerimento CORS:</strong> Per collegare Ollama da browser, avvialo abilitando i domini web (es. <code className="bg-zinc-900 px-1 py-0.5 rounded text-zinc-300">OLLAMA_ORIGINS="*" ollama serve</code>).
+                    💡 <strong className="text-zinc-300">CORS Tip:</strong> To connect to Ollama from your browser, start it with web origins enabled (e.g. <code className="bg-zinc-900 px-1 py-0.5 rounded text-zinc-300">OLLAMA_ORIGINS="*" ollama serve</code>).
                   </p>
                 </div>
               )}
@@ -207,7 +205,7 @@ export const SettingsView: React.FC = () => {
                 <div className="lg:col-span-2 bg-zinc-950/60 border border-zinc-850 p-3 rounded-xl">
                   <p className="text-[11px] text-zinc-400 leading-relaxed flex items-center justify-between">
                     <span>
-                      Modelli gratuiti supportati: <code className="text-emerald-400">google/gemma-2-9b-it:free</code>, <code className="text-emerald-400">meta-llama/llama-3.1-8b-instruct:free</code>.
+                      Free models supported: <code className="text-emerald-400">google/gemma-2-9b-it:free</code>, <code className="text-emerald-400">meta-llama/llama-3.1-8b-instruct:free</code>.
                     </span>
                     <a
                       href="https://openrouter.ai/keys"
@@ -225,7 +223,7 @@ export const SettingsView: React.FC = () => {
                 <div className="lg:col-span-2 bg-zinc-950/60 border border-zinc-850 p-3 rounded-xl">
                   <p className="text-[11px] text-zinc-400 leading-relaxed flex items-center justify-between">
                     <span>
-                      Usa <strong className="text-zinc-300">gemini-flash-latest</strong> o <strong className="text-zinc-300">gemini-2.5-flash</strong> con la quota gratuita di Google AI Studio.
+                      Use <strong className="text-zinc-300">gemini-flash-latest</strong> or <strong className="text-zinc-300">gemini-2.5-flash</strong> with Google AI Studio free tier.
                     </span>
                     <a
                       href="https://aistudio.google.com/app/apikey"
@@ -263,14 +261,14 @@ export const SettingsView: React.FC = () => {
                 />
                 <p className="text-[10px] text-zinc-500 font-sans mt-1">
                   {provider === 'local'
-                    ? 'Inserisci l’indirizzo del tuo server compatibile OpenAI (Ollama, LM Studio, vLLM).'
-                    : `Configurato automaticamente per ${provider === 'openrouter' ? 'OpenRouter' : 'Google Gemini'}.`}
+                    ? 'Enter your OpenAI-compatible server address (Ollama, LM Studio, vLLM, llama.cpp).'
+                    : `Configured automatically for ${provider === 'openrouter' ? 'OpenRouter' : 'Google Gemini'}.`}
                 </p>
               </div>
 
               <div>
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
-                  {provider === 'local' ? 'API Key (Opzionale per server locali)' : 'API Key'}
+                  {provider === 'local' ? 'API Key (Optional for local servers)' : 'API Key'}
                 </label>
                 <input
                   type="password"
@@ -278,7 +276,7 @@ export const SettingsView: React.FC = () => {
                   onChange={(e) => setKey(e.target.value)}
                   placeholder={
                     provider === 'local'
-                      ? 'Non richiesta (o inserisci bearer token se protetto)'
+                      ? 'Optional (or enter bearer token if required)'
                       : provider === 'openrouter'
                       ? 'Enter OpenRouter API Key (sk-or-...)'
                       : 'Enter Gemini API Key'
@@ -317,7 +315,7 @@ export const SettingsView: React.FC = () => {
                       </span>
                     </label>
                     <p className="text-[11px] text-zinc-400 leading-relaxed max-w-xl">
-                      Divide ogni turno in due chiamate LLM sequenziali (Arbitro/Reazione &rarr; Prosa Narrativa con Streaming) per sbloccare iniziativa autonoma dei PNG, logica di mondo e gestione del ritmo.
+                      Splits every turn into two sequential LLM calls (Judge/Reaction &rarr; Storyteller Prose with Streaming) to unlock autonomous NPC initiative, world logic, and pacing control.
                     </p>
                   </div>
                   <button
@@ -347,12 +345,12 @@ export const SettingsView: React.FC = () => {
               {saved ? (
                 <>
                   <Check className="w-4 h-4 text-emerald-600" />
-                  Impostazioni Salvate con Successo
+                  Saved Successfully
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4" />
-                  Salva Impostazioni
+                  Save Settings
                 </>
               )}
             </button>
@@ -362,10 +360,10 @@ export const SettingsView: React.FC = () => {
           <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-5 space-y-4 backdrop-blur-sm">
             <div>
               <h3 className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">
-                Database Backup & Ripristino
+                Database Backup & Restore
               </h3>
               <p className="text-[11px] text-zinc-400 leading-relaxed">
-                Esporta le tue storie e i progressi in un file JSON locale, oppure importa un backup precedentemente salvato. I dati restano sempre nel tuo browser.
+                Export your stories and progress to a local JSON file, or restore from a previous backup. Your data always stays private in your browser.
               </p>
             </div>
 
@@ -376,7 +374,7 @@ export const SettingsView: React.FC = () => {
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg text-xs font-medium transition"
               >
                 <Download className="w-4 h-4" />
-                Esporta DB (.json)
+                Export DB (.json)
               </button>
 
               <button
@@ -385,7 +383,7 @@ export const SettingsView: React.FC = () => {
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg text-xs font-medium transition"
               >
                 <Upload className="w-4 h-4" />
-                Importa DB (.json)
+                Import DB (.json)
               </button>
             </div>
             
@@ -402,7 +400,7 @@ export const SettingsView: React.FC = () => {
 
       {/* Footer */}
       <div className="mt-12 pt-6 border-t border-zinc-900 text-center text-[10px] text-zinc-400">
-        OmniTale Engine v1.1.0 • Streaming & Local Endpoints abilitati • Dati salvati in IndexedDB locale.
+        OmniTale Engine v1.1.0 • Streaming & Local Endpoints Enabled • Saved locally in IndexedDB.
       </div>
     </div>
   );
