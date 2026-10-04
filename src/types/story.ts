@@ -47,6 +47,12 @@ export interface TurnResolution {
   newHookOrTwist?: string;
 }
 
+export interface StageTokens {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+}
+
 export interface Message {
   id: string;
   role: Role;
@@ -57,6 +63,8 @@ export interface Message {
   debugResolution?: TurnResolution;
   fateRoll?: FateOracleRoll;
   stochasticMatrix?: CampaignStochasticMatrix;
+  judgeTokens?: StageTokens;
+  narratorTokens?: StageTokens;
 }
 
 export type LoreItem = LoreBlock;

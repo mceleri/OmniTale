@@ -168,6 +168,9 @@ export const orchestrateMasterResponse = async (
       fateRoll = rollFateOracle();
     }
 
+    let judgeTokensData: { promptTokens: number; completionTokens: number; totalTokens: number } | undefined = undefined;
+    let narratorTokensData: { promptTokens: number; completionTokens: number; totalTokens: number } | undefined = undefined;
+
     if (isStart) {
       const startingIntent = activeStory.dynamicState.startingIntent || activeStory.dynamicState.defaultStartingIntent || 'The adventure begins as the protagonist prepares for what lies ahead.';
       const turnZeroPrompt = getTurnZeroPrompt(
@@ -191,6 +194,12 @@ export const orchestrateMasterResponse = async (
           apiCompletionTokens = usage.completion_tokens;
         }
       );
+
+      narratorTokensData = {
+        promptTokens: apiPromptTokens,
+        completionTokens: apiCompletionTokens,
+        totalTokens: apiPromptTokens + apiCompletionTokens,
+      };
     } else if (useAgenticPipeline) {
       try {
         const judgePrompt = getJudgePrompt(
@@ -223,6 +232,12 @@ export const orchestrateMasterResponse = async (
         judgeNote = rawJudgeResponse.trim() || 'Nothing to note.';
         unEvictedScratchpad = [...currentScratchpad, judgeNote];
 
+        judgeTokensData = {
+          promptTokens: judgePromptTokens,
+          completionTokens: judgeCompletionTokens,
+          totalTokens: judgePromptTokens + judgeCompletionTokens,
+        };
+
         const narratorPrompt = getNarratorPrompt(
           sections,
           journal,
@@ -248,6 +263,12 @@ export const orchestrateMasterResponse = async (
           }
         );
 
+        narratorTokensData = {
+          promptTokens: narratorPromptTokens,
+          completionTokens: narratorCompletionTokens,
+          totalTokens: narratorPromptTokens + narratorCompletionTokens,
+        };
+
         apiPromptTokens = judgePromptTokens + narratorPromptTokens;
         apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
       } catch (pipelineErr) {
@@ -265,6 +286,12 @@ export const orchestrateMasterResponse = async (
             apiCompletionTokens = usage.completion_tokens;
           }
         );
+
+        narratorTokensData = {
+          promptTokens: apiPromptTokens,
+          completionTokens: apiCompletionTokens,
+          totalTokens: apiPromptTokens + apiCompletionTokens,
+        };
       }
     } else {
       const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll, stochasticMatrix);
@@ -280,6 +307,12 @@ export const orchestrateMasterResponse = async (
           apiCompletionTokens = usage.completion_tokens;
         }
       );
+
+      narratorTokensData = {
+        promptTokens: apiPromptTokens,
+        completionTokens: apiCompletionTokens,
+        totalTokens: apiPromptTokens + apiCompletionTokens,
+      };
     }
 
     const masterMessage: Message = {
@@ -291,6 +324,8 @@ export const orchestrateMasterResponse = async (
       judgeNote,
       fateRoll,
       stochasticMatrix,
+      judgeTokens: judgeTokensData,
+      narratorTokens: narratorTokensData,
     };
 
     const finalMessages = [...updatedMessages, masterMessage];
