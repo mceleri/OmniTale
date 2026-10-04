@@ -105,7 +105,7 @@ export interface StoryState {
   masterFeedback: string;
   
   // Settings
-  llmProvider: 'openrouter' | 'gemini' | 'openai';
+  llmProvider: 'openrouter' | 'gemini';
   llmUrl: string;
   llmKey: string;
   modelName: string;
@@ -163,7 +163,7 @@ export interface StoryState {
   updateMasterFeedback: (text: string) => void;
   addLoreItem: (title: string, content: string) => void;
   deleteLoreItem: (itemId: string) => void;
-  updateLlmSettings: (provider: 'openrouter' | 'gemini' | 'openai', url: string, key: string, modelName: string, useAgenticPipeline?: boolean) => void;
+  updateLlmSettings: (provider: 'openrouter' | 'gemini', url: string, key: string, modelName: string, useAgenticPipeline?: boolean) => void;
   setUseAgenticPipeline: (enabled: boolean) => void;
   importStore: (data: any) => void;
 }

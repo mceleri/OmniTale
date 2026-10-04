@@ -60,10 +60,10 @@ export const useStoryStore = create<StoryState>()(
             },
           }));
 
-        // Graceful fallback for legacy storage state missing llmProvider
-        const inferredProvider = persistedState.llmProvider || (
-          persistedState.llmUrl?.includes('generativelanguage') ? 'gemini' : 'openrouter'
-        );
+        // Graceful fallback for legacy storage state missing or invalid llmProvider
+        const inferredProvider: 'openrouter' | 'gemini' = (
+          persistedState.llmProvider === 'gemini' || persistedState.llmUrl?.includes('generativelanguage')
+        ) ? 'gemini' : 'openrouter';
 
         return {
           ...currentState,

@@ -2,14 +2,14 @@ import { StateCreator } from 'zustand';
 import { StoryState } from '../../types/story';
 
 export interface SettingsSlice {
-  llmProvider: 'openrouter' | 'gemini' | 'openai';
+  llmProvider: 'openrouter' | 'gemini';
   llmUrl: string;
   llmKey: string;
   modelName: string;
   useAgenticPipeline: boolean;
 
   updateLlmSettings: (
-    provider: 'openrouter' | 'gemini' | 'openai',
+    provider: 'openrouter' | 'gemini',
     url: string,
     key: string,
     modelName: string,
@@ -35,7 +35,7 @@ export const createSettingsSlice: StateCreator<
   setUseAgenticPipeline: (enabled: boolean) => set({ useAgenticPipeline: enabled }),
 
   updateLlmSettings: (
-    provider: 'openrouter' | 'gemini' | 'openai',
+    provider: 'openrouter' | 'gemini',
     url: string,
     key: string,
     modelName: string,

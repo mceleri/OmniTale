@@ -551,12 +551,12 @@ export const HomeView: React.FC = () => {
 
       {/* Creation Modal (Sleek Dialog - Worldbuilding Canvas) */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-          <div className="bg-zinc-900 border border-zinc-800/80 rounded-2xl w-full max-w-md lg:max-w-xl max-h-[85vh] flex flex-col overflow-hidden animate-scale-up">
+        <div className="fixed inset-0 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-0 sm:p-4 z-50 animate-fade-in">
+          <div className="bg-zinc-900 border-0 sm:border border-zinc-800/80 rounded-none sm:rounded-2xl w-full h-[100dvh] sm:h-auto sm:max-h-[85vh] sm:max-w-xl flex flex-col overflow-hidden animate-scale-up">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/60 shrink-0">
-              <h3 className="font-serif text-xl text-zinc-200">
+            <div className="flex items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4 border-b border-zinc-800/60 shrink-0">
+              <h3 className="font-serif text-lg sm:text-xl text-zinc-200">
                 {editingStoryId ? 'Edit Template' : 'Worldbuilding Canvas'}
               </h3>
               <button
@@ -568,7 +568,7 @@ export const HomeView: React.FC = () => {
             </div>
 
             {/* Modal Tab Navigation */}
-            <div className="flex border-b border-zinc-800 bg-zinc-950/60 px-6 gap-1 overflow-x-auto no-scrollbar shrink-0">
+            <div className="flex border-b border-zinc-800 bg-zinc-950/60 px-3 sm:px-6 gap-1 overflow-x-auto no-scrollbar shrink-0">
               {[
                 { id: 'setting', label: 'Setting', icon: '🌍' },
                 { id: 'character', label: 'Character', icon: '👤' },
@@ -580,7 +580,7 @@ export const HomeView: React.FC = () => {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveCanvasTab(tab.id as any)}
-                  className={`py-3 px-3.5 border-b-2 text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${
+                  className={`py-2.5 sm:py-3 px-3 sm:px-3.5 border-b-2 text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${
                     activeCanvasTab === tab.id
                       ? 'border-zinc-100 text-zinc-100 bg-zinc-900/60'
                       : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/30'
@@ -593,10 +593,10 @@ export const HomeView: React.FC = () => {
             </div>
 
             {/* Modal Scrollable Content Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+            <div className="flex-1 flex flex-col min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5 no-scrollbar">
               {/* Adventure Title */}
-              <div>
-                <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
+              <div className="shrink-0">
+                <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
                   Adventure Title
                 </label>
                 <input
@@ -611,25 +611,24 @@ export const HomeView: React.FC = () => {
 
               {/* Tab 1: Setting */}
               {activeCanvasTab === 'setting' && (
-                <div className="space-y-4 animate-fade-in">
-                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                <div className="flex-1 flex flex-col min-h-0 space-y-3 sm:space-y-4 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
                     🌍 <strong>World Setting & Tone:</strong> Defines atmosphere, geography, mood, and reality rules. The AI Master strictly uses this as tone and consistency guidelines without forcing active plot mandates.
                   </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
                       Setting Atmosphere & Lore
                     </label>
                     <textarea
                       value={canvasSetting}
                       onChange={(e) => setCanvasSetting(e.target.value)}
                       placeholder="Describe the environment, aesthetics, architecture, weather, and world rules..."
-                      rows={7}
-                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                      className="w-full flex-1 min-h-[180px] sm:min-h-[140px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
                     />
                   </div>
 
                   {/* Default Narrator Style in Setting Tab */}
-                  <div className="pt-2 border-t border-zinc-800/60">
+                  <div className="shrink-0 pt-2 border-t border-zinc-800/60">
                     <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
                       Default Narrator Style
                     </label>
@@ -696,71 +695,87 @@ export const HomeView: React.FC = () => {
 
               {/* Tab 2: Character Sheet */}
               {activeCanvasTab === 'character' && (
-                <div className="space-y-3 animate-fade-in">
-                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
                     👤 <strong>Character Sheet Guidelines:</strong> Protagonist name, qualitative traits, demeanor, capabilities, cover identities, and equipment. Qualitative guidelines only — no numerical stats or HP trackers.
                   </div>
-                  <textarea
-                    value={canvasCharSheet}
-                    onChange={(e) => setCanvasCharSheet(e.target.value)}
-                    placeholder={`Name: Adventurer\nRole: Wandering Scholar & Scout\n\nQualitative Demeanor & Traits:\n- Observant, cautious, respectful of ancient ruins.\n\nCapabilities & Skills:\n- Herbalism, cartography, light swordsmanship.\n\nEquipment:\n- Traveling cloak, brass compass, leather satchel, iron rations.`}
-                    rows={12}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-mono"
-                  />
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
+                      Protagonist Dossier
+                    </label>
+                    <textarea
+                      value={canvasCharSheet}
+                      onChange={(e) => setCanvasCharSheet(e.target.value)}
+                      placeholder={`Name: Adventurer\nRole: Wandering Scholar & Scout\n\nQualitative Demeanor & Traits:\n- Observant, cautious, respectful of ancient ruins.\n\nCapabilities & Skills:\n- Herbalism, cartography, light swordsmanship.\n\nEquipment:\n- Traveling cloak, brass compass, leather satchel, iron rations.`}
+                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-mono"
+                    />
+                  </div>
                 </div>
               )}
 
               {/* Tab 3: Factions */}
               {activeCanvasTab === 'factions' && (
-                <div className="space-y-3 animate-fade-in">
-                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
                     ⚔️ <strong>Factions & Competing Agendas:</strong> Active organizations, guilds, or powers. Each faction must possess its own internal logic and goals, rather than simply existing to oppose the player.
                   </div>
-                  <textarea
-                    value={canvasFactions}
-                    onChange={(e) => setCanvasFactions(e.target.value)}
-                    placeholder={`- The Sylvan Wardens: Elven druids sworn to protect the forest from outside exploitation.\n- The High Arcane Conclave: Scholars seeking lost magical engines to sustain city infrastructure.\n- The Merchant League: Trade oligarchy seeking open riverways and low tariffs.`}
-                    rows={12}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
-                  />
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
+                      Active Factions & Powers
+                    </label>
+                    <textarea
+                      value={canvasFactions}
+                      onChange={(e) => setCanvasFactions(e.target.value)}
+                      placeholder={`- The Sylvan Wardens: Elven druids sworn to protect the forest from outside exploitation.\n- The High Arcane Conclave: Scholars seeking lost magical engines to sustain city infrastructure.\n- The Merchant League: Trade oligarchy seeking open riverways and low tariffs.`}
+                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                    />
+                  </div>
                 </div>
               )}
 
               {/* Tab 4: Conflicts */}
               {activeCanvasTab === 'conflicts' && (
-                <div className="space-y-3 animate-fade-in">
-                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
                     ⚡ <strong>Structural Conflicts:</strong> Relational friction, jurisdictional disputes, and competing interests between factions. Generative material for the master to draw from when organically relevant.
                   </div>
-                  <textarea
-                    value={canvasConflicts}
-                    onChange={(e) => setCanvasConflicts(e.target.value)}
-                    placeholder={`- Territorial standoff between woodland wardens and university expeditions.\n- Economic competition over river trade rights between merchant cartels and provincial towns.\n- Inquisitorial scrutiny over untaxed alchemical imports.`}
-                    rows={12}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
-                  />
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
+                      Systemic Friction & Tensions
+                    </label>
+                    <textarea
+                      value={canvasConflicts}
+                      onChange={(e) => setCanvasConflicts(e.target.value)}
+                      placeholder={`- Territorial standoff between woodland wardens and university expeditions.\n- Economic competition over river trade rights between merchant cartels and provincial towns.\n- Inquisitorial scrutiny over untaxed alchemical imports.`}
+                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                    />
+                  </div>
                 </div>
               )}
 
               {/* Tab 5: Historical Facts */}
               {activeCanvasTab === 'history' && (
-                <div className="space-y-3 animate-fade-in">
-                  <div className="bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed">
+                <div className="flex-1 flex flex-col min-h-0 space-y-2.5 sm:space-y-3 animate-fade-in">
+                  <div className="shrink-0 bg-zinc-950/50 border border-zinc-850/70 rounded-xl p-2.5 sm:p-3 text-[11px] text-zinc-400 leading-relaxed">
                     📜 <strong>Historical Facts & Established Lore:</strong> Past covenants, founding legends, and historical facts. Used by the AI Master purely as atmospheric color and consistency context — never as active quest mandates.
                   </div>
-                  <textarea
-                    value={canvasHistory}
-                    onChange={(e) => setCanvasHistory(e.target.value)}
-                    placeholder={`- Three centuries ago, the Cataclysm of the Pale Moon opened planar fissures across the mountains.\n- The realm's civil charter was established following the historic Peace of Valoria.\n- The ancient sanctuary was carved by elven architects directly from living bedrock.`}
-                    rows={12}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
-                  />
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <label className="shrink-0 text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">
+                      Historical Lore & World Truths
+                    </label>
+                    <textarea
+                      value={canvasHistory}
+                      onChange={(e) => setCanvasHistory(e.target.value)}
+                      placeholder={`- Three centuries ago, the Cataclysm of the Pale Moon opened planar fissures across the mountains.\n- The realm's civil charter was established following the historic Peace of Valoria.\n- The ancient sanctuary was carved by elven architects directly from living bedrock.`}
+                      className="w-full flex-1 min-h-[260px] sm:min-h-[220px] bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 leading-relaxed focus:outline-none focus:border-zinc-700 placeholder-zinc-600 resize-none font-sans"
+                    />
+                  </div>
                 </div>
               )}
             </div>
 
             {/* Modal Footer (Sticky / Fixed at bottom) */}
-            <div className="px-6 py-4 border-t border-zinc-800/60 bg-zinc-900 shrink-0 flex items-center gap-3">
+            <div className="px-4 py-3 sm:px-6 sm:py-4 border-t border-zinc-800/60 bg-zinc-900 shrink-0 flex items-center gap-3">
               <button
                 type="button"
                 onClick={handleSaveTemplate}

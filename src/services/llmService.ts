@@ -1,7 +1,7 @@
 import { Message } from '../types/story';
 
 export interface LLMProviderPlugin {
-  id: 'openrouter' | 'gemini' | 'openai';
+  id: 'openrouter' | 'gemini';
   name: string;
   defaultUrl: string;
   defaultModel: string;
@@ -185,64 +185,13 @@ const GeminiPlugin: LLMProviderPlugin = {
   },
 };
 
-const OpenAIPlugin: LLMProviderPlugin = {
-  id: 'openai',
-  name: 'OpenAI / Custom',
-  defaultUrl: 'https://api.openai.com/v1',
-  defaultModel: 'gpt-4o-mini',
-  isUrlEditable: true,
-  prepareRequest({ url, key, modelName, systemPrompt, messages }) {
-    const baseUrl = url || 'https://api.openai.com/v1';
-    const targetUrl = baseUrl.endsWith('/chat/completions')
-      ? baseUrl
-      : `${baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl}/chat/completions`;
-
-    const mappedMessages = messages
-      .filter((msg) => msg.role === 'player' || msg.role === 'master')
-      .map((msg) => ({
-        role: msg.role === 'player' ? 'user' : 'assistant',
-        content: msg.content,
-      }));
-
-    return {
-      url: targetUrl,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`,
-      },
-      body: JSON.stringify({
-        model: modelName,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...mappedMessages,
-        ],
-      }),
-    };
-  },
-  parseResponse(data) {
-    const choice = data.choices?.[0];
-    return (choice?.message?.content || choice?.text || '').trim();
-  },
-  parseUsage(data) {
-    if (data.usage) {
-      return {
-        prompt_tokens: Number(data.usage.prompt_tokens) || 0,
-        completion_tokens: Number(data.usage.completion_tokens) || 0,
-        total_tokens: Number(data.usage.total_tokens) || 0,
-      };
-    }
-    return null;
-  },
-};
-
-export const LLM_PLUGINS: Record<'openrouter' | 'gemini' | 'openai', LLMProviderPlugin> = {
+export const LLM_PLUGINS: Record<'openrouter' | 'gemini', LLMProviderPlugin> = {
   openrouter: OpenRouterPlugin,
   gemini: GeminiPlugin,
-  openai: OpenAIPlugin,
 };
 
 export const fetchNarrative = async (
-  provider: 'openrouter' | 'gemini' | 'openai',
+  provider: 'openrouter' | 'gemini',
   url: string,
   key: string,
   modelName: string,
@@ -259,9 +208,7 @@ export const fetchNarrative = async (
     throw new Error(`Unsupported LLM provider: ${provider}`);
   }
 
-  // CRITICAL: Only use custom url if provider is 'openai' (which is editable).
-  // Otherwise, use the plugin's defaultUrl to ensure maximum correctness and avoid legacy stored URL contamination.
-  const targetBaseUrl = provider === 'openai' ? (url || plugin.defaultUrl) : plugin.defaultUrl;
+  const targetBaseUrl = plugin.defaultUrl;
 
   const { url: finalUrl, headers, body: requestBody } = plugin.prepareRequest({
     url: targetBaseUrl,

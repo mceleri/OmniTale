@@ -23,7 +23,7 @@ const isNoChangesResponse = (text: string): boolean => {
 };
 
 export const executeBackgroundUpdates = async (
-  provider: 'openrouter' | 'gemini' | 'openai',
+  provider: 'openrouter' | 'gemini',
   url: string,
   key: string,
   modelName: string,

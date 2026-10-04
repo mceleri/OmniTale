@@ -5,7 +5,7 @@ import { validateBackupPayload } from '../utils/validation';
 
 export const SettingsView: React.FC = () => {
   const { llmProvider, llmUrl, llmKey, modelName, useAgenticPipeline, updateLlmSettings, setView, importStore } = useStoryStore();
-  const [provider, setProvider] = useState<'openrouter' | 'gemini' | 'openai'>(llmProvider || 'openrouter');
+  const [provider, setProvider] = useState<'openrouter' | 'gemini'>(llmProvider === 'gemini' ? 'gemini' : 'openrouter');
   const [url, setUrl] = useState(llmUrl);
   const [key, setKey] = useState(llmKey);
   const [model, setModel] = useState(modelName);
@@ -14,7 +14,7 @@ export const SettingsView: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleProviderChange = (newProvider: 'openrouter' | 'gemini' | 'openai') => {
+  const handleProviderChange = (newProvider: 'openrouter' | 'gemini') => {
     setProvider(newProvider);
     if (newProvider === 'openrouter') {
       setUrl('https://openrouter.ai/api/v1/chat/completions');
@@ -22,9 +22,6 @@ export const SettingsView: React.FC = () => {
     } else if (newProvider === 'gemini') {
       setUrl('https://generativelanguage.googleapis.com/v1beta');
       setModel('gemini-flash-latest');
-    } else if (newProvider === 'openai') {
-      setUrl('https://api.openai.com/v1');
-      setModel('gpt-4o-mini');
     }
   };
 
@@ -127,9 +124,9 @@ export const SettingsView: React.FC = () => {
                 <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-2">
                   LLM Provider
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {(['openrouter', 'gemini', 'openai'] as const).map((p) => {
-                    const label = p === 'openrouter' ? 'OpenRouter' : p === 'gemini' ? 'Gemini' : 'OpenAI';
+                <div className="grid grid-cols-2 gap-2">
+                  {(['openrouter', 'gemini'] as const).map((p) => {
+                    const label = p === 'openrouter' ? 'OpenRouter' : 'Gemini';
                     const active = provider === p;
                     return (
                       <button
@@ -157,25 +154,17 @@ export const SettingsView: React.FC = () => {
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  disabled={provider !== 'openai'}
+                  disabled={true}
                   placeholder={
                     provider === 'openrouter'
                       ? 'https://openrouter.ai/api/v1/chat/completions'
-                      : provider === 'gemini'
-                      ? 'https://generativelanguage.googleapis.com/v1beta'
-                      : 'https://api.openai.com/v1'
+                      : 'https://generativelanguage.googleapis.com/v1beta'
                   }
-                  className={`w-full bg-zinc-950 border rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none placeholder-zinc-500 transition ${
-                    provider !== 'openai'
-                      ? 'border-zinc-900 text-zinc-500 cursor-not-allowed bg-zinc-950/40'
-                      : 'border-zinc-800 text-zinc-200 focus:border-zinc-600'
-                  }`}
+                  className="w-full bg-zinc-950/40 border border-zinc-900 text-zinc-500 cursor-not-allowed rounded-xl px-3.5 py-2.5 text-sm font-mono focus:outline-none placeholder-zinc-500 transition"
                 />
-                {provider !== 'openai' && (
-                  <p className="text-[10px] text-zinc-500 font-sans mt-1">
-                    URL is automatically configured for {provider === 'openrouter' ? 'OpenRouter' : 'Gemini'}.
-                  </p>
-                )}
+                <p className="text-[10px] text-zinc-500 font-sans mt-1">
+                  URL is automatically configured for {provider === 'openrouter' ? 'OpenRouter' : 'Gemini'}.
+                </p>
               </div>
 
               <div>
@@ -189,9 +178,7 @@ export const SettingsView: React.FC = () => {
                   placeholder={
                     provider === 'openrouter'
                       ? 'Enter OpenRouter API Key (sk-or-...)'
-                      : provider === 'gemini'
-                      ? 'Enter Gemini API Key'
-                      : 'Enter OpenAI API Key'
+                      : 'Enter Gemini API Key'
                   }
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-zinc-600 placeholder-zinc-500 font-mono"
                 />

@@ -24,7 +24,7 @@ export interface JourneyTranslationOutput {
  * with graceful fallback to original texts if translation fails.
  */
 export const translateJourneyBatch = async (
-  provider: 'openrouter' | 'gemini' | 'openai',
+  provider: 'openrouter' | 'gemini',
   url: string,
   key: string,
   modelName: string,
