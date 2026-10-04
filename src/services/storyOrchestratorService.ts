@@ -2,7 +2,6 @@ import { Story, StoryState, Message, FateOracleRoll, CampaignStochasticMatrix } 
 import { fetchNarrative } from './llmService';
 import { executeBackgroundUpdates } from './backgroundService';
 import {
-  formatUnifiedPrompt,
   getInitialJournalGenerationPrompt,
   getJudgePrompt,
   getNarratorPrompt,
@@ -241,104 +240,78 @@ export const orchestrateMasterResponse = async (
         totalTokens: apiPromptTokens + apiCompletionTokens,
       };
     } else {
-      try {
-        const judgePrompt = getJudgePrompt(
-          charSheet,
-          currentScratchpad,
-          activeStory.language,
-          feedback,
-          lore,
-          journal,
-          sections,
-          propensity,
-          fateRoll
-        );
-        let judgePromptTokens = 0;
-        let judgeCompletionTokens = 0;
+      const judgePrompt = getJudgePrompt(
+        charSheet,
+        currentScratchpad,
+        activeStory.language,
+        feedback,
+        lore,
+        journal,
+        sections,
+        propensity,
+        fateRoll
+      );
+      let judgePromptTokens = 0;
+      let judgeCompletionTokens = 0;
 
-        const rawJudgeResponse = await fetchNarrative(
-          provider,
-          url,
-          key,
-          model,
-          judgePrompt,
-          last10Messages,
-          (usage) => {
-            judgePromptTokens = usage.prompt_tokens;
-            judgeCompletionTokens = usage.completion_tokens;
-          }
-        );
+      const rawJudgeResponse = await fetchNarrative(
+        provider,
+        url,
+        key,
+        model,
+        judgePrompt,
+        last10Messages,
+        (usage) => {
+          judgePromptTokens = usage.prompt_tokens;
+          judgeCompletionTokens = usage.completion_tokens;
+        }
+      );
 
-        judgeNote = rawJudgeResponse.trim() || 'Nothing to note.';
-        unEvictedScratchpad = [...currentScratchpad, judgeNote];
+      judgeNote = rawJudgeResponse.trim() || 'Nothing to note.';
+      unEvictedScratchpad = [...currentScratchpad, judgeNote];
 
-        judgeTokensData = {
-          promptTokens: judgePromptTokens,
-          completionTokens: judgeCompletionTokens,
-          totalTokens: judgePromptTokens + judgeCompletionTokens,
-        };
+      judgeTokensData = {
+        promptTokens: judgePromptTokens,
+        completionTokens: judgeCompletionTokens,
+        totalTokens: judgePromptTokens + judgeCompletionTokens,
+      };
 
-        const narratorPrompt = getNarratorPrompt(
-          sections,
-          journal,
-          feedback,
-          judgeNote,
-          propensity,
-          activeStory.language
-        );
+      const narratorPrompt = getNarratorPrompt(
+        sections,
+        journal,
+        feedback,
+        judgeNote,
+        propensity,
+        activeStory.language
+      );
 
-        let narratorPromptTokens = 0;
-        let narratorCompletionTokens = 0;
+      let narratorPromptTokens = 0;
+      let narratorCompletionTokens = 0;
 
-        masterResponseText = await fetchNarrative(
-          provider,
-          url,
-          key,
-          model,
-          narratorPrompt,
-          last10Messages,
-          (usage) => {
-            narratorPromptTokens = usage.prompt_tokens;
-            narratorCompletionTokens = usage.completion_tokens;
-          },
-          (fullText) => {
-            streamProgressiveChunk(fullText);
-          }
-        );
+      masterResponseText = await fetchNarrative(
+        provider,
+        url,
+        key,
+        model,
+        narratorPrompt,
+        last10Messages,
+        (usage) => {
+          narratorPromptTokens = usage.prompt_tokens;
+          narratorCompletionTokens = usage.completion_tokens;
+        },
+        (fullText) => {
+          streamProgressiveChunk(fullText);
+        }
+      );
 
-        narratorTokensData = {
-          promptTokens: narratorPromptTokens,
-          completionTokens: narratorCompletionTokens,
-          totalTokens: narratorPromptTokens + narratorCompletionTokens,
-        };
+      narratorTokensData = {
+        promptTokens: narratorPromptTokens,
+        completionTokens: narratorCompletionTokens,
+        totalTokens: narratorPromptTokens + narratorCompletionTokens,
+      };
 
-        apiPromptTokens = judgePromptTokens + narratorPromptTokens;
-        apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
-      } catch (pipelineErr) {
-        console.error('[orchestrateMasterResponse] Error in agentic pipeline, falling back to unified prompt:', pipelineErr);
-        const UNIFIED_PROMPT = formatUnifiedPrompt(lore, charSheet, journal, feedback, activeStory.language, propensity, sections, fateRoll, stochasticMatrix);
-        masterResponseText = await fetchNarrative(
-          provider,
-          url,
-          key,
-          model,
-          UNIFIED_PROMPT,
-          last10Messages,
-          (usage) => {
-            apiPromptTokens = usage.prompt_tokens;
-            apiCompletionTokens = usage.completion_tokens;
-          },
-          (fullText) => {
-            streamProgressiveChunk(fullText);
-          }
-        );
-
-        narratorTokensData = {
-          promptTokens: apiPromptTokens,
-          completionTokens: apiCompletionTokens,
-          totalTokens: apiPromptTokens + apiCompletionTokens,
-        };
-      }
+      apiPromptTokens = judgePromptTokens + narratorPromptTokens;
+      apiCompletionTokens = judgeCompletionTokens + narratorCompletionTokens;
     }
 
     const masterMessage: Message = {

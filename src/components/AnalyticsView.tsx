@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useStoryStore } from '../store/useStoryStore';
-import { formatUnifiedPrompt } from '../utils/prompts/storyPrompts';
+import { getNarratorPrompt } from '../utils/prompts/storyPrompts';
 import { estimateTokens } from '../utils/tokenEstimator';
 import { 
   ArrowLeft, 
@@ -59,9 +59,9 @@ export const AnalyticsView: React.FC = () => {
   const loreTokens = estimateTokens(loreText);
   const charSheetTokens = estimateTokens(charSheetText);
   const journalTokens = estimateTokens(journalText);
-  const coreInstructionTokens = 350; // Base prompt text tokens in formatUnifiedPrompt
+  const coreInstructionTokens = 350;
 
-  // Unified system prompt size with full 5-section canvas accuracy
+  // Narrator system prompt size with full 5-section canvas accuracy
   const totalSystemTokens = useMemo(() => {
     const sections = {
       setting: story.dynamicState.setting,
@@ -71,19 +71,16 @@ export const AnalyticsView: React.FC = () => {
       historicalFacts: story.dynamicState.historicalFacts,
       lorebook: story.dynamicState.lorebook,
     };
-    const fullUnifiedText = formatUnifiedPrompt(
-      loreText,
-      charSheetText,
+    const fullNarratorText = getNarratorPrompt(
+      sections,
       journalText,
       feedbackText,
-      story.language,
-      story.narrativePropensity,
-      sections,
       undefined,
-      story.dynamicState.stochasticMatrix
+      story.narratorStyle || story.narrativePropensity || 'balanced',
+      story.language
     );
-    return estimateTokens(fullUnifiedText);
-  }, [loreText, charSheetText, journalText, feedbackText, story]);
+    return estimateTokens(fullNarratorText);
+  }, [journalText, feedbackText, story]);
 
   // Entire message history token metrics with Judge & Narrator (In + Out) decomposition
   const messageTokensList = useMemo(() => {
