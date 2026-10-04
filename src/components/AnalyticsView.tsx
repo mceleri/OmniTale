@@ -479,7 +479,7 @@ export const AnalyticsView: React.FC = () => {
                             const yVal = paddingTop + (chartHeight - paddingTop - paddingBottom) * r;
                             const labelVal = Math.round(maxVal * (1 - r));
                             return (
-                              <g key={i} className="opacity-40">
+                              <g key={i}>
                                 <line 
                                   x1={paddingLeft} 
                                   y1={yVal} 
@@ -488,11 +488,12 @@ export const AnalyticsView: React.FC = () => {
                                   stroke="#27272a" 
                                   strokeWidth="1" 
                                   strokeDasharray="2,4"
+                                  opacity="0.5"
                                 />
                                 <text 
-                                  x={paddingLeft - 6} 
+                                  x={paddingLeft - 5} 
                                   y={yVal + 3} 
-                                  className="text-[8px] font-mono fill-zinc-600 text-right" 
+                                  className="text-[8px] font-mono fill-zinc-500 text-right" 
                                   textAnchor="end"
                                 >
                                   {labelVal}
