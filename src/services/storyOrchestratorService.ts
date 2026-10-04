@@ -20,7 +20,7 @@ export interface StoryStoreAccess {
 /**
  * Orchestrates the full AI Master narrative generation cycle, including
  * turn 0 initialization, fate oracle rolling, agentic pipeline resolution,
- * and background lore/journal sweeps.
+ * streaming prose updates, and background lore/journal sweeps.
  */
 export const orchestrateMasterResponse = async (
   store: StoryStoreAccess,
@@ -143,6 +143,8 @@ export const orchestrateMasterResponse = async (
     }
   }
 
+  const masterMessageId = 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6);
+
   try {
     const storyMessages = updatedMessages.filter((m: Message) => m.role === 'player' || m.role === 'master');
     const last10Messages = storyMessages.slice(-10);
@@ -171,6 +173,42 @@ export const orchestrateMasterResponse = async (
     let judgeTokensData: { promptTokens: number; completionTokens: number; totalTokens: number } | undefined = undefined;
     let narratorTokensData: { promptTokens: number; completionTokens: number; totalTokens: number } | undefined = undefined;
 
+    const streamProgressiveChunk = (fullText: string) => {
+      masterResponseText = fullText;
+      setState((s: StoryState) => {
+        const updatedStories = s.stories.map((story: Story) => {
+          if (story.id === targetStoryId) {
+            const currentMsgs = [...story.messages];
+            const existingIdx = currentMsgs.findIndex((m: Message) => m.id === masterMessageId);
+            if (existingIdx !== -1) {
+              currentMsgs[existingIdx] = {
+                ...currentMsgs[existingIdx],
+                content: fullText,
+                fateRoll,
+                stochasticMatrix,
+                judgeNote,
+              };
+            } else {
+              currentMsgs.push({
+                id: masterMessageId,
+                role: 'master',
+                content: fullText,
+                fateRoll,
+                stochasticMatrix,
+                judgeNote,
+              });
+            }
+            return {
+              ...story,
+              messages: currentMsgs,
+            };
+          }
+          return story;
+        });
+        return { stories: updatedStories };
+      });
+    };
+
     if (isStart) {
       const startingIntent = activeStory.dynamicState.startingIntent || activeStory.dynamicState.defaultStartingIntent || 'The adventure begins as the protagonist prepares for what lies ahead.';
       const turnZeroPrompt = getTurnZeroPrompt(
@@ -192,6 +230,9 @@ export const orchestrateMasterResponse = async (
         (usage) => {
           apiPromptTokens = usage.prompt_tokens;
           apiCompletionTokens = usage.completion_tokens;
+        },
+        (fullText) => {
+          streamProgressiveChunk(fullText);
         }
       );
 
@@ -260,6 +301,9 @@ export const orchestrateMasterResponse = async (
           (usage) => {
             narratorPromptTokens = usage.prompt_tokens;
             narratorCompletionTokens = usage.completion_tokens;
+          },
+          (fullText) => {
+            streamProgressiveChunk(fullText);
           }
         );
 
@@ -284,6 +328,9 @@ export const orchestrateMasterResponse = async (
           (usage) => {
             apiPromptTokens = usage.prompt_tokens;
             apiCompletionTokens = usage.completion_tokens;
+          },
+          (fullText) => {
+            streamProgressiveChunk(fullText);
           }
         );
 
@@ -305,6 +352,9 @@ export const orchestrateMasterResponse = async (
         (usage) => {
           apiPromptTokens = usage.prompt_tokens;
           apiCompletionTokens = usage.completion_tokens;
+        },
+        (fullText) => {
+          streamProgressiveChunk(fullText);
         }
       );
 
@@ -316,7 +366,7 @@ export const orchestrateMasterResponse = async (
     }
 
     const masterMessage: Message = {
-      id: 'msg_' + Date.now() + Math.random().toString(36).substring(2, 6),
+      id: masterMessageId,
       role: 'master',
       content: masterResponseText,
       tokens: apiCompletionTokens || estimateTokens(masterResponseText),
@@ -328,15 +378,22 @@ export const orchestrateMasterResponse = async (
       narratorTokens: narratorTokensData,
     };
 
-    const finalMessages = [...updatedMessages, masterMessage];
     const evictedScratchpad = unEvictedScratchpad.slice(-5);
 
     setState((s: StoryState) => {
       const updatedStories = s.stories.map((story: Story) => {
         if (story.id === targetStoryId) {
+          const currentMsgs = [...story.messages];
+          const existingIdx = currentMsgs.findIndex((m: Message) => m.id === masterMessageId);
+          if (existingIdx !== -1) {
+            currentMsgs[existingIdx] = masterMessage;
+          } else {
+            currentMsgs.push(masterMessage);
+          }
+
           return {
             ...story,
-            messages: finalMessages,
+            messages: currentMsgs,
             dynamicState: {
               ...story.dynamicState,
               ...(stochasticMatrix ? { stochasticMatrix } : {}),
@@ -354,6 +411,10 @@ export const orchestrateMasterResponse = async (
         isGeneratingStory: false,
       };
     });
+
+    const finalState = getState();
+    const finalActiveStory = finalState.stories.find((s: Story) => s.id === targetStoryId);
+    const finalMessages = finalActiveStory ? finalActiveStory.messages : [];
 
     // Check count for background updates (using targetStoryId closure)
     const masterMessagesCount = finalMessages.filter((m: Message) => m.role === 'master').length;
@@ -415,12 +476,13 @@ export const orchestrateMasterResponse = async (
     };
 
     setState((s: StoryState) => {
-      const finalMessages = [...updatedMessages, errorMsg];
       const updatedStories = s.stories.map((story: Story) => {
         if (story.id === targetStoryId) {
+          // Clean up any partially streamed master message on hard error
+          const cleanMsgs = story.messages.filter((m: Message) => m.id !== masterMessageId);
           return {
             ...story,
-            messages: finalMessages,
+            messages: [...cleanMsgs, errorMsg],
             updatedAt: Date.now(),
           };
         }

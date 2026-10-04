@@ -1,4 +1,4 @@
-import { Message } from '../types/story';
+import { Message, LLMProvider } from '../types/story';
 import { fetchNarrative } from './llmService';
 import {
   formatLorebookPrompt,
@@ -23,7 +23,7 @@ const isNoChangesResponse = (text: string): boolean => {
 };
 
 export const executeBackgroundUpdates = async (
-  provider: 'openrouter' | 'gemini',
+  provider: LLMProvider,
   url: string,
   key: string,
   modelName: string,

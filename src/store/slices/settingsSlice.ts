@@ -1,15 +1,15 @@
 import { StateCreator } from 'zustand';
-import { StoryState } from '../../types/story';
+import { StoryState, LLMProvider } from '../../types/story';
 
 export interface SettingsSlice {
-  llmProvider: 'openrouter' | 'gemini';
+  llmProvider: LLMProvider;
   llmUrl: string;
   llmKey: string;
   modelName: string;
   useAgenticPipeline: boolean;
 
   updateLlmSettings: (
-    provider: 'openrouter' | 'gemini',
+    provider: LLMProvider,
     url: string,
     key: string,
     modelName: string,
@@ -24,7 +24,9 @@ export const createSettingsSlice: StateCreator<
   [],
   SettingsSlice
 > = (set) => ({
-  llmProvider: (import.meta.env.VITE_LLM_URL?.includes('generativelanguage') || import.meta.env.VITE_MODEL_NAME?.toLowerCase().startsWith('gemini'))
+  llmProvider: (import.meta.env.VITE_LLM_URL?.includes('localhost') || import.meta.env.VITE_LLM_URL?.includes('127.0.0.1'))
+    ? 'local'
+    : (import.meta.env.VITE_LLM_URL?.includes('generativelanguage') || import.meta.env.VITE_MODEL_NAME?.toLowerCase().startsWith('gemini'))
     ? 'gemini'
     : 'openrouter',
   llmUrl: import.meta.env.VITE_LLM_URL || 'https://openrouter.ai/api/v1/chat/completions',
@@ -35,7 +37,7 @@ export const createSettingsSlice: StateCreator<
   setUseAgenticPipeline: (enabled: boolean) => set({ useAgenticPipeline: enabled }),
 
   updateLlmSettings: (
-    provider: 'openrouter' | 'gemini',
+    provider: LLMProvider,
     url: string,
     key: string,
     modelName: string,

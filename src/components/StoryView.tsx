@@ -338,64 +338,85 @@ export const StoryView: React.FC = () => {
                 }`}
               >
                 {isMaster ? (
-                  <MarkdownText text={msg.content} />
+                  <>
+                    <MarkdownText text={msg.content} />
+                    {isGeneratingStory && isLastMessage && (
+                      <span className="inline-block w-1.5 h-4 ml-1 bg-zinc-400 animate-pulse align-middle" />
+                    )}
+                  </>
                 ) : (
                   <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
                 )}
               </div>
 
               {/* Message Actions */}
-              <div
-                className={`flex items-center gap-2 mt-1.5 px-1 transition-opacity ${
-                  isLastMessage || isLastPlayerMessage
-                    ? 'opacity-100'
-                    : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100'
-                }`}
-              >
-                {isLastPlayerMessage && (
+              {!isGeneratingStory && (
+                <div
+                  className={`flex items-center gap-2 mt-1.5 px-1 transition-opacity ${
+                    isLastMessage || isLastPlayerMessage
+                      ? 'opacity-100'
+                      : 'opacity-0 group-hover:opacity-100 focus-within:opacity-100'
+                  }`}
+                >
+                  {isLastPlayerMessage && (
+                    <button
+                      type="button"
+                      disabled={isAnyLoading}
+                      onClick={() => {
+                        setEditingMessageId(msg.id);
+                        setEditingText(msg.content);
+                      }}
+                      className="text-[11px] text-zinc-400 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                      title="Edit last action and regenerate response"
+                    >
+                      <Edit className="w-3 h-3" /> Edit
+                    </button>
+                  )}
+                  {isLastMessage && (
+                    <button
+                      type="button"
+                      disabled={isAnyLoading}
+                      onClick={async () => {
+                        await regenerateLastResponse();
+                      }}
+                      className="text-[11px] text-zinc-400 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                      title={isMaster ? "Re-roll this response" : "Generate response for this action"}
+                    >
+                      <RotateCcw className="w-3 h-3" /> Regenerate
+                    </button>
+                  )}
                   <button
                     type="button"
                     disabled={isAnyLoading}
                     onClick={() => {
-                      setEditingMessageId(msg.id);
-                      setEditingText(msg.content);
+                      if (confirm('Delete this message?')) {
+                        deleteMessage(msg.id);
+                      }
                     }}
-                    className="text-[11px] text-zinc-400 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
-                    title="Edit last action and regenerate response"
+                    className="text-[11px] text-zinc-400 hover:text-red-400 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
+                    title="Delete this message"
                   >
-                    <Edit className="w-3 h-3" /> Edit
+                    <Trash2 className="w-3 h-3" /> Delete
                   </button>
-                )}
-                {isLastMessage && (
-                  <button
-                    type="button"
-                    disabled={isAnyLoading}
-                    onClick={async () => {
-                      await regenerateLastResponse();
-                    }}
-                    className="text-[11px] text-zinc-400 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
-                    title={isMaster ? "Re-roll this response" : "Generate response for this action"}
-                  >
-                    <RotateCcw className="w-3 h-3" /> Regenerate
-                  </button>
-                )}
-                <button
-                  type="button"
-                  disabled={isAnyLoading}
-                  onClick={() => {
-                    if (confirm('Delete this message?')) {
-                      deleteMessage(msg.id);
-                    }
-                  }}
-                  className="text-[11px] text-zinc-400 hover:text-red-400 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition bg-zinc-900/50 hover:bg-zinc-900 px-2 py-1 rounded-md border border-zinc-800/40"
-                  title="Delete this message"
-                >
-                  <Trash2 className="w-3 h-3" /> Delete
-                </button>
-              </div>
+                </div>
+              )}
             </div>
           );
         })}
+        {isGeneratingStory && (messages.length === 0 || messages[messages.length - 1].role === 'player') && (
+          <div className="flex flex-col max-w-[90%] lg:max-w-[75%] mr-auto items-start animate-fade-in">
+            <div className="flex items-center gap-2 mb-1 px-1 text-[10px] text-zinc-400 font-sans tracking-wider">
+              <span>STORYTELLER</span>
+              <span className="inline-flex items-center gap-1 text-[10px] text-zinc-500">
+                <Loader className="w-3 h-3 animate-spin" /> weaving narrative...
+              </span>
+            </div>
+            <div className="font-serif text-[15px] lg:text-base text-zinc-500 italic py-1 pr-4 flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-zinc-500 animate-pulse" />
+              <span>Forming the scene...</span>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </main>
 

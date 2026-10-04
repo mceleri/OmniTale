@@ -61,9 +61,15 @@ export const useStoryStore = create<StoryState>()(
           }));
 
         // Graceful fallback for legacy storage state missing or invalid llmProvider
-        const inferredProvider: 'openrouter' | 'gemini' = (
-          persistedState.llmProvider === 'gemini' || persistedState.llmUrl?.includes('generativelanguage')
-        ) ? 'gemini' : 'openrouter';
+        const inferredProvider: LLMProvider = (
+          persistedState.llmProvider === 'local' ||
+          persistedState.llmUrl?.includes('localhost') ||
+          persistedState.llmUrl?.includes('127.0.0.1')
+        )
+          ? 'local'
+          : (persistedState.llmProvider === 'gemini' || persistedState.llmUrl?.includes('generativelanguage'))
+          ? 'gemini'
+          : 'openrouter';
 
         return {
           ...currentState,

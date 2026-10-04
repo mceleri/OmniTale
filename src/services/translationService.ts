@@ -1,5 +1,5 @@
 import { fetchNarrative, cleanAndParseJson } from './llmService';
-import { StorySections } from '../types/story';
+import { StorySections, LLMProvider } from '../types/story';
 
 export interface JourneyTranslationInput {
   title: string;
@@ -24,14 +24,14 @@ export interface JourneyTranslationOutput {
  * with graceful fallback to original texts if translation fails.
  */
 export const translateJourneyBatch = async (
-  provider: 'openrouter' | 'gemini',
+  provider: LLMProvider,
   url: string,
   key: string,
   modelName: string,
   targetLanguage: string,
   input: JourneyTranslationInput
 ): Promise<JourneyTranslationOutput> => {
-  if (!key || targetLanguage.toLowerCase() === 'english') {
+  if ((!key && provider !== 'local') || targetLanguage.toLowerCase() === 'english') {
     return {
       title: input.title,
       synopsis: input.synopsis,
