@@ -27,3 +27,13 @@ dist-ssr
 start-remote.sh
 start-*.sh
 dev.log
+
+# Python & LLM Evaluation artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+eval_results/
+results_*/
+test_results/
