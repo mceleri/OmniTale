@@ -116,14 +116,14 @@ def main():
     parser.add_argument(
         "--hf-repo",
         type=str,
-        default=None,
-        help="HuggingFace repository (e.g. Qwen/Qwen2.5-7B-Instruct-GGUF)"
+        default="bartowski/Qwen2.5-7B-Instruct-GGUF",
+        help="HuggingFace repository (default: bartowski/Qwen2.5-7B-Instruct-GGUF)"
     )
     parser.add_argument(
         "--hf-file",
         type=str,
-        default=None,
-        help="HuggingFace GGUF filename (e.g. qwen2.5-7b-instruct-q4_k_m.gguf)"
+        default="Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+        help="HuggingFace GGUF filename (default: Qwen2.5-7B-Instruct-Q4_K_M.gguf)"
     )
     parser.add_argument(
         "--backend",

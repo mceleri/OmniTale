@@ -84,10 +84,10 @@ CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python
 ```bash
 python3 evaluate.py \
   --backend llamacpp \
-  --hf-repo Qwen/Qwen2.5-7B-Instruct-GGUF \
-  --hf-file qwen2.5-7b-instruct-q4_k_m.gguf \
-  --template eldoria \
-  --language Italian \
+  --hf-repo bartowski/Qwen2.5-7B-Instruct-GGUF \
+  --hf-file Qwen2.5-7B-Instruct-Q4_K_M.gguf \
+  --template collective-flame \
+  --language English \
   --turns 50 \
   --ctx-size 28000 \
   --gpu-layers -1 \
