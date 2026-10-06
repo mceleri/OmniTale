@@ -72,6 +72,16 @@ class LlamaCppBackend(BaseLLMBackend):
             init_kwargs["type_v"] = 1 if cache_type_v == "q8_0" else (2 if cache_type_v == "q4_0" else 0)
 
         try:
+            import llama_cpp
+            gpu_supported = getattr(llama_cpp, 'llama_supports_gpu_offload', lambda: False)()
+            if gpu_supported:
+                print("  ⚡ GPU Acceleration: ENABLED (llama.cpp compiled with CUDA/GPU offloading)")
+            else:
+                print("  ⚠️ GPU Acceleration: NOT DETECTED (llama.cpp compiled in CPU-only mode. Expect very slow inference!)")
+        except Exception:
+            pass
+
+        try:
             self.llm = Llama(**init_kwargs)
         except TypeError:
             # Fallback if specific kwargs are not supported by the installed llama-cpp version
@@ -117,29 +127,38 @@ class LlamaCppBackend(BaseLLMBackend):
 
         start_time = time.perf_counter()
         
-        response = self.llm.create_chat_completion(
-            messages=chat_messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            stream=False
-        )
-        latency_sec = time.perf_counter() - start_time
-
-        content = ""
-        prompt_tokens = 0
-        completion_tokens = 0
-
-        if isinstance(response, dict):
+        # Use streaming to provide immediate visual feedback
+        accumulated_chunks = []
+        try:
+            stream_resp = self.llm.create_chat_completion(
+                messages=chat_messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                stream=True
+            )
+            for chunk in stream_resp:
+                delta = chunk.get("choices", [{}])[0].get("delta", {})
+                piece = delta.get("content", "")
+                if piece:
+                    accumulated_chunks.append(piece)
+                    print(piece, end="", flush=True)
+            print()  # Newline after stream finishes
+            content = "".join(accumulated_chunks)
+        except Exception as e:
+            # Fallback to non-streaming if stream mode fails
+            response = self.llm.create_chat_completion(
+                messages=chat_messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                stream=False
+            )
             choice = response.get("choices", [{}])[0]
             content = choice.get("message", {}).get("content", "") or ""
-            usage = response.get("usage", {})
-            prompt_tokens = usage.get("prompt_tokens", 0)
-            completion_tokens = usage.get("completion_tokens", 0)
 
-        if not prompt_tokens:
-            prompt_tokens = sum(self.count_tokens(m.get("content", "")) for m in chat_messages)
-        if not completion_tokens:
-            completion_tokens = self.count_tokens(content)
+        latency_sec = time.perf_counter() - start_time
+
+        prompt_tokens = sum(self.count_tokens(m.get("content", "")) for m in chat_messages)
+        completion_tokens = self.count_tokens(content)
 
         total_tokens = prompt_tokens + completion_tokens
         tokens_per_sec = completion_tokens / latency_sec if latency_sec > 0 else 0.0
