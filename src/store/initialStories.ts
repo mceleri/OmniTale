@@ -656,5 +656,84 @@ Husband and wife for centuries and mortal vessels of the Collective Flame, livin
     messages: [],
     createdAt: 1782345600000,
     updatedAt: 1782345600000
+  },
+  {
+    id: 'modern-vampires',
+    type: 'template',
+    title: 'Modern Vampires',
+    genre: 'Urban Gothic / Mystery',
+    synopsis: 'In a sprawling modern metropolis, an unforgettable Halloween night with an enigmatic, red-haired woman named Lyra leaves thirty-year-old Kizag with baffling symptoms: acute photophobia, heightened senses, and a visceral thirst that water and food no longer satisfy. Kizag is not an immediate, full-fledged vampire—a transformation like this is a slow, harrowing metamorphosis, granting early physical awakenings while daylight still burns his eyes and saps his strength without turning him to ash. Striving to maintain his ordinary life among his tight-knit circle of friends, Kizag pursues an obsessive urban search for Lyra to find medical answers. What he does not realize is that Lyra, an ancient psychic vampire, is watching him from the shadows: she suspects Kizag might be the reincarnation of her lost love—a peerless swordsman celebrated as the most human vampire to ever exist. Lacking certainty, Lyra subjects him to a secret, prolonged trial of character: only by proving that noble, compassionate spirit will Kizag earn the right to approach her and learn the truth.',
+    narrativePropensity: 'balanced',
+    narratorStyle: 'balanced',
+    dynamicState: {
+      characterSheet: `Name: Kizag
+Role: Thirty-year-old metropolitan professional (designer/consultant) with a background in historical fencing (HEMA), undergoing a slow, baffling supernatural metamorphosis.
+
+Metamorphic Condition & Early Awakening:
+- Not yet a full vampire: the transformation is a gradual physical and metaphysical transition. Direct sunlight does not incinerate him, but causes severe photophobia, burning migraines, nausea, and debilitating fatigue, forcing him to wear dark sunglasses and seek shade.
+- Early manifestations: Spasmodic bursts of compressed physical strength, lightning-fast reflexes, acute auditory and olfactory sensitivity (hearing heartbeats across rooms, smelling blood and stress hormones).
+- The Thirst & Appetite: Progressive biological rejection of solid food and water, both tasting like ash or cardboard; persistent, burning throat dryness that mimics acute chemical withdrawal.
+- Latent Martial Memory: Under adrenaline or threat, unexpected muscle memory for blade work and swordplay spontaneously manifests, despite only practicing recreational fencing.
+- Psychological state: Caught between paranoia over an experimental designer neurotoxin, shame over appearing fragile before his friends, and an intoxicating, inescapable obsession with the memory of Lyra.
+
+Social Circle & Close Friends:
+- June: Best friend and creative studio partner. Capable, pragmatic, protective, and harboring a long-concealed affection for Kizag. She is the first to notice his pale pallor and erratic hours, fearing he is spiraling into drug abuse or a severe psychological breakdown.
+- Pietro: Childhood friend and trusted neighborhood pharmacist. Pragmatic and discreet; willing to run informal toxicology and blood screenings to protect Kizag from public hospital records, but increasingly disturbed by inexplicable laboratory anomalies.
+- Matteo & Sofia (The group's long-time couple):
+  * Matteo: Jovial, extroverted architect and the group's social anchor. Deeply rational; brushes off Kizag's peculiarities as severe career burnout or a wild dating aftermath.
+  * Sofia: Art conservator and photographer with an exceptional eye for minute details. She notices Kizag's marble-cold touch, rigid stillness, vitreous gaze, and involuntary flinches to high-frequency sounds, sensing an ominous shift that defies casual excuses.`,
+      setting: `A sprawling, rain-soaked contemporary Western metropolis. Beneath sleek glass skyscrapers, corporate offices, trendy art galleries, and bustling neighborhood bistros lies an occult underground tightly bound by the laws of the Masquerade. The supernatural is not public knowledge: any anomaly is rationalized away by modern science, toxicology, or psychiatric diagnoses. Daylight reveals a mundane, demanding professional world; nighttime exposes quiet, shadowed avenues and private sanctuaries where hidden predators tread with extreme caution.`,
+      factions: `- Lyra (The Sensitive Elder / The Veiled Proctor): An ancient, enigmatic vampire gifted with empathic and soul-reading sensitivity. Centuries ago, she loved Julian—a master swordsman renowned as the most noble and human vampire of their kind. Sensing a faint soul resonance in Kizag during Halloween, she initiated his turning, but refuses to reveal herself until she proves whether he is truly Julian reborn or a tragic mistake. She watches from afar, orchestrating ethical dilemmas to test his restraint and valor.
+- The Ebony Circle (The City's Nocturnal Patriciate): The orthodox, territorial vampire hierarchy ruled by Marcus Vane. They fiercely uphold the Masquerade and monitor metropolitan power centers through private security fronts. Unaware of Kizag's specific identity, their hounds nevertheless remain vigilant for rogue contagions or unauthorized fledgling risings.
+- The Circle of Mortals (June, Pietro, Matteo, Sofia): Kizag's lifeline to human existence. Their dinner invites, work deadlines, and affectionate scrutiny represent both his greatest logistical hazard and his most vital moral compass.`,
+      conflicts: `- The Internal & Medical Friction: Kizag attempting to balance everyday obligations, studio deadlines, and social gatherings with friends while hiding his progressive aversion to food, sunlight sensitivity, and terrifying bodily changes.
+- The Long-Term Trial of Lyra: Kizag obsessively tracking urban rumors and elusive leads to find Lyra, unaware that she is observing him from the shadows, evaluating whether his moral choices mirror the chivalry and compassion of her fallen beloved.
+- The Threat of the Masquerade: Avoiding indiscreet displays of superhuman reflexes or violent feeding that could alert private security contractors tied to Marcus Vane's Ebony Circle or trigger police investigations.`,
+      historicalFacts: `- Two centuries ago, Julian—a legendary swordsman and vampire noble revered for defending mortals—perished in an ancient feud, leaving Lyra devastated and in voluntary seclusion.
+- The Masquerade in the city was reinforced in the late 19th century through financial alliances and municipal oversight.
+- Kizag and June co-founded their design studio four years ago, building a reputation among local cultural spaces and galleries.`,
+      lorebook: `## The Setting: Metropolitan Noir
+A vibrant, modern metropolis where ancient occult secrets hide beneath high-finance glass towers, art venues, and quiet residential quarters. The word "vampire" belongs to folklore until undeniable biological and supernatural evidence forces its weight.
+
+## Protagonist: Kizag (The Fledgling in Transition)
+Thirty-year-old metropolitan professional undergoing an extended, gradual turning. He is not instantly dead or combustible in daylight: sunlight causes agonizing migraines, eye inflammation, and weakness rather than immediate ash. As his humanity wanes, latent martial reflexes with blades awaken.
+
+## Key Figures
+- Lyra: An ancient psychic vampire testing Kizag's soul from the shadows. She will only draw close if he proves to be the noble, humane warrior she once loved.
+- June: Devoted best friend and business partner, desperately trying to save him from what she believes is a toxic drug spiral.
+- Pietro: Pharmacist friend conducting off-the-books clinical checks.
+- Matteo & Sofia: The anchor couple of the friend group. Matteo rationalizes everything; Sofia perceives the uncanny details.
+- Marcus Vane's Ebony Circle: Shadowy rulers of the city's night, enforcing silence.`,
+      masterJournal: `// AI Master Notes — Modern Vampires (The Soul's Trial)
+// Act 1: The Lingering Light & The Elusive Scent
+
+[CAMPAIGN CONTEXT & ATMOSPHERE]
+- Tone: Slow-burn Urban Mystery, psychological Body Horror, and interpersonal drama.
+- Kizag believes he is grappling with an experimental designer drug or a neurological disorder. The transformation is prolonged: daylight causes painful photophobia and weakness, not instant combustion.
+- The central dramatic tension lies in the friction between Kizag's mundane friendships (June, Pietro, Matteo, Sofia) and his alien bodily mutations.
+
+[CORE DIRECTIVES FOR THE MASTER (PACING & AMBIGUITY)]
+1. PRESERVE GROUNDED AMBIGUITY IN THE OPENING:
+   - Ground early anomalies in physical, medical, or psychological terms (toxicology screenings, acute anemia, withdrawal, migraine aura). Do not rush to supernatural jargon until evidence makes denial impossible.
+   - Pacing is slow-burn: reveal ONE subtle symptom or breadcrumb per scene.
+2. LYRA AS A REMOTE OBSERVER & PROCTOR:
+   - Lyra must NOT appear in person for casual dialogue in early acts. She operates via subtle intermediaries, vintage tokens, cryptic traces, or brief glimpses from distant shadows.
+   - She is actively testing Kizag's soul: orchestrate dilemmas where Kizag must choose between selfish predatory impulses and the dignity, safety, or protection of mortals.
+   - When Kizag displays self-restraint, empathy, or innate skill with a blade, reward him with a breadcrumb or subtle covert assistance.
+3. WEAVE THE SOCIAL FABRIC:
+   - Make social gatherings (dinners at Matteo and Sofia's, studio meetings with June, discreet consultations with Pietro) essential obstacles. Kizag must make excuses for not eating, hide his freezing skin, and conceal his sensory overload.
+4. NO PREMATURE PARAMILITARY ASSAULTS:
+   - The Ebony Circle operates through quiet influence, distant observers, and discreet inquiries, not open firefights or heavy SWAT squads in early scenes.
+
+[ACTIVE GOAL OF ACT 1]
+Kizag attempts to survive a social evening or studio workday with June, Matteo, and Sofia while coping with his worsening symptoms, seeking his first verified urban lead regarding Lyra's whereabouts.`,
+      masterFeedback: '',
+      judgeScratchpad: [],
+      defaultStartingIntent: "I am sitting in June's apartment with the blinds drawn, nursing a glass of water that tastes like chalk. June is looking over my shoulder with worried eyes, asking if I'm finally ready to tell her what really happened on Halloween.",
+      defaultStochasticMatrix: null,
+    },
+    messages: [],
+    createdAt: 1782345600000,
+    updatedAt: 1782345600000
   }
 ];
