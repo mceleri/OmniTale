@@ -678,7 +678,7 @@ Metamorphic Condition & Early Awakening:
 
 Social Circle & Close Friends:
 - June: Best friend and creative studio partner. Capable, pragmatic, protective, and harboring a long-concealed affection for Kizag. She is the first to notice his pale pallor and erratic hours, fearing he is spiraling into drug abuse or a severe psychological breakdown.
-- Pietro: Childhood friend and trusted neighborhood pharmacist. Pragmatic and discreet; willing to run informal toxicology and blood screenings to protect Kizag from public hospital records, but increasingly disturbed by inexplicable laboratory anomalies.
+- Pietro: Childhood friend and talented software engineer / tech enthusiast. Pragmatic, geeky, and loyal; shares quiet late-night video game sessions with Kizag. Unaware of any physical oddities, but a helpful ally if Kizag needs to trace digital footprints, obscure message boards, or encrypted metadata to find Lyra.
 - Matteo & Sofia (The group's long-time couple):
   * Matteo: Jovial, extroverted architect and the group's social anchor. Deeply rational; brushes off Kizag's peculiarities as severe career burnout or a wild dating aftermath.
   * Sofia: Art conservator and photographer with an exceptional eye for minute details. She notices Kizag's marble-cold touch, rigid stillness, vitreous gaze, and involuntary flinches to high-frequency sounds, sensing an ominous shift that defies casual excuses.`,
@@ -686,7 +686,7 @@ Social Circle & Close Friends:
       factions: `- Lyra (The Sensitive Elder / The Veiled Proctor): An ancient, enigmatic vampire gifted with empathic and soul-reading sensitivity. Centuries ago, she loved Julian—a master swordsman renowned as the most noble and human vampire of their kind. Sensing a faint soul resonance in Kizag during Halloween, she initiated his turning, but refuses to reveal herself until she proves whether he is truly Julian reborn or a tragic mistake. She tests him from the shadows: if Kizag demonstrates compassion, restraint, and chivalry, she covertly aids his survival against the city's predators and leaves subtle breadcrumbs so he can find her; if he succumbs to bloodlust or monstrous cruelty, she will let the Ebony Circle hunt him down or execute him herself.
 - The Ebony Circle (The City's Nocturnal Patriciate): The orthodox, territorial vampire hierarchy ruled by Marcus Vane. They fiercely uphold the Masquerade and monitor metropolitan power centers through private security fronts. Unaware of Kizag's specific identity, their hounds nevertheless remain vigilant for rogue contagions or unauthorized fledgling risings.
 - The Circle of Mortals (June, Pietro, Matteo, Sofia): Kizag's lifeline to human existence. Their dinner invites, work deadlines, and affectionate scrutiny represent both his greatest logistical hazard and his most vital moral compass.`,
-      conflicts: `- The Internal & Medical Friction: Kizag attempting to balance everyday obligations, studio deadlines, and social gatherings with friends while hiding his progressive aversion to food, sunlight sensitivity, and terrifying bodily changes.
+      conflicts: `- The Internal & Everyday Friction: Kizag attempting to balance everyday obligations, studio deadlines, and social gatherings with friends while hiding his progressive aversion to food, sunlight sensitivity, and terrifying bodily changes.
 - The Long-Term Trial of Lyra: Kizag obsessively tracking urban rumors and elusive leads to find Lyra, unaware that she is observing him from the shadows, evaluating whether his moral choices mirror the chivalry and compassion of her fallen beloved.
 - The Threat of the Masquerade: Avoiding indiscreet displays of superhuman reflexes or violent feeding that could alert private security contractors tied to Marcus Vane's Ebony Circle or trigger police investigations.`,
       historicalFacts: `- Two centuries ago, Julian—a legendary swordsman and vampire noble revered for defending mortals—perished in an ancient feud, leaving Lyra devastated and in voluntary seclusion.
@@ -701,7 +701,7 @@ Thirty-year-old metropolitan professional undergoing an extended, gradual turnin
 ## Key Figures
 - Lyra: An ancient psychic vampire testing Kizag's soul from the shadows. If he proves to be the noble, humane warrior she once loved, she will shield him from dangers and slowly let him trace her down; if he gives in to cold brutality, she will abandon or destroy him.
 - June: Devoted best friend and business partner, desperately trying to save him from what she believes is a toxic drug spiral.
-- Pietro: Pharmacist friend conducting off-the-books clinical checks.
+- Pietro: Software engineer and longtime friend, capable of digging through digital footprints and web metadata.
 - Matteo & Sofia: The anchor couple of the friend group. Matteo rationalizes everything; Sofia perceives the uncanny details.
 - Marcus Vane's Ebony Circle: Shadowy rulers of the city's night, enforcing silence.`,
       masterJournal: `// AI Master Notes — Modern Vampires (The Soul's Trial)
@@ -713,24 +713,25 @@ Thirty-year-old metropolitan professional undergoing an extended, gradual turnin
 - The central dramatic tension lies in the friction between Kizag's mundane friendships (June, Pietro, Matteo, Sofia) and his alien bodily mutations.
 
 [CORE DIRECTIVES FOR THE MASTER (PACING & AMBIGUITY)]
-1. PRESERVE GROUNDED AMBIGUITY IN THE OPENING:
-   - Ground early anomalies in physical, medical, or psychological terms (toxicology screenings, acute anemia, withdrawal, migraine aura). Do not rush to supernatural jargon until evidence makes denial impossible.
-   - Pacing is slow-burn: reveal ONE subtle symptom or breadcrumb per scene.
+1. PRESERVE GROUNDED AMBIGUITY & ZERO CLINICAL TRAPS:
+   - NO hospital blood screenings, secret toxicology alerts, or laboratory alarms! The opening is an intimate, grounded roleplay space.
+   - Kizag interprets his own symptoms through everyday lenses: burnout, bad alcohol/substances from Halloween, sensory overload, or migraine aura.
+   - Pacing is slow-burn: reveal ONE subtle sensory symptom or interpersonal friction per scene.
 2. LYRA AS A REMOTE OBSERVER & PROCTOR:
    - Lyra must NOT appear in person for casual dialogue in early acts. She operates via subtle intermediaries, vintage tokens, cryptic traces, or brief glimpses from distant shadows.
    - She is actively testing Kizag's soul: orchestrate dilemmas where Kizag must choose between selfish predatory impulses and the dignity, safety, or protection of mortals.
    - If Kizag demonstrates self-restraint, empathy, or innate skill with a blade, Lyra secretly aids his survival against nocturnal predators and rewards him with a subtle breadcrumb leading closer to her.
    - If Kizag acts with callous cruelty or gives in to mindless bloodlust, Lyra withdraws her protection, leaving him exposed to the hounds of the Ebony Circle or stepping in to eliminate him herself as a catastrophic mistake.
 3. WEAVE THE SOCIAL FABRIC:
-   - Make social gatherings (dinners at Matteo and Sofia's, studio meetings with June, discreet consultations with Pietro) essential obstacles. Kizag must make excuses for not eating, hide his freezing skin, and conceal his sensory overload.
-4. NO PREMATURE PARAMILITARY ASSAULTS:
-   - The Ebony Circle operates through quiet influence, distant observers, and discreet inquiries, not open firefights or heavy SWAT squads in early scenes.
+   - Make everyday social interactions (working with June at the studio, casual group chats with Pietro, upcoming dinners at Matteo and Sofia's) the true field of tension. Kizag must make excuses for not eating, wear sunglasses indoors, and hide his freezing skin.
+4. NO PARAMILITARY INTRUSIONS OR PRIVATE SECURITY IN EARLY SCENES:
+   - Marcus Vane's Ebony Circle operates strictly through distant observers and quiet influence, NOT open firefights, door-to-door raids, or SWAT teams.
 
 [ACTIVE GOAL OF ACT 1]
-Kizag attempts to survive a social evening or studio workday with June, Matteo, and Sofia while coping with his worsening symptoms, seeking his first verified urban lead regarding Lyra's whereabouts.`,
+Kizag navigates a normal day with June at their design studio, attempting to deflect her growing concern while examining a single vintage curio or personal token left behind from that Halloween night.`,
       masterFeedback: '',
       judgeScratchpad: [],
-      defaultStartingIntent: "I am sitting in June's apartment with the blinds drawn, nursing a glass of water that tastes like chalk. June is looking over my shoulder with worried eyes, asking if I'm finally ready to tell her what really happened on Halloween.",
+      defaultStartingIntent: "I am sitting with June in our design studio on a rainy morning, with the blinds tilted to spare my sensitive eyes. She has just brought me a coffee that smells faintly nauseating, asking gently if I'm finally ready to talk about why I've been so distant since Halloween.",
       defaultStochasticMatrix: null,
     },
     messages: [],

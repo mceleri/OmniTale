@@ -422,8 +422,8 @@ ${styleGuideline}
 
 4. ACTIVE INCITING INCIDENT & SITUATIONAL MOTION (STRICT ANTI-STAGNATION):
    - Turn 0 MUST NEVER open with a passive, eventless void ("nothing is happening, you are waiting, what do you do?").
-   - The opening scene MUST IMMEDIATELY introduce an active external catalyst, social encounter, NPC interaction, or environmental disruption that disturbs the static status quo and demands the protagonist's immediate attention or choice.
-   - Ground this catalyst organically in the campaign's specific genre conventions, setting laws, and active factional interests. Maintain strict situational fidelity to the intended starting scale: do NOT trigger premature paramilitary raids, massive armed ambushes, or catastrophic exposures if the setting dictates subtlety or investigative slow-burn.
+   - The opening scene MUST introduce an active situational spark, social encounter, NPC dialogue, or immediate dilemma that engages the protagonist right away.
+   - GROUNDED SCALE & TONAL FIDELITY: For personal, atmospheric, mystery, or slow-burn stories, the catalyst MUST be an intimate, grounded human interaction (e.g. a companion asking a piercing, unavoidable question, a client with an urgent deadline, an upcoming social event, or an intriguing keepsake found in a pocket)—NEVER an armed raid, an emergency police/security alert, or a high-tier supernatural rupture that shatters the quiet premise before the player takes their first turn.
 5. STRICT PLAYER AGENCY & ANTI-PUPPETING:
    - Introduce the opening scene without forcing involuntary physical actions, panic, or uncharacteristic destructive outbursts on the protagonist. The player retains full ownership of their character's actions and speech.
 6. STRICT DIEGETIC IMMEDIACY & NO SPOILERS OF UNPLAYED SECRETS:
