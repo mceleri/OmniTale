@@ -662,22 +662,22 @@ Husband and wife for centuries and mortal vessels of the Collective Flame, livin
     type: 'template',
     title: 'Modern Vampires',
     genre: 'Urban Gothic / Mystery',
-    synopsis: 'In a rain-drenched modern metropolis, thirty-year-old designer Kizag wakes from an enigmatic Halloween night with Lyra, a mysterious noblewoman, into a harrowing and prolonged metamorphosis: severe photophobia, heightened senses, and a burning thirst that water and food cannot soothe. Kizag is not an immediate, combustible vampire, nor does he fall into daytime comas—daylight pains his eyes and drains his vitality, but he retains his full consciousness and agency around the clock. Striving to shield his everyday life and his beloved design studio with his best friend June, Kizag hunts for answers. Unknown to him, Lyra—an ancient psychic vampire of immense wealth and lineage—observes him from the shadows. Centuries ago, she loved Julian, revered as the most noble and humane vampire to ever exist. In Kizag, she recognized that lost soul\'s chivalry and martial grace. She turned him not on a whim, but as a perilous gamble: risking execution by the city\'s ruling vampire syndicate, the Ebony Circle, Lyra needs a mortal-passing guardian to defend her ancestral haven from predatory corporate buyouts. Only if Kizag proves his honor, self-restraint, and compassion will she step in to mentor him; if he succumbs to monstrous bloodlust, she will destroy him herself as a fatal error.',
+    synopsis: "The morning of November 1st, thirty-year-old designer Kizag wakes alone in his city apartment with what feels like a catastrophic hangover from Halloween night: acute photophobia, a pounding head, and an unquenchable, dry throat. He attributes it all to bad party alcohol or a spiked drink, but his senses are razor-sharp, his tap water tastes like ash, and in the pocket of his discarded jacket lies a curious, vintage wax-wrapped honey candy smelling faintly of dried roses and an enigmatic woman named Lyra. Kizag is not an immediately combustible monster, nor does he fall into daytime comas—his turning is a slow, creeping metamorphosis that leaves him conscious and functional indoors 24/7. Unbeknownst to him, Lyra—an ancient psychic vampire of high lineage—tested him on Halloween, sensing the noble soul of her fallen husband Julian, a chivalric master swordsman. Lyra needs a mortal-passing champion to legally protect her sovereign haven, Villa Edera, from predatory corporate buyouts led by Marcus Vane's Ebony Circle. As Kizag navigates mundane morning messages from his close friends and business partner June, he must uncover what happened to him without blowing his humanity—or proving himself a bloodthirsty beast.",
     narrativePropensity: 'balanced',
     narratorStyle: 'balanced',
     dynamicState: {
       characterSheet: `Name: Kizag
-Role: Thirty-year-old metropolitan professional (designer/consultant) and recreational historical fencing (HEMA) practitioner, undergoing a slow, harrowing supernatural metamorphosis.
+Role: Thirty-year-old metropolitan graphic designer and historical fencing (HEMA) practitioner, waking on the morning of November 1st to the earliest, baffling signs of a slow supernatural metamorphosis.
 
-Metamorphic Condition & Early Awakening:
-- Gradual Metamorphosis (NO Forced Daytime Coma): Direct sunlight causes severe photophobia, pounding migraines, and physical lethargy (requiring tinted sunglasses, closed blinds, and shade), but DOES NOT incinerate him instantly. He retains full consciousness and agency 24 hours a day, able to work, converse, and make decisions indoors during daylight.
-- Awakening Faculties: Surges of concentrated muscular strength, razor-sharp reflexes, acute hearing (picking out heartbeats across a room) and scent (identifying stress hormones and dried blood).
-- The Thirst & Metabolism: Progressive biological aversion to solid food and tap water (tasting flat, ashen, or nausea-inducing); raw red meat or animal serum grants temporary vitality, while decanted or human blood restores true biological warmth and flushed color.
-- Latent Martial Memory: Under adrenaline or threat, precise muscle memory for historical blade work and swordplay surfaces instinctively.
-- Psychological State: Torn between rationalizing the symptoms as an experimental neurotoxin, fear of exposing his condition to loved ones, and an intoxicating, inescapable fascination with Lyra.
+The Morning After (November 1st) & Physical State:
+- Waking Alone: Begins alone in his own apartment, initially believing he is suffering from an agonizing hangover or a spiked party drink from Halloween.
+- Metamorphic Condition (NO Forced Daytime Coma): Direct sunlight through uncurtained windows causes piercing photophobia, severe eye-strain, and nausea, prompting him to keep the blinds drawn. However, he is fully conscious, awake, and capable of moving, speaking, and making decisions 24/7 indoors.
+- The First Symptoms: Tap water tastes like chalk and dry ash; the smell of brewing coffee turns his stomach; his throat burns with an unquenchable dryness.
+- Latent Martial Memory & Reflexes: Enhanced hearing (noticing water pipes and distant footsteps), light-footed balance, and muscle memory for blade work.
+- The Keepsake: In the pocket of his Halloween jacket lies an old-fashioned honey candy in artisanal wax paper, carrying the subtle scent of dried roses and antique wood—his only physical trace of Lyra.
 
 The Circle of Mortals (Close Friends — Driven by Loyalty & Affection):
-- June: Best friend and co-founder of their design studio. Energetic, pragmatic, fiercely protective, harboring an unspoken romantic affection for Kizag. She is the anchor of his humanity; her only motive is keeping their business afloat and protecting Kizag from spiraling.
+- June: Co-founder of their design studio and best friend. Affectionate, fiercely loyal, but prone to worry and unspoken jealousy after Kizag vanished with an unknown woman on Halloween. Her morning texts are casual and checking in, not hostile.
 - Pietro: Childhood friend and freelance software developer. Geeky, laid-back, and intensely loyal; shares late-night gaming sessions and pizza. Ignorant of anything occult, but ready to do small digital favors (digging up old forum archives or website metadata) out of pure friendship.
 - Matteo & Sofia (The group's anchor couple):
   * Matteo: Jovial, booming interior architect; loves organizing dinners and group outings; dismisses Kizag's moodiness as standard freelance burnout.
@@ -736,36 +736,50 @@ Thirty-year-old designer undergoing a gradual metaphysical metamorphosis. He DOE
 - Pietro, Matteo & Sofia: Longtime friends providing warmth, humor, and normal social gravity.
 - Marcus Vane (The Ebony Circle): Ruthless corporate vampire syndicate using private security fronts and real estate buyouts to dominate the city.`,
       masterJournal: `// AI Master Notes — Modern Vampires: The Soul's Trial
-// Act 1: The Veiled Hearth & The Architects of Shadow
+// Act 1: The Morning After & The Honey Keepsake
 
 [CAMPAIGN CONTEXT & GROUNDED REALISM]
-- Tone: Slow-burn Urban Mystery, psychological transformation, and interpersonal drama.
-- Kizag retains full consciousness during the day: he suffers from severe photophobia, eye-strain, and fatigue in direct sunlight, but DOES NOT experience instant combustion or forced daytime comas. He can work, talk, and make decisions indoors 24/7.
-- Grounded Masquerade: The supernatural is hidden behind ordinary facades (galleries, trusts, security firms).
+- Opening Point: November 1st (All Saints' Day), morning. Kizag wakes up ALONE in his own apartment.
+- Tone: Intimate, slow-burn psychological discovery and mystery.
+- Kizag retains full consciousness during the day: he suffers from severe photophobia, eye-strain, and fatigue in direct sunlight (prompting him to keep curtains closed), but DOES NOT experience instant combustion or forced daytime comas. He can walk, talk, and make decisions indoors 24/7.
+- The Keepsake: In his discarded jacket pocket from Halloween rests a single artisanal honey candy wrapped in antique wax paper, smelling faintly of dried roses and antique wood.
+
+[CAMPAIGN STOCHASTIC MATRIX INTERPRETATION FOR MODERN VAMPIRES — MANDATORY]
+When generating or harmonizing Turn 0 with the 5 stochastic axes, apply these specific thematic guidelines (DO NOT use generic paramilitary or high-threat defaults):
+1. LOCAL ENVIRONMENT & SHELTER:
+   - Represents the state and comfort of Kizag's apartment on the morning of Nov 1st (e.g. low: cold, messy, thin curtains letting in painful glare; high: comfortable, quiet, thick drapes, good shelter).
+2. SOCIAL CLIMATE & SECURITY AWARENESS:
+   - DEFAULT (High/Neutral): The Ebony Circle and Vane Security know NOTHING about Kizag. He is a completely anonymous civilian.
+   - LOW ROLLS (1-35): Vague, distant inquiries at the art gallery where the party was held. STRICT FORBIDDEN DIRECTIVE: NEVER place surveillance vans, private security agents, or overt spies outside Kizag's home or studio in early scenes!
+3. MATERIAL RESOURCES & LOGISTICS:
+   - Represents the financial health of the design studio and Kizag's bank balance (tight freelance cash-flow on low rolls, healthy cushion on high rolls).
+4. ENTOURAGE & IMMEDIATE CONTACTS' DEMEANOR (JUNE & FRIENDS):
+   - June has a concealed romantic fondness for Kizag and is naturally curious/jealous about the woman he spoke to at the party.
+   - Low roll: June is visibly piqued or anxious in her texts, gently pressing him on why he vanished early with an unknown woman.
+   - High roll: June is warm, teasing, and reassuring, asking if he survived his hangover.
+5. INCITING CATALYST / OPENING INCIDENT:
+   - MUST be an intimate, mundane morning event: a text notification on his phone, the physical shock of tap water tasting like chalk, the painful morning glare through the curtains, or finding the vintage honey candy in his jacket pocket. NEVER an emergency raid or clinical crisis!
 
 [CORE MASTER DIRECTIVES & PACING GUARDRAILS]
 1. GROUNDED OPENING & NO CLINICAL/PARAMILITARY TRAPS:
-   - Act 1 begins in an intimate, domestic, or professional setting (the design studio or June's loft).
+   - Act 1 begins in Kizag's apartment on the morning after Halloween. He is alone.
    - NEVER trigger instant SWAT raids, black-suit interrogations, or public bio-security alarms in early scenes.
-   - Initial symptoms are interpreted through mundane lenses (burnout, bad substances from Halloween, migraine aura, severe anemia).
+   - The Honey Candy Keepsake: In the pocket of his jacket from Halloween lies a single honey candy wrapped in antique-style wax paper, carrying the faint, unmistakable scent of dried roses and antique wood.
 2. BALANCED STAKES (NO GOTCHA, NO DEUS EX MACHINA):
-   - Very Unfavorable Rolls (1-35): Introduce grounded friction (a missed call, an awkward suspicion, a delayed delivery, a sharp migraine, an uncomfortable question from a friend). NEVER invent absurd off-hour emergencies (e.g. state inspectors calling at 3:00 AM) or inescapable dead-ends.
-   - Very Favorable Rolls (65-100): Grant earned, logical advantages (a great pitch, a clean evasion, an empathetic breakthrough with June, a useful historical lead). NEVER bestow preposterous windfalls (gallons of free blood, magical hacker exploits, multi-million dollar checks out of nowhere).
+   - Very Unfavorable Rolls (1-35): Grounded friction (a nagging text from June, an awkward question, a missed alarm, a sharp migraine). NEVER invent absurd off-hour emergencies (e.g. state inspectors calling at 3:00 AM) or inescapable dead-ends.
+   - Very Favorable Rolls (65-100): Earned advantages (recovering a clear memory, finding an old address, a warm supportive call). NEVER bestow preposterous windfalls.
 3. NPC COGNITIVE REALISM (ANTI-SHERLOCK):
-   - Friends (June, Sofia, Matteo, Pietro) are ordinary people with normal, distracted senses. They DO NOT notice forensic details like absent glass condensation, microscopic pupil shifts, or sub-dermal temperature changes during casual social moments.
-   - Pietro is a loyal software engineer, NOT an omniscient intelligence agency: he does not magically know classified surveillance blind spots.
+   - Friends are ordinary humans with normal, distracted senses. They DO NOT notice forensic details like absent glass condensation.
 4. LYRA'S ACTIVE ROLE & BALANCE OF POWER:
-   - Lyra is NOT an impotent reclusive damsel. She is a powerful, wealthy ancient with immense diplomatic and cultural leverage.
-   - She needs Kizag for legal and daylight navigation, but she offers substantial resources: historical sanctuary, ancient guidance, and covert protection against Vane's overreach.
-   - Her trial tests whether Kizag retains his human empathy and honor under pressure.
+   - Lyra is a powerful, wealthy ancient testing Kizag's moral character from afar. She offers real sanctuary and resources to those who prove their honor.
 5. VANE SECURITY LIMITS:
-   - Marcus Vane's guards are private security personnel, NOT an invading army. They cannot violate private property without cause, conduct armed checkpoints on public streets, or execute warrantless searches without risking severe state legal backlash.
+   - Private security personnel with commercial boundaries, NOT an invading military force.
 
 [ACTIVE GOAL OF ACT 1]
-Kizag manages a normal workday with June at their design studio, deflecting her genuine concern while deciphering the first subtle, vintage breadcrumb left by Lyra after Halloween.`,
+Kizag manages the morning after Halloween alone in his apartment: coping with his strange physical symptoms, inspecting his clothes and phone, and deciding how to respond to June's messages while pondering the honey candy and the scent of Lyra.`,
       masterFeedback: '',
       judgeScratchpad: [],
-      defaultStartingIntent: "I am sitting with June in our design studio on a rainy morning, with the blinds tilted to spare my sensitive eyes. She has just brought me a coffee that smells faintly nauseating, asking gently if I'm finally ready to talk about why I've been so distant since Halloween.",
+      defaultStartingIntent: "I wake up alone in my bed on the morning of November 1st, wincing against the daylight filtering through the curtains with a pounding headache and an unquenchable, parched throat. I drag myself out of bed to find a glass of water and check my phone for messages from last night.",
       defaultStochasticMatrix: null,
     },
     messages: [],
