@@ -662,73 +662,107 @@ Husband and wife for centuries and mortal vessels of the Collective Flame, livin
     type: 'template',
     title: 'Modern Vampires',
     genre: 'Urban Gothic / Mystery',
-    synopsis: 'In a sprawling modern metropolis, an unforgettable Halloween night with an enigmatic, red-haired woman named Lyra leaves thirty-year-old Kizag with baffling symptoms: acute photophobia, heightened senses, and a visceral thirst that water and food no longer satisfy. Kizag is not an immediate, full-fledged vampire—his turning is a slow, grueling metamorphosis, granting early physical awakenings while daylight burns his eyes and drains his vitality without reducing him to ash. Striving to protect his everyday life among a close circle of friends, Kizag embarks on an obsessive urban search for Lyra to find answers and a cure. Unknown to him, Lyra—an ancient psychic vampire—watches him from the shadows: she suspects Kizag may be the reincarnation of her lost husband, a legendary swordsman revered as the most humane vampire to ever walk the earth. Uncertain of his true soul, Lyra tests him from afar: if Kizag demonstrates honor, self-restraint, and compassion, she will secretly shield him from the city\'s predatory elders and gradually guide his path toward her; but if he surrenders to monstrous brutality, she will abandon him to the hunt or destroy him herself as a tragic failure.',
+    synopsis: 'In a rain-drenched modern metropolis, thirty-year-old designer Kizag wakes from an enigmatic Halloween night with Lyra, a mysterious noblewoman, into a harrowing and prolonged metamorphosis: severe photophobia, heightened senses, and a burning thirst that water and food cannot soothe. Kizag is not an immediate, combustible vampire, nor does he fall into daytime comas—daylight pains his eyes and drains his vitality, but he retains his full consciousness and agency around the clock. Striving to shield his everyday life and his beloved design studio with his best friend June, Kizag hunts for answers. Unknown to him, Lyra—an ancient psychic vampire of immense wealth and lineage—observes him from the shadows. Centuries ago, she loved Julian, revered as the most noble and humane vampire to ever exist. In Kizag, she recognized that lost soul\'s chivalry and martial grace. She turned him not on a whim, but as a perilous gamble: risking execution by the city\'s ruling vampire syndicate, the Ebony Circle, Lyra needs a mortal-passing guardian to defend her ancestral haven from predatory corporate buyouts. Only if Kizag proves his honor, self-restraint, and compassion will she step in to mentor him; if he succumbs to monstrous bloodlust, she will destroy him herself as a fatal error.',
     narrativePropensity: 'balanced',
     narratorStyle: 'balanced',
     dynamicState: {
       characterSheet: `Name: Kizag
-Role: Thirty-year-old metropolitan professional (designer/consultant) with a background in historical fencing (HEMA), undergoing a slow, baffling supernatural metamorphosis.
+Role: Thirty-year-old metropolitan professional (designer/consultant) and recreational historical fencing (HEMA) practitioner, undergoing a slow, harrowing supernatural metamorphosis.
 
 Metamorphic Condition & Early Awakening:
-- Not yet a full vampire: the transformation is a gradual physical and metaphysical transition. Direct sunlight does not incinerate him, but causes severe photophobia, burning migraines, nausea, and debilitating fatigue, forcing him to wear dark sunglasses and seek shade.
-- Early manifestations: Spasmodic bursts of compressed physical strength, lightning-fast reflexes, acute auditory and olfactory sensitivity (hearing heartbeats across rooms, smelling blood and stress hormones).
-- The Thirst & Appetite: Progressive biological rejection of solid food and water, both tasting like ash or cardboard; persistent, burning throat dryness that mimics acute chemical withdrawal.
-- Latent Martial Memory: Under adrenaline or threat, unexpected muscle memory for blade work and swordplay spontaneously manifests, despite only practicing recreational fencing.
-- Psychological state: Caught between paranoia over an experimental designer neurotoxin, shame over appearing fragile before his friends, and an intoxicating, inescapable obsession with the memory of Lyra.
+- Gradual Metamorphosis (NO Forced Daytime Coma): Direct sunlight causes severe photophobia, pounding migraines, and physical lethargy (requiring tinted sunglasses, closed blinds, and shade), but DOES NOT incinerate him instantly. He retains full consciousness and agency 24 hours a day, able to work, converse, and make decisions indoors during daylight.
+- Awakening Faculties: Surges of concentrated muscular strength, razor-sharp reflexes, acute hearing (picking out heartbeats across a room) and scent (identifying stress hormones and dried blood).
+- The Thirst & Metabolism: Progressive biological aversion to solid food and tap water (tasting flat, ashen, or nausea-inducing); raw red meat or animal serum grants temporary vitality, while decanted or human blood restores true biological warmth and flushed color.
+- Latent Martial Memory: Under adrenaline or threat, precise muscle memory for historical blade work and swordplay surfaces instinctively.
+- Psychological State: Torn between rationalizing the symptoms as an experimental neurotoxin, fear of exposing his condition to loved ones, and an intoxicating, inescapable fascination with Lyra.
 
-Social Circle & Close Friends:
-- June: Best friend and creative studio partner. Capable, pragmatic, protective, and harboring a long-concealed affection for Kizag. She is the first to notice his pale pallor and erratic hours, fearing he is spiraling into drug abuse or a severe psychological breakdown.
-- Pietro: Childhood friend and talented software engineer / tech enthusiast. Pragmatic, geeky, and loyal; shares quiet late-night video game sessions with Kizag. Unaware of any physical oddities, but a helpful ally if Kizag needs to trace digital footprints, obscure message boards, or encrypted metadata to find Lyra.
-- Matteo & Sofia (The group's long-time couple):
-  * Matteo: Jovial, extroverted architect and the group's social anchor. Deeply rational; brushes off Kizag's peculiarities as severe career burnout or a wild dating aftermath.
-  * Sofia: Art conservator and photographer with an exceptional eye for minute details. She notices Kizag's marble-cold touch, rigid stillness, vitreous gaze, and involuntary flinches to high-frequency sounds, sensing an ominous shift that defies casual excuses.`,
-      setting: `A sprawling, rain-soaked contemporary Western metropolis. Beneath sleek glass skyscrapers, corporate offices, trendy art galleries, and bustling neighborhood bistros lies an occult underground tightly bound by the laws of the Masquerade. The supernatural is not public knowledge: any anomaly is rationalized away by modern science, toxicology, or psychiatric diagnoses. Daylight reveals a mundane, demanding professional world; nighttime exposes quiet, shadowed avenues and private sanctuaries where hidden predators tread with extreme caution.`,
-      factions: `- Lyra (The Sensitive Elder / The Veiled Proctor): An ancient, enigmatic vampire gifted with empathic and soul-reading sensitivity. Centuries ago, she loved Julian—a master swordsman renowned as the most noble and human vampire of their kind. Sensing a faint soul resonance in Kizag during Halloween, she initiated his turning, but refuses to reveal herself until she proves whether he is truly Julian reborn or a tragic mistake. She tests him from the shadows: if Kizag demonstrates compassion, restraint, and chivalry, she covertly aids his survival against the city's predators and leaves subtle breadcrumbs so he can find her; if he succumbs to bloodlust or monstrous cruelty, she will let the Ebony Circle hunt him down or execute him herself.
-- The Ebony Circle (The City's Nocturnal Patriciate): The orthodox, territorial vampire hierarchy ruled by Marcus Vane. They fiercely uphold the Masquerade and monitor metropolitan power centers through private security fronts. Unaware of Kizag's specific identity, their hounds nevertheless remain vigilant for rogue contagions or unauthorized fledgling risings.
-- The Circle of Mortals (June, Pietro, Matteo, Sofia): Kizag's lifeline to human existence. Their dinner invites, work deadlines, and affectionate scrutiny represent both his greatest logistical hazard and his most vital moral compass.`,
-      conflicts: `- The Internal & Everyday Friction: Kizag attempting to balance everyday obligations, studio deadlines, and social gatherings with friends while hiding his progressive aversion to food, sunlight sensitivity, and terrifying bodily changes.
-- The Long-Term Trial of Lyra: Kizag obsessively tracking urban rumors and elusive leads to find Lyra, unaware that she is observing him from the shadows, evaluating whether his moral choices mirror the chivalry and compassion of her fallen beloved.
-- The Threat of the Masquerade: Avoiding indiscreet displays of superhuman reflexes or violent feeding that could alert private security contractors tied to Marcus Vane's Ebony Circle or trigger police investigations.`,
-      historicalFacts: `- Two centuries ago, Julian—a legendary swordsman and vampire noble revered for defending mortals—perished in an ancient feud, leaving Lyra devastated and in voluntary seclusion.
-- The Masquerade in the city was reinforced in the late 19th century through financial alliances and municipal oversight.
-- Kizag and June co-founded their design studio four years ago, building a reputation among local cultural spaces and galleries.`,
-      lorebook: `## The Setting: Metropolitan Noir
-A vibrant, modern metropolis where ancient occult secrets hide beneath high-finance glass towers, art venues, and quiet residential quarters. The word "vampire" belongs to folklore until undeniable biological and supernatural evidence forces its weight.
+The Circle of Mortals (Close Friends — Driven by Loyalty & Affection):
+- June: Best friend and co-founder of their design studio. Energetic, pragmatic, fiercely protective, harboring an unspoken romantic affection for Kizag. She is the anchor of his humanity; her only motive is keeping their business afloat and protecting Kizag from spiraling.
+- Pietro: Childhood friend and freelance software developer. Geeky, laid-back, and intensely loyal; shares late-night gaming sessions and pizza. Ignorant of anything occult, but ready to do small digital favors (digging up old forum archives or website metadata) out of pure friendship.
+- Matteo & Sofia (The group's anchor couple):
+  * Matteo: Jovial, booming interior architect; loves organizing dinners and group outings; dismisses Kizag's moodiness as standard freelance burnout.
+  * Sofia: Thoughtful art conservator and photographer. Observant and sensitive to emotional shifts; worries when Kizag seems withdrawn, but rationalizes his habits through normal human lenses (fatigue, stress, recovery).`,
+      setting: `A sprawling, rain-swept contemporary Western metropolis. Beneath sleek corporate glass towers, design lofts, and crowded neighborhood bistros lies a clandestine occult society governed by the Masquerade. The supernatural is not public knowledge: anomalies are rationalized away by toxicology, stress, mental illness, or technical glitches. The mortal world is vibrant, bureaucratic, and demanding; the night world is a Cold War between entrenched aristocratic havens and modern corporate syndicates.`,
+      factions: `## FACTIONS, CAPABILITIES & REALISTIC LIMITS (B-TEST DIRECTIVES)
+
+1. LYRA (The Sovereign of Villa Edera / The Veiled Proctor)
+- Nature & Persona: An ancient, psychic vampire noblewoman of immense age, intellect, and wealth. Deeply cultured, melancholic, possessing acute empathy and soul-reading capabilities.
+- Her Lost Love: Two centuries ago, she loved Julian—a peerless swordsman celebrated as the most humane vampire to ever live, who defended mortal dignity and governed his predatory Beast with chivalric restraint.
+- Why She Turned Kizag & What She Expects:
+  * She sensed Julian's martial soul and moral steel in Kizag during Halloween.
+  * She did NOT turn him for casual amusement: she desperately needs an ally who possesses Julian's rare balance—someone capable of mastering the vampire's strength without becoming a butcher.
+  * Operative Expectation: Lyra cannot walk under the sun, cannot understand modern digital banking, and cannot sit in municipal zoning boards. She needs Kizag and his design studio as her "daylight shield"—a legitimate mortal business capable of holding legal titles and municipal contracts to protect her historic haven, Villa Edera, from corporate expropriation.
+- The Grave Risks She Is Running:
+  * High Treason Against the Blood Laws: Siring a fledgling without the Ebony Circle's sanction is a capital crime punishable by a citywide Blood Hunt and the revocation of Villa Edera's sovereign territorial immunity.
+  * Symbiotic Vulnerability: Having invested her own blood in Kizag, if he loses control, slaughters civilians, or is captured and interrogated by Marcus Vane's inquisitors, the trail leads straight to her.
+  * Exposure of Centuries-Old Wealth: If Kizag's studio collapses or draws police scrutiny, the opaque trusts shielding her properties face catastrophic fiscal audits.
+- Powers & "Normal" Operating Baseline:
+  * What She CAN Do: Vast historical wealth, untouchable cultural prestige, untraceable trust funds, psychic emotional sensing, hypnotic memory-wiping through the Kiss, peerless renaissance blade mastery within her estate.
+  * What She CANNOT Do: Cannot walk in broad daylight; cannot hack networks or navigate digital systems; cannot conduct open warfare on city streets without destroying the treaty that protects her sanctuary.
+  * What She Risks If Overreaching: Using overt mind control in public or shedding blood outside her grounds triggers instant retaliation from the Ebony Circle and police homicide task forces.
+
+2. THE EBONY CIRCLE / MARCUS VANE (Vane Security Systems & Real Estate Conglomerates)
+- Nature & Agenda: The dominant, orthodox vampire syndicate governing the metropolitan night through corporate shells, high-finance boards, and private security contracts.
+- Strategic Goal: Maintain an absolute monopoly over nocturnal territory; eliminate or leash unauthorized fledglings to protect the Masquerade; acquire historical estates (like Villa Edera) to develop luxury high-rises and expand their surveillance footprint.
+- Powers & "Normal" Operating Baseline:
+  * What They CAN Do: Uniformed private security guards in commercial patrol cars (*Vane Security Systems*); monitoring their own private corporate facilities; filing aggressive lawsuits, property liens, and zoning challenges; bribing municipal inspectors; discreet inquiries through front investigators.
+  * What They CANNOT Do (STRICT LIMITS): They are NOT the NSA, an army, or an all-seeing police state! They CANNOT conduct arbitrary militarized roadblocks on public streets without state police; they CANNOT execute warrantless searches on private citizens; they DO NOT possess sci-fi biometric scanners or thermal LIDAR drones that map civilian body heat across public city streets; they CANNOT launch armed SWAT raids against sovereign havens like Villa Edera without undeniable proof and formal legal/vampiric casus belli.
+  * What They Risk If Overreaching: Conducting shootouts, violent kidnappings, or reckless sweeps exposes them to state anti-mafia inquiries, media scandals, instant revocation of private security licenses by the Prefecture, and severe censure from rival international vampire courts for breaching the Masquerade.
+
+3. METROPOLITAN POLICE & CIVIL AUTHORITIES
+- Nature & Agenda: Regular detectives, patrol officers, and municipal agencies tasked with public safety and enforcing the law.
+- Powers & Baseline: Formal search warrants, forensics labs, ballistics, street checkpoints, public surveillance cameras (CCTV).
+- Cognitive Stance: Completely mundane and rational. They DO NOT believe in vampires, demons, or curses. If they encounter drained corpses, they investigate drug cartels, organ trafficking rings, or psychotic serial killers.
+- Limits & Pressures: Bound by legal procedures, paperwork, and political interference from wealthy donors (including both Vane's lobbyists and Lyra's trusts).
+
+4. THE CIRCLE OF MORTALS (June, Pietro, Matteo, Sofia)
+- Nature: Ordinary humans bound to Kizag purely by years of shared trials, creative work, and genuine love.
+- Boundaries: They are NOT pawns with factional agendas. June wants the studio to thrive and Kizag to be safe; Pietro wants to hang out and build code; Matteo and Sofia want warm dinners and shared memories. Their innocence is their shield and Kizag's greatest emotional anchor.`,
+      conflicts: `- The Dual Life Dilemma: Kizag striving to keep his studio afloat, meet deadlines, and share meals with June and friends while concealing his growing need for blood and his daylight fatigue.
+- The Cold War of Real Estate & Blood: Marcus Vane attempting to squeeze Villa Edera out through zoning challenges and private security patrols, while Lyra uses Kizag's architectural project to cement the sanctuary's legal immunity.
+- The Testing of the Soul: Lyra secretly assessing whether Kizag's moral choices reflect Julian's legendary compassion or whether the newly turned fledgling is turning into an uncontrollable monster.`,
+      historicalFacts: `- Two centuries ago, Julian—a master swordsman and vampire noble revered for defending mortal lives—perished defending an enclave, leaving Lyra in voluntary isolation.
+- The Masquerade in the metropolis was modernized in the late 19th century, exchanging aristocratic duels for corporate lobbying and non-disclosure agreements.
+- Kizag and June co-founded their design studio four years ago, building a strong reputation among cultural institutions and galleries.`,
+      lorebook: `## The Setting: Contemporary Urban Gothic
+A rain-drenched Western metropolis where centuries-old vampire enclaves coexist with corporate conglomerates under the ironclad law of the Masquerade. The supernatural is guarded with extreme care: mortals rationalize anomalies as stress, mental illness, or corporate corruption.
 
 ## Protagonist: Kizag (The Fledgling in Transition)
-Thirty-year-old metropolitan professional undergoing an extended, gradual turning. He is not instantly dead or combustible in daylight: sunlight causes agonizing migraines, eye inflammation, and weakness rather than immediate ash. As his humanity wanes, latent martial reflexes with blades awaken.
+Thirty-year-old designer undergoing a gradual metaphysical metamorphosis. He DOES NOT fall into daytime comas: daylight causes painful photophobia and migraines, but he remains conscious and operational indoors 24/7. Latent fencing reflexes awaken under stress.
 
-## Key Figures
-- Lyra: An ancient psychic vampire testing Kizag's soul from the shadows. If he proves to be the noble, humane warrior she once loved, she will shield him from dangers and slowly let him trace her down; if he gives in to cold brutality, she will abandon or destroy him.
-- June: Devoted best friend and business partner, desperately trying to save him from what she believes is a toxic drug spiral.
-- Pietro: Software engineer and longtime friend, capable of digging through digital footprints and web metadata.
-- Matteo & Sofia: The anchor couple of the friend group. Matteo rationalizes everything; Sofia perceives the uncanny details.
-- Marcus Vane's Ebony Circle: Shadowy rulers of the city's night, enforcing silence.`,
-      masterJournal: `// AI Master Notes — Modern Vampires (The Soul's Trial)
-// Act 1: The Lingering Light & The Elusive Scent
+## Key Figures & Factions
+- Lyra (Villa Edera): Ancient psychic vampire testing Kizag to see if he carries the noble soul of Julian. She desperately needs a daylight legal champion to protect her estate from corporate predators.
+- June: Co-founder of the studio, devoted best friend, harboring unexpressed love for Kizag. She is his moral anchor.
+- Pietro, Matteo & Sofia: Longtime friends providing warmth, humor, and normal social gravity.
+- Marcus Vane (The Ebony Circle): Ruthless corporate vampire syndicate using private security fronts and real estate buyouts to dominate the city.`,
+      masterJournal: `// AI Master Notes — Modern Vampires: The Soul's Trial
+// Act 1: The Veiled Hearth & The Architects of Shadow
 
-[CAMPAIGN CONTEXT & ATMOSPHERE]
-- Tone: Slow-burn Urban Mystery, psychological Body Horror, and interpersonal drama.
-- Kizag believes he is grappling with an experimental designer drug or a neurological disorder. The transformation is prolonged: daylight causes painful photophobia and weakness, not instant combustion.
-- The central dramatic tension lies in the friction between Kizag's mundane friendships (June, Pietro, Matteo, Sofia) and his alien bodily mutations.
+[CAMPAIGN CONTEXT & GROUNDED REALISM]
+- Tone: Slow-burn Urban Mystery, psychological transformation, and interpersonal drama.
+- Kizag retains full consciousness during the day: he suffers from severe photophobia, eye-strain, and fatigue in direct sunlight, but DOES NOT experience instant combustion or forced daytime comas. He can work, talk, and make decisions indoors 24/7.
+- Grounded Masquerade: The supernatural is hidden behind ordinary facades (galleries, trusts, security firms).
 
-[CORE DIRECTIVES FOR THE MASTER (PACING & AMBIGUITY)]
-1. PRESERVE GROUNDED AMBIGUITY & ZERO CLINICAL TRAPS:
-   - NO hospital blood screenings, secret toxicology alerts, or laboratory alarms! The opening is an intimate, grounded roleplay space.
-   - Kizag interprets his own symptoms through everyday lenses: burnout, bad alcohol/substances from Halloween, sensory overload, or migraine aura.
-   - Pacing is slow-burn: reveal ONE subtle sensory symptom or interpersonal friction per scene.
-2. LYRA AS A REMOTE OBSERVER & PROCTOR:
-   - Lyra must NOT appear in person for casual dialogue in early acts. She operates via subtle intermediaries, vintage tokens, cryptic traces, or brief glimpses from distant shadows.
-   - She is actively testing Kizag's soul: orchestrate dilemmas where Kizag must choose between selfish predatory impulses and the dignity, safety, or protection of mortals.
-   - If Kizag demonstrates self-restraint, empathy, or innate skill with a blade, Lyra secretly aids his survival against nocturnal predators and rewards him with a subtle breadcrumb leading closer to her.
-   - If Kizag acts with callous cruelty or gives in to mindless bloodlust, Lyra withdraws her protection, leaving him exposed to the hounds of the Ebony Circle or stepping in to eliminate him herself as a catastrophic mistake.
-3. WEAVE THE SOCIAL FABRIC:
-   - Make everyday social interactions (working with June at the studio, casual group chats with Pietro, upcoming dinners at Matteo and Sofia's) the true field of tension. Kizag must make excuses for not eating, wear sunglasses indoors, and hide his freezing skin.
-4. NO PARAMILITARY INTRUSIONS OR PRIVATE SECURITY IN EARLY SCENES:
-   - Marcus Vane's Ebony Circle operates strictly through distant observers and quiet influence, NOT open firefights, door-to-door raids, or SWAT teams.
+[CORE MASTER DIRECTIVES & PACING GUARDRAILS]
+1. GROUNDED OPENING & NO CLINICAL/PARAMILITARY TRAPS:
+   - Act 1 begins in an intimate, domestic, or professional setting (the design studio or June's loft).
+   - NEVER trigger instant SWAT raids, black-suit interrogations, or public bio-security alarms in early scenes.
+   - Initial symptoms are interpreted through mundane lenses (burnout, bad substances from Halloween, migraine aura, severe anemia).
+2. BALANCED STAKES (NO GOTCHA, NO DEUS EX MACHINA):
+   - Very Unfavorable Rolls (1-35): Introduce grounded friction (a missed call, an awkward suspicion, a delayed delivery, a sharp migraine, an uncomfortable question from a friend). NEVER invent absurd off-hour emergencies (e.g. state inspectors calling at 3:00 AM) or inescapable dead-ends.
+   - Very Favorable Rolls (65-100): Grant earned, logical advantages (a great pitch, a clean evasion, an empathetic breakthrough with June, a useful historical lead). NEVER bestow preposterous windfalls (gallons of free blood, magical hacker exploits, multi-million dollar checks out of nowhere).
+3. NPC COGNITIVE REALISM (ANTI-SHERLOCK):
+   - Friends (June, Sofia, Matteo, Pietro) are ordinary people with normal, distracted senses. They DO NOT notice forensic details like absent glass condensation, microscopic pupil shifts, or sub-dermal temperature changes during casual social moments.
+   - Pietro is a loyal software engineer, NOT an omniscient intelligence agency: he does not magically know classified surveillance blind spots.
+4. LYRA'S ACTIVE ROLE & BALANCE OF POWER:
+   - Lyra is NOT an impotent reclusive damsel. She is a powerful, wealthy ancient with immense diplomatic and cultural leverage.
+   - She needs Kizag for legal and daylight navigation, but she offers substantial resources: historical sanctuary, ancient guidance, and covert protection against Vane's overreach.
+   - Her trial tests whether Kizag retains his human empathy and honor under pressure.
+5. VANE SECURITY LIMITS:
+   - Marcus Vane's guards are private security personnel, NOT an invading army. They cannot violate private property without cause, conduct armed checkpoints on public streets, or execute warrantless searches without risking severe state legal backlash.
 
 [ACTIVE GOAL OF ACT 1]
-Kizag navigates a normal day with June at their design studio, attempting to deflect her growing concern while examining a single vintage curio or personal token left behind from that Halloween night.`,
+Kizag manages a normal workday with June at their design studio, deflecting her genuine concern while deciphering the first subtle, vintage breadcrumb left by Lyra after Halloween.`,
       masterFeedback: '',
       judgeScratchpad: [],
       defaultStartingIntent: "I am sitting with June in our design studio on a rainy morning, with the blinds tilted to spare my sensitive eyes. She has just brought me a coffee that smells faintly nauseating, asking gently if I'm finally ready to talk about why I've been so distant since Halloween.",
